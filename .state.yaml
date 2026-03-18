@@ -1,0 +1,10 @@
+project: smartscaile-portal
+tier: lite
+current_phase: 2
+phase_1:
+  brief_complete: true
+  style_guide_complete: true
+phase_2:
+  setup_complete: true
+  build_complete: true
+  review_complete: false

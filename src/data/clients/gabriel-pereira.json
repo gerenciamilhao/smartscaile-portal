@@ -1,0 +1,216 @@
+{
+  "client": {
+    "id": "gabriel-pereira",
+    "name": "Gabriel Pereira",
+    "company": "",
+    "type": "prospect",
+    "contact": {
+      "representative": "Carlos Korber",
+      "label": "smartscaile martech"
+    },
+    "instagram": "gabrielgpere",
+    "stapeNote": "019d015d-0b05-7356-9ccb-da574c2dd27a",
+    "createdAt": "2026-03-18"
+  },
+  "meetings": [
+    {
+      "id": "meet-001",
+      "date": "2026-03-18",
+      "title": "Reunião Inicial — Discovery",
+      "duration": "00:53:32",
+      "participants": ["Carlos Korber", "Ramon Lemos", "Gabriel Pereira"],
+      "status": "completed",
+      "summary": "Reunião de discovery com Gabriel Pereira, gestor de tráfego e infoprodutor que opera uma agência. Dois cenários discutidos: implementação de server-side tracking para cliente existente (Kim Pifer, investimento R$3-4k/dia em Meta Ads) e setup completo para lançamento próprio no nicho de infoprodutores. Auditoria técnica ao vivo revelou tracking 100% client-side, sem CAPI, sem cookie persistence, com perda estimada de 30-40% de atribuição. Gabriel demonstrou interesse em parceria de longo prazo, trazendo ~15 clientes se o resultado for positivo.",
+      "topics": [
+        {
+          "title": "Cliente Kim Pifer — Diagnóstico",
+          "notes": "Empresa de capital aberto, nicho 'ganhar dinheiro'. Instagram ~117k seguidores. Funil: Anúncio > LP com delay no botão > Checkout direto Hotmart. Ticket R$297 (front-end) + upsell/downsell (ticket médio R$450-570). Investimento R$3-4k/dia, só Meta. CPA atual R$140-191 nos melhores criativos, meta R$100. Não escala, bate no teto. Budget potencial R$100-200k/dia."
+        },
+        {
+          "title": "Lançamento Próprio — Setup do Zero",
+          "notes": "Nicho: infoprodutores que faturam R$50k+ e querem escalar. Funil: Anúncio > Página de vendas low-ticket R$47 > Obrigado > WhatsApp > 7 dias > Webinário gravado (Hot Webinar) > Produto principal R$1.497 + recorrência R$6.500. Formulário de qualificação (A/B/C). X1 via API Meta + NCET. Meta: CAC zerado no ingresso (CPA <= R$47). Conversão esperada no webinário: 10-15%. Status: do zero, nada implementado."
+        },
+        {
+          "title": "Auditoria Técnica ao Vivo",
+          "notes": "Site do Kim Pifer: nota baixa, 100% client-side. Tags carregadas pelo servidor Google (não custom loader). Sem server-side tracking. Usa UTMFY (demonstrado que perde ~50% de atribuição). FBC com janela de apenas 1 dia. Sem cookie persistence. Estimativa de perda: 30-40% de atribuição no mínimo."
+        },
+        {
+          "title": "Parceria Futura",
+          "notes": "Se funcionar, Gabriel quer trazer ~15 clientes de infoprodutos (faturam R$100-300k/lançamento). Interesse em white label ou comissionamento. Modelos apresentados: white label (margem própria) ou indicação com comissão."
+        }
+      ],
+      "decisions": [
+        "Implementar server-side tracking para Kim Pifer e lançamento próprio",
+        "Substituir UTMFY por solução server-side completa",
+        "Realizar teste A/B pixel antigo vs novo por 30 dias",
+        "Garantia: devolução das 2 últimas parcelas se pixel antigo performar melhor",
+        "Usar Stape como plataforma de server-side (20EUR/mês)",
+        "Criar grupo WhatsApp + ClickUp para acompanhamento"
+      ],
+      "nextSteps": [
+        {
+          "task": "Enviar proposta para ambos os cenários",
+          "owner": "smartscaile.",
+          "deadline": "2026-03-19",
+          "status": "pending"
+        },
+        {
+          "task": "Análise completa da estrutura atual",
+          "owner": "smartscaile.",
+          "deadline": "2026-03-19",
+          "status": "pending"
+        },
+        {
+          "task": "Avaliar proposta internamente",
+          "owner": "Gabriel",
+          "deadline": "TBD",
+          "status": "pending"
+        }
+      ],
+      "insights": {
+        "maturityScore": {
+          "tracking": 2,
+          "analytics": 3,
+          "automation": 2,
+          "overall": 2
+        },
+        "currentStack": [
+          { "tool": "Meta Ads", "status": "active" },
+          { "tool": "UTMFY", "status": "active" },
+          { "tool": "Hotmart", "status": "active" },
+          { "tool": "WordPress", "status": "active" },
+          { "tool": "GTM (client-side)", "status": "basic" },
+          { "tool": "Google Analytics 4", "status": "basic" },
+          { "tool": "Hot Webinar", "status": "inactive" }
+        ],
+        "opportunities": [
+          {
+            "area": "Server-Side Tracking (GTM SS + Stape)",
+            "impact": "high",
+            "description": "Recuperar 30-40% dos eventos perdidos. Migrar de client-side para server-side completo com GTM SS via Stape."
+          },
+          {
+            "area": "Eliminação do UTMFY",
+            "impact": "high",
+            "description": "UTMFY demonstrado perdendo ~50% de atribuição. Substituir por solução server-side nativa com cookie persistence."
+          },
+          {
+            "area": "Cookie Persistence (cookieper)",
+            "impact": "high",
+            "description": "FBC atual com janela de 1 dia. Estender para 90 dias com cookieper, melhorando drasticamente a janela de atribuição."
+          },
+          {
+            "area": "Custom Loader",
+            "impact": "medium",
+            "description": "Tags carregadas pelo servidor Google padrão. Custom loader evita bloqueio por adblockers."
+          },
+          {
+            "area": "Setup de Funil Nativo (lançamento)",
+            "impact": "high",
+            "description": "Lançamento próprio do zero com tracking profissional desde o dia 1. Funil completo com eventos custom, conversões server-side, dedup nativa."
+          }
+        ],
+        "painPoints": [
+          "Não escala: trava em R$3-4k/dia no Kim Pifer",
+          "CPA alto: R$140-191 nos melhores criativos, meta R$100",
+          "100% client-side: sem server-side tracking",
+          "UTMFY perdendo ~50% de atribuição",
+          "FBC com janela de apenas 1 dia",
+          "Sem cookie persistence",
+          "Lançamento próprio: zero estrutura implementada"
+        ]
+      }
+    }
+  ],
+  "diagnosis": {
+    "headline": "O que você vai conquistar",
+    "stapeChecker": {
+      "noteId": "019d015d-0b05-7356-9ccb-da574c2dd27a",
+      "url": "https://stape.io/website-tracking-checker/019d015d-0b05-7356-9ccb-da574c2dd27a",
+      "label": "Ver relatório completo da Stape"
+    },
+    "goals": [
+      {
+        "metric": "R$100-200k/dia",
+        "label": "Budget diário desbloqueado",
+        "description": "Com dados precisos chegando ao algoritmo do Meta, a escala deixa de travar. Cada conversão passa a ser contabilizada e o algoritmo otimiza de verdade."
+      },
+      {
+        "metric": "CPA R$100",
+        "label": "Meta de CPA alcançável",
+        "description": "Hoje parte das suas conversões simplesmente não aparece para o pixel. Quando o Meta enxerga tudo, o CPA reportado cai porque reflete a realidade."
+      },
+      {
+        "metric": "30-40%",
+        "label": "Dados recuperados",
+        "description": "Estimativa de eventos que hoje se perdem no caminho. Com server-side tracking, esses dados voltam a alimentar suas campanhas."
+      }
+    ],
+    "desires": {
+      "headline": "Entendemos o que você precisa",
+      "intro": "Você quer escalar o Kim Pifer de R$3-4k para R$100-200k por dia. Quer um CPA de R$100. E quer lançar seu produto próprio com uma estrutura profissional desde o dia 1. Tudo isso é possível. Vamos te mostrar como.",
+      "items": [
+        {
+          "icon": "scale",
+          "title": "Escalar sem teto",
+          "description": "O budget do Kim Pifer tem potencial para R$100-200k/dia. Para chegar lá, o algoritmo do Meta precisa enxergar todas as conversões. Hoje ele trabalha parcialmente cego."
+        },
+        {
+          "icon": "target",
+          "title": "CPA de R$100 no Kim Pifer",
+          "description": "A diferença entre R$140-191 e R$100 de CPA pode estar nos dados que se perdem antes de chegar ao pixel. Quando cada venda é contabilizada, o algoritmo otimiza melhor."
+        },
+        {
+          "icon": "rocket",
+          "title": "Lançamento próprio com estrutura pro",
+          "description": "Funil do zero. Ingresso R$47, webinário, produto principal R$1.497 e recorrência de R$6.500. Cada etapa precisa ser mensurada desde o dia 1 para você saber exatamente de onde vem o resultado."
+        },
+        {
+          "icon": "users",
+          "title": "Parceria de longo prazo",
+          "description": "Se o resultado aparecer, você traz mais 15 clientes. A gente entende o peso disso. Por isso a proposta inclui teste A/B de 30 dias com garantia. Zero risco para você."
+        }
+      ]
+    },
+    "opportunities": [
+      {
+        "title": "Server-Side Tracking Completo",
+        "impact": "high",
+        "effort": "medium",
+        "description": "Seus dados passam a trafegar direto do servidor para o Meta, sem depender do navegador do visitante. Resultado: o algoritmo recebe todas as conversões e otimiza com precisão."
+      },
+      {
+        "title": "Cookie Persistence de 90 dias",
+        "impact": "high",
+        "effort": "low",
+        "description": "A janela de atribuição salta de 1 dia para 90 dias. Aquele lead que clicou no anúncio e comprou 3 semanas depois aparece corretamente no seu painel."
+      },
+      {
+        "title": "Custom Loader Anti-Adblock",
+        "impact": "medium",
+        "effort": "low",
+        "description": "O pixel passa a carregar de forma invisível para adblockers. Mais 10-15% de dados que antes simplesmente sumiam."
+      },
+      {
+        "title": "CAPI Meta Completo",
+        "impact": "high",
+        "effort": "medium",
+        "description": "Conversions API enviando eventos server-side com deduplicação nativa. O Meta recebe dados de alta qualidade, e isso melhora diretamente o match rate e a otimização."
+      },
+      {
+        "title": "Setup Profissional do Lançamento",
+        "impact": "high",
+        "effort": "high",
+        "description": "Seu lançamento próprio nasce com tracking profissional. Cada etapa do funil mensurada: ingresso, WhatsApp, webinário, venda. Você sabe exatamente onde está o gargalo."
+      }
+    ],
+    "proposal": {
+      "headline": "Vamos fazer isso acontecer",
+      "description": "Implementação completa de server-side tracking para os dois cenários: escala do Kim Pifer e lançamento do seu produto. GTM Server-Side via Stape, CAPI Meta, cookie persistence de 90 dias, custom loader e dedup nativa. Inclui 30 dias de teste A/B para você ver o resultado com seus próprios dados.",
+      "timeline": "3-4 semanas para implementar + 30 dias de teste A/B",
+      "investment": "Sob consulta",
+      "guarantee": "Se o pixel antigo performar melhor nos 30 dias de teste, devolvemos as 2 últimas parcelas",
+      "cta": "Quero começar"
+    }
+  }
+}
