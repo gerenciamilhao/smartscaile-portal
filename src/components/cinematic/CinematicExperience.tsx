@@ -88,11 +88,11 @@ function UnlockedExperience({ clientData }: { clientData: ClientData | null }) {
   });
 
   // Hero sai: fade + drift up — desativa completamente ao terminar
-  const heroOpacity    = useTransform(scrollYProgress, [0, 0.04, 0.10], [1, 1, 0]);
-  const heroY          = useTransform(scrollYProgress, [0, 0.04, 0.10], [0, 0, -40]);
-  const heroPointer    = useTransform(scrollYProgress, (v) => v > 0.10 ? 'none' : 'auto');
+  const heroOpacity    = useTransform(scrollYProgress, [0, 0.03, 0.08], [1, 1, 0]);
+  const heroY          = useTransform(scrollYProgress, [0, 0.03, 0.08], [0, 0, -40]);
+  const heroPointer    = useTransform(scrollYProgress, (v) => v > 0.08 ? 'none' : 'auto');
   const heroVisibility = useTransform(scrollYProgress, (v) =>
-    v > 0.12 ? ('hidden' as const) : ('visible' as const)
+    v > 0.10 ? ('hidden' as const) : ('visible' as const)
   );
 
   return (
@@ -100,7 +100,7 @@ function UnlockedExperience({ clientData }: { clientData: ClientData | null }) {
       {/* Container tall — 600vh dá respiração entre os 5 slides */}
       <div
         ref={scrollRef}
-        style={{ height: hasProposal ? '600vh' : 'auto', position: 'relative' }}
+        style={{ height: hasProposal ? '750vh' : 'auto', position: 'relative' }}
       >
         {/* Viewport sticky — fica preso no topo */}
         <div

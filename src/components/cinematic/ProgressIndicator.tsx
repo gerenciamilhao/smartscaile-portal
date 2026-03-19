@@ -7,31 +7,41 @@ interface ProgressIndicatorProps {
   sections: string[];
 }
 
-// Midpoints de cada slide (centro do range de cada slide em ProposalScroll)
-const SLIDE_MIDS = [0.19, 0.37, 0.55, 0.73, 0.91];
+// Midpoints — exatamente no centro de cada slide range
+const SLIDE_MIDS = [0.17, 0.35, 0.53, 0.71, 0.90];
+
+// Each slide's exact range boundaries (from ProposalScroll R)
+const SLIDE_RANGES: [number, number][] = [
+  [0.08, 0.26],
+  [0.26, 0.44],
+  [0.44, 0.62],
+  [0.62, 0.80],
+  [0.80, 1.00],
+];
 
 export function ProgressIndicator({ scrollYProgress, sections }: ProgressIndicatorProps) {
-  // Aparece quando começa o 1º slide, some no fim
   const overallOpacity = useTransform(
     scrollYProgress,
-    [0, 0.08, 0.12, 0.96, 1.0],
+    [0, 0.06, 0.10, 0.96, 1.0],
     [0, 0, 1, 1, 0],
   );
 
-  const thumbPercent = useTransform(scrollYProgress, [0.10, 1.0], [0, 100]);
+  const thumbPercent = useTransform(scrollYProgress, [0.08, 1.0], [0, 100]);
   const thumbTop = useTransform(thumbPercent, (v) => `${Math.min(100, Math.max(0, v))}%`);
 
   return (
     <>
-      {/* Dots na parte inferior */}
       <motion.div
         style={{
-          position: 'fixed', bottom: 28, left: '50%', transform: 'translateX(-50%)',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
-          zIndex: 50, opacity: overallOpacity,
+          position: 'fixed',
+          bottom: 160,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 50,
+          opacity: overallOpacity,
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           {sections.map((label, i) => (
             <ProgressDot key={label} index={i} label={label} scrollYProgress={scrollYProgress} />
           ))}
@@ -67,23 +77,45 @@ export function ProgressIndicator({ scrollYProgress, sections }: ProgressIndicat
 function ProgressDot({ index, label, scrollYProgress }: {
   index: number; label: string; scrollYProgress: MotionValue<number>;
 }) {
+  const [start, end] = SLIDE_RANGES[index];
   const mid = SLIDE_MIDS[index];
-  const r = 0.09;
 
-  const scale      = useTransform(scrollYProgress, [mid - r, mid, mid + r], [0.7, 1, 0.7]);
-  const dotOpacity = useTransform(scrollYProgress, [mid - r, mid, mid + r], [0.2, 1, 0.2]);
-  const lblOpacity = useTransform(scrollYProgress, [mid - r, mid, mid + r], [0, 0.7, 0]);
+  // Dot: visible only within this slide's range, peak at midpoint
+  const dotOpacity = useTransform(
+    scrollYProgress,
+    [start, mid, end],
+    [0.15, 1, 0.15],
+  );
+  const scale = useTransform(
+    scrollYProgress,
+    [start, mid, end],
+    [0.7, 1, 0.7],
+  );
+
+  // Label: only visible around midpoint, 0 everywhere else
+  const lblIn  = mid - 0.04;
+  const lblOut = mid + 0.04;
+  const lblOpacity = useTransform(scrollYProgress, (v) => {
+    if (v < lblIn || v > lblOut) return 0;
+    const dist = Math.abs(v - mid);
+    return Math.max(0, (1 - dist / 0.04) * 0.7);
+  });
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, position: 'relative' }}>
       <motion.span style={{
-        opacity: lblOpacity, fontSize: '0.45rem', color: '#77BDAC',
-        letterSpacing: '0.06em', whiteSpace: 'nowrap', fontFamily: 'monospace',
+        opacity: lblOpacity, fontSize: '0.6rem', color: '#77BDAC',
+        letterSpacing: '0.06em', whiteSpace: 'nowrap',
+        fontFamily: 'var(--font-mono), monospace',
+        fontWeight: 500,
+        position: 'absolute',
+        bottom: '100%',
+        marginBottom: 8,
       }}>
         {label}
       </motion.span>
       <motion.div style={{
-        width: 6, height: 6, borderRadius: '50%', backgroundColor: '#77BDAC',
+        width: 8, height: 8, borderRadius: '50%', backgroundColor: '#77BDAC',
         scale, opacity: dotOpacity,
       }} />
     </div>

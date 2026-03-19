@@ -20,48 +20,45 @@
       "duration": "00:53:32",
       "participants": ["Carlos Korber", "Ramon Lemos", "Gabriel Pereira"],
       "status": "completed",
-      "summary": "Reunião de discovery com Gabriel Pereira, gestor de tráfego e infoprodutor que opera uma agência. Dois cenários discutidos: implementação de server-side tracking para cliente existente (Kim Pifer, investimento R$3-4k/dia em Meta Ads) e setup completo para lançamento próprio no nicho de infoprodutores. Auditoria técnica ao vivo revelou tracking 100% client-side, sem CAPI, sem cookie persistence, com perda estimada de 30-40% de atribuição. Gabriel demonstrou interesse em parceria de longo prazo, trazendo ~15 clientes se o resultado for positivo.",
+      "summary": "Reunião de discovery com Gabriel Pereira, gestor de tráfego que opera a conta do Kim Paiffer (Atom Traders, empresa de capital aberto). Auditoria técnica ao vivo no site pre-especializacao.com.br/pet-pc4 revelou tracking 100% client-side, sem CAPI, sem cookie persistence, UTMFY perdendo ~50% de atribuição, FBC com 1 dia, com perda estimada de 30-40% de atribuição e dados sujos no gerenciador (CPA reportado R$700 vs R$140-191 real). Escala travada em R$3-4k/dia com potencial de R$100-200k/dia. Gabriel demonstrou interesse em parceria de longo prazo, trazendo ~15 clientes se o resultado for positivo.",
       "topics": [
         {
-          "title": "Cliente Kim Pifer — Diagnóstico",
-          "notes": "Empresa de capital aberto, nicho 'ganhar dinheiro'. Instagram ~117k seguidores. Funil: Anúncio > LP com delay no botão > Checkout direto Hotmart. Ticket R$297 (front-end) + upsell/downsell (ticket médio R$450-570). Investimento R$3-4k/dia, só Meta. CPA atual R$140-191 nos melhores criativos, meta R$100. Não escala, bate no teto. Budget potencial R$100-200k/dia."
-        },
-        {
-          "title": "Lançamento Próprio — Setup do Zero",
-          "notes": "Nicho: infoprodutores que faturam R$50k+ e querem escalar. Funil: Anúncio > Página de vendas low-ticket R$47 > Obrigado > WhatsApp > 7 dias > Webinário gravado (Hot Webinar) > Produto principal R$1.497 + recorrência R$6.500. Formulário de qualificação (A/B/C). X1 via API Meta + NCET. Meta: CAC zerado no ingresso (CPA <= R$47). Conversão esperada no webinário: 10-15%. Status: do zero, nada implementado."
+          "title": "Cliente Kim Paiffer — Diagnóstico",
+          "notes": "Kim Paiffer (Joaquim Paiffer), CEO da Atom Traders Publicações S.A. (Atom Educacional). Empresa de capital aberto na bolsa. Irmão da Carol Pifer (participou do Shark Tank, também cliente do Gabriel). Instagram @kimpaiffer, ~117k seguidores. Produto: Pré-Especialização em Trading 2026 (R$297). Site auditado: pre-especializacao.com.br/pet-pc4 (WordPress + Elementor, VSL via ConverteAI, checkout Hotmart com cupom 20OFF). Público-alvo: classe baixa, nicho 'ganhar dinheiro' / educação financeira e day trading. Funil: Anúncio Meta > LP com delay no botão > Checkout direto Hotmart > escadinha upsell/downsell (Compra R$297 > Upsell 1 > se não compra > Downsell 1 > Upsell 2 > Downsell 2). Ticket médio R$450-570. ~10% do tráfego passa por formulário antes do redirect. Investimento R$3-4k/dia, só Meta. CPA atual R$140-191 nos melhores criativos, meta R$100. Escala travada, bate no teto. Budget potencial R$100-200k/dia. Burocracia: 'muitos caciques', Gabriel não tem autonomia para decisões financeiras, processo de aprovação com múltiplos decisores."
         },
         {
           "title": "Auditoria Técnica ao Vivo",
-          "notes": "Site do Kim Pifer: nota baixa, 100% client-side. Tags carregadas pelo servidor Google (não custom loader). Sem server-side tracking. Usa UTMFY (demonstrado que perde ~50% de atribuição). FBC com janela de apenas 1 dia. Sem cookie persistence. Estimativa de perda: 30-40% de atribuição no mínimo."
+          "notes": "Site auditado: pre-especializacao.com.br/pet-pc4. Nota baixa (overall 31/100, ads 31/100, cookieLifetime 12/100). 100% client-side, sem server-side. Tags carregadas pelo servidor Google (não custom loader). 2 pixels Meta ativos (IDs: 698472216668540 e 520865198087897). Usa UTMFY (demonstrado ao vivo perdendo ~50% de atribuição). FBC com janela de apenas 1 dia. Sem cookie persistence. Dados sujos no gerenciador: CPA aparecendo como R$700 (vs R$140-191 real). Estrutura avaliada como 'de 2020 em 2026'. Estimativa de perda: 30-40% de atribuição no mínimo."
         },
         {
           "title": "Parceria Futura",
-          "notes": "Se funcionar, Gabriel quer trazer ~15 clientes de infoprodutos (faturam R$100-300k/lançamento). Interesse em white label ou comissionamento. Modelos apresentados: white label (margem própria) ou indicação com comissão."
+          "notes": "Se funcionar, Gabriel quer trazer ~15 clientes de infoprodutos (faturam R$100-300k/lançamento). Interesse em white label: 'plugando por trás' com margem própria. Carol Pifer (irmã do Kim, participante do Shark Tank, também cliente do Gabriel) como potencial adicional. Modelos apresentados: white label (margem própria) ou indicação com comissão."
         }
       ],
       "decisions": [
-        "Implementar server-side tracking para Kim Pifer e lançamento próprio",
+        "Implementar server-side tracking para a operação do Kim Paiffer (Atom Traders)",
         "Substituir UTMFY por solução server-side completa",
         "Realizar teste A/B pixel antigo vs novo por 30 dias",
         "Garantia: devolução das 2 últimas parcelas se pixel antigo performar melhor",
         "Usar Stape como plataforma de server-side (20EUR/mês)",
-        "Criar grupo WhatsApp + ClickUp para acompanhamento"
+        "Criar grupo WhatsApp + ClickUp para acompanhamento",
+        "Proposta separada para lançamento próprio do Gabriel (ver gabriel-pereira-lancamento.json)"
       ],
       "nextSteps": [
         {
-          "task": "Enviar proposta para ambos os cenários",
+          "task": "Enviar proposta para operação Kim Paiffer",
           "owner": "smartscaile.",
           "deadline": "2026-03-19",
           "status": "pending"
         },
         {
-          "task": "Análise completa da estrutura atual",
+          "task": "Análise completa da estrutura atual (pre-especializacao.com.br)",
           "owner": "smartscaile.",
           "deadline": "2026-03-19",
           "status": "pending"
         },
         {
-          "task": "Avaliar proposta internamente",
+          "task": "Avaliar proposta internamente (processo de aprovação na Atom Traders)",
           "owner": "Gabriel",
           "deadline": "TBD",
           "status": "pending"
@@ -81,7 +78,8 @@
           { "tool": "WordPress", "status": "active" },
           { "tool": "GTM (client-side)", "status": "basic" },
           { "tool": "Google Analytics 4", "status": "basic" },
-          { "tool": "Hot Webinar", "status": "inactive" }
+          { "tool": "ConverteAI (VSL player)", "status": "active" },
+          { "tool": "WordPress + Elementor", "status": "active" }
         ],
         "opportunities": [
           {
@@ -105,108 +103,113 @@
             "description": "Tags carregadas pelo servidor Google padrão. Custom loader evita bloqueio por adblockers."
           },
           {
-            "area": "Setup de Funil Nativo (lançamento)",
+            "area": "Dedup Nativa (Hotmart + Meta)",
             "impact": "high",
-            "description": "Lançamento próprio do zero com tracking profissional desde o dia 1. Funil completo com eventos custom, conversões server-side, dedup nativa."
+            "description": "Escadinha de upsell/downsell gera múltiplos eventos por sessão. Sem dedup, o Meta conta vendas duplicadas. Dedup nativa garante cada venda contada uma vez, no lugar certo."
           }
         ],
         "painPoints": [
           "Não escala: trava em R$3-4k/dia no Kim Pifer",
           "CPA alto: R$140-191 nos melhores criativos, meta R$100",
+          "Dados sujos: CPA reportado R$700 no gerenciador vs R$140-191 real",
           "100% client-side: sem server-side tracking",
           "UTMFY perdendo ~50% de atribuição",
           "FBC com janela de apenas 1 dia",
           "Sem cookie persistence",
-          "Lançamento próprio: zero estrutura implementada"
+          "Estrutura de tracking defasada ('de 2020 em 2026')",
+          "Sem autonomia financeira: empresa de capital aberto com processo de aprovação com múltiplos decisores",
+          "2 pixels Meta ativos sem clareza de qual é o correto",
+          "Escadinha de upsell/downsell sem dedup: eventos duplicados"
         ]
       }
     }
   ],
   "diagnosis": {
-    "headline": "O que você vai conquistar",
+    "headline": "O que está travando a escala da Atom",
     "stapeChecker": {
       "noteId": "019d015d-0b05-7356-9ccb-da574c2dd27a",
       "url": "https://stape.io/website-tracking-checker/019d015d-0b05-7356-9ccb-da574c2dd27a",
-      "label": "Ver relatório completo da Stape"
+      "label": "Ver relatório completo da Stape",
+      "scores": {
+        "analytics": 38,
+        "ads": 31,
+        "cookieLifetime": 12,
+        "pageSpeed": 54,
+        "overall": 31
+      }
     },
     "goals": [
       {
         "metric": "R$100-200k/dia",
-        "label": "Budget diário desbloqueado",
-        "description": "Com dados precisos chegando ao algoritmo do Meta, a escala deixa de travar. Cada conversão passa a ser contabilizada e o algoritmo otimiza de verdade."
+        "label": "Sair dos R$3-4k e parar de bater na trave",
+        "description": "A Atom Educacional tem fôlego, tem o nicho amplo, tem 117 mil seguidores e um funil que converte. Só que o algoritmo do Meta trabalha parcialmente cego. Ele não enxerga todas as vendas, então trava a escala. Com 100% dos dados chegando, ele para de frear e começa a otimizar de verdade."
       },
       {
         "metric": "CPA R$100",
-        "label": "Meta de CPA alcançável",
-        "description": "Hoje parte das suas conversões simplesmente não aparece para o pixel. Quando o Meta enxerga tudo, o CPA reportado cai porque reflete a realidade."
+        "label": "De R$140-191 para a meta de R$100",
+        "description": "Os melhores criativos entregam R$191 e R$140 de CPA. Sempre bate na trave, nunca fica positivo. A diferença entre o CPA atual e os R$100 pode estar nos 30-40% de conversões que se perdem antes de chegar ao pixel. Quando o Meta enxerga tudo, o número reportado cai porque reflete a realidade."
       },
       {
         "metric": "30-40%",
-        "label": "Dados recuperados",
-        "description": "Estimativa de eventos que hoje se perdem no caminho. Com server-side tracking, esses dados voltam a alimentar suas campanhas."
+        "label": "Dados que a operação perde todo dia",
+        "description": "A cada R$4.000 investidos por dia, pelo menos R$1.200 rodam sem dados de volta para o algoritmo. Ele não otimiza o que não vê. São R$36.000 por mês em investimento que o Meta simplesmente ignora na hora de decidir onde alocar o próximo real."
       }
     ],
     "desires": {
-      "headline": "Entendemos o que você precisa",
-      "intro": "Você quer escalar o Kim Pifer de R$3-4k para R$100-200k por dia. Quer um CPA de R$100. E quer lançar seu produto próprio com uma estrutura profissional desde o dia 1. Tudo isso é possível. Vamos te mostrar como.",
+      "headline": "O que a Atom Educacional precisa agora",
+      "intro": "A Pré-Especialização em Trading vende a R$297 com escadinha de upsell chegando a R$570 de ticket médio. O nicho de educação financeira é gigante, o budget existe para R$100-200k/dia. Só que a estrutura de tracking trava tudo em R$3-4k/dia. O gerenciador mostra CPA de R$700 enquanto o real é R$140-191. Os dados não batem, o algoritmo trabalha cego, e cada dia que passa são mais dados perdidos.",
       "items": [
         {
           "icon": "scale",
-          "title": "Escalar sem teto",
-          "description": "O budget do Kim Pifer tem potencial para R$100-200k/dia. Para chegar lá, o algoritmo do Meta precisa enxergar todas as conversões. Hoje ele trabalha parcialmente cego."
+          "title": "Destravar a escala de R$3-4k para R$100-200k/dia",
+          "description": "O fôlego existe, o nicho de educação financeira é enorme. Para escalar sem o CPA disparar, o algoritmo do Meta precisa enxergar 100% das conversões. Hoje ele trabalha com 60-70% dos dados. É como pilotar um avião com metade dos instrumentos desligados."
         },
         {
           "icon": "target",
-          "title": "CPA de R$100 no Kim Pifer",
-          "description": "A diferença entre R$140-191 e R$100 de CPA pode estar nos dados que se perdem antes de chegar ao pixel. Quando cada venda é contabilizada, o algoritmo otimiza melhor."
+          "title": "Derrubar o CPA para R$100",
+          "description": "A diferença entre R$140-191 e R$100 de CPA está nos dados que se perdem no caminho. Com ticket de R$297 e escadinha de upsell chegando a R$570, um CPA de R$100 significa ROAS de 4.5x a 5.7x no front-end. Aí a escala faz sentido."
         },
         {
-          "icon": "rocket",
-          "title": "Lançamento próprio com estrutura pro",
-          "description": "Funil do zero. Ingresso R$47, webinário, produto principal R$1.497 e recorrência de R$6.500. Cada etapa precisa ser mensurada desde o dia 1 para você saber exatamente de onde vem o resultado."
+          "icon": "check",
+          "title": "Limpar os dados do gerenciador",
+          "description": "CPA de R$700 no gerenciador quando o real é R$140. Dados duplicados, atribuição quebrada, números que não batem com a Hotmart. Quando o Meta, o GA4 e o backoffice mostram o mesmo número, as decisões deixam de ser no achismo."
         },
         {
-          "icon": "users",
-          "title": "Parceria de longo prazo",
-          "description": "Se o resultado aparecer, você traz mais 15 clientes. A gente entende o peso disso. Por isso a proposta inclui teste A/B de 30 dias com garantia. Zero risco para você."
+          "icon": "shield",
+          "title": "Resultado comprovado antes do compromisso",
+          "description": "A Atom é empresa de capital aberto com processo de aprovação rigoroso. A proposta inclui teste A/B de 30 dias: pixel antigo vs novo, lado a lado. Se o antigo performar melhor, devolvemos as 2 últimas parcelas. O resultado fala por si."
         }
       ]
     },
     "opportunities": [
       {
-        "title": "Server-Side Tracking Completo",
+        "title": "Recuperar 30-40% dos dados que se perdem hoje",
         "impact": "high",
         "effort": "medium",
-        "description": "Seus dados passam a trafegar direto do servidor para o Meta, sem depender do navegador do visitante. Resultado: o algoritmo recebe todas as conversões e otimiza com precisão."
+        "description": "Hoje a cada R$4.000 investidos, pelo menos R$1.200 rodam sem dados de volta. Com server-side tracking, os dados trafegam direto do servidor para o Meta sem depender do navegador. O algoritmo recebe todas as conversões e sabe exatamente onde alocar o próximo real. Isso é o que separa R$3k/dia de R$100k/dia."
       },
       {
-        "title": "Cookie Persistence de 90 dias",
+        "title": "Estender a janela de atribuição de 1 dia para 90 dias",
         "impact": "high",
         "effort": "low",
-        "description": "A janela de atribuição salta de 1 dia para 90 dias. Aquele lead que clicou no anúncio e comprou 3 semanas depois aparece corretamente no seu painel."
+        "description": "O cookie do FBC expira em 1 dia. O lead que clicou no anúncio e comprou 3 dias depois aparece como orgânico. Com persistência de 90 dias, cada venda volta pro anúncio certo. No ticket médio de R$450-570, basta recuperar 2 vendas por dia para a operação se pagar."
       },
       {
-        "title": "Custom Loader Anti-Adblock",
+        "title": "Blindar o pixel contra bloqueadores",
         "impact": "medium",
         "effort": "low",
-        "description": "O pixel passa a carregar de forma invisível para adblockers. Mais 10-15% de dados que antes simplesmente sumiam."
+        "description": "As tags carregam pelo servidor do Google e são visíveis para qualquer bloqueador. Com custom loader, o pixel se torna invisível. São 10-15% a mais de dados que hoje simplesmente somem do painel e que o Meta nunca usa para otimizar."
       },
       {
-        "title": "CAPI Meta Completo",
+        "title": "Dar ao Meta dados limpos para derrubar o CPA",
         "impact": "high",
         "effort": "medium",
-        "description": "Conversions API enviando eventos server-side com deduplicação nativa. O Meta recebe dados de alta qualidade, e isso melhora diretamente o match rate e a otimização."
-      },
-      {
-        "title": "Setup Profissional do Lançamento",
-        "impact": "high",
-        "effort": "high",
-        "description": "Seu lançamento próprio nasce com tracking profissional. Cada etapa do funil mensurada: ingresso, WhatsApp, webinário, venda. Você sabe exatamente onde está o gargalo."
+        "description": "Hoje o Meta recebe dados parciais e duplicados. O gerenciador mostra CPA de R$700 quando o real é R$140. Com CAPI server-side e dedup nativa, cada venda é contada uma vez, no lugar certo. Dados limpos = algoritmo que otimiza de verdade."
       }
     ],
     "proposal": {
-      "headline": "Vamos fazer isso acontecer",
-      "description": "Implementação completa de server-side tracking para os dois cenários: escala do Kim Pifer e lançamento do seu produto. GTM Server-Side via Stape, CAPI Meta, cookie persistence de 90 dias, custom loader e dedup nativa. Inclui 30 dias de teste A/B para você ver o resultado com seus próprios dados.",
+      "headline": "Cada dia com a estrutura atual é dinheiro que não volta",
+      "description": "A R$4k/dia, a operação da Atom perde no mínimo R$1.200 diários em dados que nunca chegam ao Meta. São R$36.000 por mês de investimento rodando no escuro. A implementação inclui server-side tracking completo, CAPI Meta, cookie persistence de 90 dias, custom loader e dedup nativa para a escadinha de upsell/downsell. Em 30 dias de teste A/B, os números falam por si.",
       "timeline": "3-4 semanas para implementar + 30 dias de teste A/B",
       "investment": "Sob consulta",
       "guarantee": "Se o pixel antigo performar melhor nos 30 dias de teste, devolvemos as 2 últimas parcelas",

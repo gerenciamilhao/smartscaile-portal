@@ -26,10 +26,19 @@ export interface Goal {
   description: string;
 }
 
+export interface StapeScore {
+  analytics: number;
+  ads: number;
+  cookieLifetime: number;
+  pageSpeed: number;
+  overall: number;
+}
+
 export interface StapeChecker {
   noteId: string;
   url: string;
   label: string;
+  scores?: StapeScore;
 }
 
 export interface DesireItem {
