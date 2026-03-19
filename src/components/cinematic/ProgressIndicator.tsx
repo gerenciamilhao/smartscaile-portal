@@ -7,18 +7,19 @@ interface ProgressIndicatorProps {
   sections: string[];
 }
 
-// Midpoints — exatamente no centro de cada slide range
-const SLIDE_MIDS = [0.125, 0.26, 0.395, 0.525, 0.655, 0.79, 0.93];
+// Midpoints — exatamente no centro de cada slide range (8 slides)
+const SLIDE_MIDS = [0.11, 0.23, 0.35, 0.47, 0.59, 0.71, 0.83, 0.945];
 
 // Each slide's exact range boundaries (from ProposalScroll R)
 const SLIDE_RANGES: [number, number][] = [
-  [0.06, 0.19],
-  [0.19, 0.33],
-  [0.33, 0.46],
-  [0.46, 0.59],
-  [0.59, 0.72],
-  [0.72, 0.86],
-  [0.86, 1.00],
+  [0.05, 0.17],
+  [0.17, 0.29],
+  [0.29, 0.41],
+  [0.41, 0.53],
+  [0.53, 0.65],
+  [0.65, 0.77],
+  [0.77, 0.89],
+  [0.89, 1.00],
 ];
 
 export function ProgressIndicator({ scrollYProgress, sections }: ProgressIndicatorProps) {

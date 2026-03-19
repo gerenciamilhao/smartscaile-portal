@@ -181,6 +181,45 @@
         "description": "Hoje o Meta recebe dados parciais e duplicados. O gerenciador mostra CPA de R$700 quando o real é R$140. Com CAPI server-side e dedup nativa, cada venda é contada uma vez, no lugar certo. Dados limpos = algoritmo que otimiza de verdade."
       }
     ],
+    "pricing": {
+      "plans": [
+        {
+          "name": "Apenas Meta Ads",
+          "label": "Tracking server-side: Apenas Meta Ads",
+          "services": [
+            { "title": "Configuração Google Tag Manager" },
+            { "title": "Implementação Completa Web + Server" },
+            { "title": "Criação do servidor e configuração Stape + sGTM" },
+            { "title": "Implementação Meta Pixel Web e Server", "detail": "com Conversion API e Advanced Matching" },
+            { "title": "Configuração API WhatsApp com SmartLinki" },
+            { "title": "Configuração do banco de dados", "detail": "para armazenamento de dados de navegação e identificadores de clique" },
+            { "title": "Implementação do Purchase via Webhook" },
+            { "title": "40 dias de acompanhamento + suporte técnico", "detail": "validação da estrutura e dos dados" }
+          ],
+          "installments": 3,
+          "amount": 2800,
+          "discount": "-10% na compra dentro de 24 horas"
+        },
+        {
+          "name": "Meta + Google + GA4",
+          "label": "Tracking server-side: Meta Ads + Google Ads + Google Analytics 4",
+          "services": [
+            { "title": "Reestruturação Google Tag Manager + GA4" },
+            { "title": "Implementação Completa GA4 Web + Server" },
+            { "title": "Criação do servidor e configuração Stape + sGTM" },
+            { "title": "Implementação Meta Pixel Web e Server", "detail": "com Conversion API e Advanced Matching" },
+            { "title": "Configuração API WhatsApp com SmartLinki" },
+            { "title": "Configuração Google Ads Server-Side", "detail": "com enhanced conversions" },
+            { "title": "Configuração do banco de dados", "detail": "para armazenamento de dados de navegação e identificadores de clique" },
+            { "title": "Implementação do Purchase via Webhook" },
+            { "title": "40 dias de acompanhamento + suporte técnico", "detail": "validação da estrutura e dos dados" }
+          ],
+          "installments": 3,
+          "amount": 4500,
+          "discount": "-10% na compra dentro de 24 horas"
+        }
+      ]
+    },
     "proposal": {
       "headline": "Cada dia com a estrutura atual é dinheiro que não volta",
       "description": "A R$4k/dia, a operação perde no mínimo R$1.200 diários em dados que nunca chegam ao Meta. São R$36.000 por mês rodando no escuro. Server-side tracking completo, CAPI Meta, cookie persistence de 90 dias, custom loader e dedup nativa para a escadinha de upsell/downsell. A Atom é empresa de capital aberto com processo de aprovação rigoroso. Por isso a proposta inclui teste A/B de 30 dias: pixel antigo vs novo, lado a lado. O resultado fala por si.",

@@ -12,7 +12,7 @@ import type { ClientData } from '@/lib/clients';
 
 type PageState = 'locked' | 'unlocking' | 'unlocked';
 
-const SECTION_LABELS = ['Inicio', 'Auditoria', 'Escala', 'CPA', 'Dados', 'Implementacao', 'Proposta'];
+const SECTION_LABELS = ['Inicio', 'Auditoria', 'Escala', 'CPA', 'Dados', 'Implementacao', 'Investimento', 'Proposta'];
 
 interface CinematicExperienceProps {
   initialData?: ClientData | null;
@@ -97,10 +97,10 @@ function UnlockedExperience({ clientData }: { clientData: ClientData | null }) {
 
   return (
     <>
-      {/* Container tall — 1050vh dá respiração entre os 7 slides */}
+      {/* Container tall — 1200vh dá respiração entre os 8 slides */}
       <div
         ref={scrollRef}
-        style={{ height: hasProposal ? '1050vh' : 'auto', position: 'relative' }}
+        style={{ height: hasProposal ? '1200vh' : 'auto', position: 'relative' }}
       >
         {/* Viewport sticky — fica preso no topo */}
         <div

@@ -6,10 +6,10 @@ import { motion } from 'framer-motion';
 import { ScrollSlide } from './ScrollSlide';
 import { SectionBadge } from '@/components/portal/SectionBadge';
 import { useTransform } from 'framer-motion';
-import type { ClientData, Opportunity } from '@/lib/clients';
+import type { ClientData, Opportunity, PricingPlan } from '@/lib/clients';
 import {
   Target, Rocket,
-  Server, Cookie, Shield, Zap,
+  Server, Cookie, Shield, Zap, Check,
   ArrowRight, MessageCircle, Clock, ExternalLink,
   BarChart2, Activity,
 } from 'lucide-react';
@@ -19,16 +19,17 @@ interface ProposalScrollProps {
   clientData: ClientData;
 }
 
-// Ranges sequenciais dentro do 750vh (hero ocupa 0→~0.08)
-// 5 slides dividem 0.08 → 1.0 = 0.92 / 5 = ~0.184 cada
+// Ranges sequenciais dentro do 1200vh (hero ocupa 0→~0.05)
+// 8 slides dividem 0.05 → 1.0 = 0.95 / 8 = ~0.12 cada
 const R = {
-  header:        [0.06, 0.19] as [number, number],
-  results:       [0.19, 0.33] as [number, number],
-  goal1:         [0.33, 0.46] as [number, number],
-  goal2:         [0.46, 0.59] as [number, number],
-  goal3:         [0.59, 0.72] as [number, number],
-  opportunities: [0.72, 0.86] as [number, number],
-  proposal:      [0.86, 1.00] as [number, number],
+  header:        [0.05, 0.17] as [number, number],
+  results:       [0.17, 0.29] as [number, number],
+  goal1:         [0.29, 0.41] as [number, number],
+  goal2:         [0.41, 0.53] as [number, number],
+  goal3:         [0.53, 0.65] as [number, number],
+  opportunities: [0.65, 0.77] as [number, number],
+  pricing:       [0.77, 0.89] as [number, number],
+  proposal:      [0.89, 1.00] as [number, number],
 };
 
 const oppIcons = [
@@ -237,9 +238,19 @@ export default function ProposalScroll({ scrollYProgress, clientData }: Proposal
       </ScrollSlide>
 
       {/* ═══════════════════════════════════════════════════════════════════════
-          SLIDE 7 — Proposta + CTA (isLast: permanece visivel, sem fade-out)
+          SLIDE 7 — Investimento / Pricing
           ═══════════════════════════════════════════════════════════════════════ */}
-      <ScrollSlide range={R.proposal} scrollYProgress={scrollYProgress} zIndex={8} isLast>
+      {diagnosis.pricing && (
+        <ScrollSlide range={R.pricing} scrollYProgress={scrollYProgress} zIndex={8}>
+          <div className="slide-dot-grid" />
+          <PricingSlide scrollYProgress={scrollYProgress} pricing={diagnosis.pricing} range={R.pricing} />
+        </ScrollSlide>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════════════════════
+          SLIDE 8 — Proposta + CTA (isLast: permanece visivel, sem fade-out)
+          ═══════════════════════════════════════════════════════════════════════ */}
+      <ScrollSlide range={R.proposal} scrollYProgress={scrollYProgress} zIndex={9} isLast>
         <div className="slide-dot-grid" />
 
         <div className="slide-content text-center">
@@ -1440,6 +1451,413 @@ function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
         </motion.div>
         <div className="h-px flex-1" style={{ background: 'linear-gradient(270deg, rgba(119,189,172,0.15), transparent)' }} />
       </motion.div>
+    </div>
+  );
+}
+
+// ─── Pricing Card — ROAS ComparisonCard DNA (extracted for hooks rule) ────────
+function PricingCard({ plan, index, opacity, y }: {
+  plan: PricingPlan;
+  index: number;
+  opacity: MotionValue<number>;
+  y: MotionValue<number>;
+}) {
+  const formattedAmount = plan.amount.toLocaleString('pt-BR');
+  const isRight = index === 1;
+
+  // Colors — ROAS card DNA
+  const cardBg    = isRight ? 'rgba(8, 14, 12, 0.97)' : 'rgba(10, 10, 10, 0.95)';
+  const headerBg  = isRight ? 'rgba(8, 16, 13, 0.95)' : 'rgba(12, 12, 12, 0.95)';
+  const borderCol = isRight ? 'rgba(119,189,172,0.18)' : 'rgba(255,255,255,0.08)';
+  const accentCol = isRight ? 'rgba(119,189,172,' : 'rgba(255,255,255,';
+  const fnameCol  = isRight ? 'rgba(119,189,172,0.7)' : 'rgba(156,163,175,0.5)';
+  const statusTxt = isRight ? 'COMPLETO' : 'ESSENCIAL';
+  const statusBg  = isRight ? 'rgba(34,197,94,0.10)' : 'rgba(255,255,255,0.04)';
+  const statusBrd = isRight ? 'rgba(34,197,94,0.30)' : 'rgba(255,255,255,0.08)';
+  const statusCol = isRight ? '#22c55e' : '#9CA3AF';
+  const numCol    = isRight ? '#77BDAC' : '#e5e7eb';
+
+  return (
+    <motion.div style={{ opacity, y, flex: 1, maxWidth: 370 }}>
+      {/* Card with breathing glow on right */}
+      <motion.div
+        animate={isRight ? {
+          boxShadow: [
+            '0 30px 70px rgba(0,0,0,0.7), 0 12px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(119,189,172,0.10), 0 0 30px rgba(119,189,172,0.03)',
+            '0 30px 70px rgba(0,0,0,0.7), 0 12px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(119,189,172,0.16), 0 0 50px rgba(119,189,172,0.07)',
+            '0 30px 70px rgba(0,0,0,0.7), 0 12px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(119,189,172,0.10), 0 0 30px rgba(119,189,172,0.03)',
+          ],
+        } : undefined}
+        transition={isRight ? { duration: 4, repeat: Infinity, ease: 'easeInOut' } : undefined}
+        style={{
+          borderRadius: 16,
+          border: `1px solid ${borderCol}`,
+          background: cardBg,
+          ...(!isRight ? {
+            boxShadow: '0 25px 60px rgba(0,0,0,0.7), 0 10px 20px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04)',
+          } : {}),
+          overflow: 'hidden',
+        }}
+      >
+
+        {/* ── Chrome header ── */}
+        <div style={{
+          padding: '10px 20px',
+          borderBottom: `1px solid ${isRight ? 'rgba(119,189,172,0.12)' : 'rgba(255,255,255,0.05)'}`,
+          background: headerBg,
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+            <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#FF5F56' }} />
+            <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#FFBD2E' }} />
+            <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#27C93F' }} />
+            <span style={{
+              marginLeft: 8,
+              fontFamily: 'var(--font-mono), monospace', fontSize: '0.55rem', color: fnameCol,
+            }}>
+              {isRight ? 'proposta-completa.md' : 'proposta-meta.md'}
+            </span>
+          </div>
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: 4,
+            padding: '3px 9px', borderRadius: 99,
+            background: statusBg, border: `1px solid ${statusBrd}`,
+            fontFamily: 'var(--font-mono), monospace', fontSize: '0.5rem',
+            fontWeight: 700, color: statusCol, letterSpacing: '0.05em',
+          }}>
+            {isRight && (
+              <motion.span
+                animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }}
+                transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+                style={{ width: 5, height: 5, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }}
+              />
+            )}
+            {statusTxt}
+          </span>
+        </div>
+
+        {/* ── Hero investment number ── */}
+        <div style={{ padding: '24px 22px 8px', textAlign: 'center' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'baseline', gap: 4 }}>
+            <span style={{
+              fontFamily: 'var(--font-mono), monospace', fontWeight: 600,
+              fontSize: '1rem', lineHeight: 1, color: numCol,
+              opacity: 0.5,
+            }}>
+              {plan.installments}x
+            </span>
+            <span style={{
+              fontFamily: 'var(--font-mono), monospace', fontWeight: 700,
+              fontSize: 'clamp(1.8rem, 4vw, 2.4rem)', lineHeight: 1, color: numCol,
+              letterSpacing: '-0.02em',
+              fontVariantNumeric: 'tabular-nums',
+            }}>
+              R${formattedAmount}
+            </span>
+          </div>
+          <div style={{ marginTop: 8 }}>
+            <span style={{
+              fontFamily: 'var(--font-mono), monospace', fontSize: '0.55rem', fontWeight: 600,
+              color: isRight ? 'rgba(119,189,172,0.6)' : 'rgba(156,163,175,0.5)', letterSpacing: '0.1em',
+            }}>
+              SEM JUROS
+            </span>
+          </div>
+        </div>
+
+        {/* ── Discount ── */}
+        <div style={{ padding: '6px 22px 18px', display: 'flex', justifyContent: 'center' }}>
+          <span style={{
+            padding: '4px 12px', borderRadius: 6,
+            background: 'rgba(239,68,68,0.08)',
+            border: '1px solid rgba(239,68,68,0.14)',
+            fontSize: '0.55rem', fontWeight: 600, color: '#f87171',
+          }}>
+            {plan.discount}
+          </span>
+        </div>
+
+        {/* ── Divider ── */}
+        <div style={{
+          padding: '8px 22px',
+          fontSize: '0.55rem', fontWeight: 500,
+          color: isRight ? 'rgba(119,189,172,0.6)' : 'rgba(156,163,175,0.45)',
+          letterSpacing: '0.04em', textAlign: 'center',
+          borderTop: `1px solid ${isRight ? 'rgba(119,189,172,0.10)' : 'rgba(255,255,255,0.05)'}`,
+        }}>
+          Serviços inclusos
+        </div>
+
+        {/* ── Service rows — sans-serif for readability ── */}
+        <div style={{ padding: '4px 16px 20px' }}>
+          {plan.services.map((service, i) => {
+            const isLast = i === plan.services.length - 1;
+            return (
+              <div key={i} style={{
+                marginBottom: isLast ? 0 : 7,
+                padding: '9px 14px', borderRadius: 8,
+                background: isLast
+                  ? `${accentCol}0.07)`
+                  : 'rgba(255,255,255,0.025)',
+                borderLeft: isLast
+                  ? `3px solid ${accentCol}0.45)`
+                  : '2px solid rgba(255,255,255,0.06)',
+              }}>
+                <div style={{
+                  fontSize: '0.75rem', color: '#E5E7EB',
+                  lineHeight: 1.5, fontWeight: 500,
+                }}>
+                  {service.title}
+                </div>
+                {service.detail && (
+                  <div style={{
+                    fontSize: '0.62rem', color: isRight ? 'rgba(119,189,172,0.6)' : '#9CA3AF',
+                    marginTop: 3, lineHeight: 1.4,
+                  }}>
+                    {service.detail}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </motion.div>
+
+    </motion.div>
+  );
+}
+
+// ─── Platform logo SVGs (Simple Icons — official brand marks) ────────────────
+function MetaLogo({ size = 20, opacity = 0.7 }: { size?: number; opacity?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="#0A66C2" style={{ opacity }}>
+      <path d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a6.624 6.624 0 0 0 .265.86 5.297 5.297 0 0 0 .371.761c.696 1.159 1.818 1.927 3.593 1.927 1.497 0 2.633-.671 3.965-2.444.76-1.012 1.144-1.626 2.663-4.32l.756-1.339.186-.325c.061.1.121.196.183.3l2.152 3.595c.724 1.21 1.665 2.556 2.47 3.314 1.046.987 1.992 1.22 3.06 1.22 1.075 0 1.876-.355 2.455-.843a3.743 3.743 0 0 0 .81-.973c.542-.939.861-2.127.861-3.745 0-2.72-.681-5.357-2.084-7.45-1.282-1.912-2.957-2.93-4.716-2.93-1.047 0-2.088.467-3.053 1.308-.652.57-1.257 1.29-1.82 2.05-.69-.875-1.335-1.547-1.958-2.056-1.182-.966-2.315-1.303-3.454-1.303zm10.16 2.053c1.147 0 2.188.758 2.992 1.999 1.132 1.748 1.647 4.195 1.647 6.4 0 1.548-.368 2.9-1.839 2.9-.58 0-1.027-.23-1.664-1.004-.496-.601-1.343-1.878-2.832-4.358l-.617-1.028a44.908 44.908 0 0 0-1.255-1.98c.07-.109.141-.224.211-.327 1.12-1.667 2.118-2.602 3.358-2.602zm-10.201.553c1.265 0 2.058.791 2.675 1.446.307.327.737.871 1.234 1.579l-1.02 1.566c-.757 1.163-1.882 3.017-2.837 4.338-1.191 1.649-1.81 1.817-2.486 1.817-.524 0-1.038-.237-1.383-.794-.263-.426-.464-1.13-.464-2.046 0-2.221.63-4.535 1.66-6.088.454-.687.964-1.226 1.533-1.533a2.264 2.264 0 0 1 1.088-.285z"/>
+    </svg>
+  );
+}
+
+function GoogleAdsLogo({ size = 20, opacity = 0.7 }: { size?: number; opacity?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" style={{ opacity }}>
+      <path d="M3.9998 22.9291C1.7908 22.9291 0 21.1383 0 18.9293s1.7908-3.9998 3.9998-3.9998 3.9998 1.7908 3.9998 3.9998-1.7908 3.9998-3.9998 3.9998z" fill="#4285F4"/>
+      <path d="M23.4641 16.9287L15.4632 3.072C14.3586 1.1587 11.9121.5028 9.9988 1.6074S7.4295 5.1585 8.5341 7.0718l8.0009 13.8567c1.1046 1.9133 3.5511 2.5679 5.4644 1.4646 1.9134-1.1046 2.568-3.5511 1.4647-5.4644z" fill="#34A853"/>
+      <path d="M7.5137 4.8438L1.5645 15.1484A4.5 4.5 0 0 1 4 14.4297c2.5597-.0075 4.6248 2.1585 4.4941 4.7148l3.2168-5.5723-3.6094-6.25c-.4499-.7793-.6322-1.6394-.5878-2.4784z" fill="#FBBC04"/>
+    </svg>
+  );
+}
+
+function GA4Logo({ size = 20, opacity = 0.7 }: { size?: number; opacity?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="#E37400" style={{ opacity }}>
+      <path d="M22.84 2.9982v17.9987c.0086 1.6473-1.3197 2.9897-2.967 2.9984a2.9808 2.9808 0 01-.3677-.0208c-1.528-.226-2.6477-1.5558-2.6105-3.1V3.1204c-.0369-1.5458 1.0856-2.8762 2.6157-3.1 1.6361-.1915 3.1178.9796 3.3093 2.6158.014.1201.0208.241.0202.3619zM4.1326 18.0548c-1.6417 0-2.9726 1.331-2.9726 2.9726C1.16 22.6691 2.4909 24 4.1326 24s2.9726-1.3309 2.9726-2.9726-1.331-2.9726-2.9726-2.9726zm7.8728-9.0098c-.0171 0-.0342 0-.0513.0003-1.6495.0904-2.9293 1.474-2.891 3.1256v7.9846c0 2.167.9535 3.4825 2.3505 3.763 1.6118.3266 3.1832-.7152 3.5098-2.327.04-.1974.06-.3983.0593-.5998v-8.9585c.003-1.6474-1.33-2.9852-2.9773-2.9882z"/>
+    </svg>
+  );
+}
+
+// ─── Floating platform logos config ──────────────────────────────────────────
+// Card 1 (left): Apenas Meta
+// Card 2 (right): Meta + Google Ads + GA4
+
+// ─── Pricing Slide — ROAS-style dual comparison cards ────────────────────────
+function PricingSlide({ scrollYProgress, pricing, range }: {
+  scrollYProgress: MotionValue<number>;
+  pricing: { plans: PricingPlan[] };
+  range: [number, number];
+}) {
+  const [start, end] = range;
+  const span = end - start;
+
+  // Badge entry
+  const badgeOpacity = useTransform(scrollYProgress, [start + span * 0.08, start + span * 0.22], [0, 1]);
+  const badgeY = useTransform(scrollYProgress, [start + span * 0.08, start + span * 0.22], [12, 0]);
+
+  // Card 1 entry
+  const card1Opacity = useTransform(scrollYProgress, [start + span * 0.14, start + span * 0.32], [0, 1]);
+  const card1Y = useTransform(scrollYProgress, [start + span * 0.14, start + span * 0.32], [20, 0]);
+
+  // Card 2 entry (staggered)
+  const card2Opacity = useTransform(scrollYProgress, [start + span * 0.20, start + span * 0.38], [0, 1]);
+  const card2Y = useTransform(scrollYProgress, [start + span * 0.20, start + span * 0.38], [20, 0]);
+
+  // Elements entry
+  const elemOpacity = useTransform(scrollYProgress, [start + span * 0.25, start + span * 0.42], [0, 1]);
+
+  const cardOpacities = [card1Opacity, card2Opacity];
+  const cardYs = [card1Y, card2Y];
+
+  return (
+    <div className="slide-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', paddingBottom: 60 }}>
+
+      {/* ── Floating orbs ── */}
+      {[
+        { top: '10%', left: '6%', size: 5, dur: 5.5, delay: 0 },
+        { top: '30%', right: '5%', size: 4, dur: 6.5, delay: 1.2 },
+        { top: '55%', left: '3%', size: 3, dur: 7, delay: 2 },
+        { top: '75%', right: '8%', size: 4, dur: 5, delay: 0.5 },
+        { top: '85%', left: '10%', size: 3, dur: 6, delay: 1.8 },
+      ].map((orb, i) => (
+        <motion.div
+          key={`orb-${i}`}
+          animate={{ y: [0, -(orb.size + 3), 0], opacity: [0.25, 0.5, 0.25] }}
+          transition={{ duration: orb.dur, repeat: Infinity, ease: 'easeInOut', delay: orb.delay }}
+          style={{
+            position: 'absolute', top: orb.top,
+            ...(orb.left ? { left: orb.left } : { right: orb.right }),
+            width: orb.size, height: orb.size, borderRadius: '50%',
+            background: 'rgba(119,189,172,0.3)',
+            boxShadow: '0 0 10px rgba(119,189,172,0.12)',
+            pointerEvents: 'none',
+          }}
+        />
+      ))}
+
+      {/* Section badge */}
+      <motion.div style={{ opacity: badgeOpacity, y: badgeY }}>
+        <SectionBadge label="Investimento" />
+      </motion.div>
+
+      {/* Two cards + floating logos wrapper */}
+      <div style={{ position: 'relative', marginTop: 14, overflow: 'visible' }}>
+
+        {/* ── Floating platform logos ── */}
+        <motion.div style={{ opacity: elemOpacity, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none', zIndex: 2 }}>
+          {/* Card 1 — Meta (left side, spread out) */}
+          <motion.div
+            animate={{ y: [0, -6, 0], rotate: [0, 3, 0] }}
+            transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
+            style={{
+              position: 'absolute', top: '18%', left: -90,
+              padding: 8, borderRadius: 12,
+              background: 'rgba(0,129,251,0.06)',
+              border: '1px solid rgba(0,129,251,0.15)',
+              boxShadow: '0 4px 20px rgba(0,129,251,0.08)',
+            }}
+          >
+            <MetaLogo size={22} opacity={0.8} />
+          </motion.div>
+
+          {/* Card 1 — CAPI pill */}
+          <motion.div
+            animate={{ y: [0, -3, 0], opacity: [0.3, 0.5, 0.3] }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
+            style={{
+              position: 'absolute', top: '60%', left: -80,
+              padding: '3px 10px', borderRadius: 6,
+              background: 'rgba(119,189,172,0.06)',
+              border: '1px solid rgba(119,189,172,0.10)',
+              fontFamily: 'var(--font-mono), monospace',
+              fontSize: '0.45rem', fontWeight: 500, color: 'rgba(119,189,172,0.45)',
+              letterSpacing: '0.04em', whiteSpace: 'nowrap',
+            }}
+          >
+            CAPI
+          </motion.div>
+
+          {/* Card 2 — Meta (right top) */}
+          <motion.div
+            animate={{ y: [0, -5, 0], rotate: [0, -2, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+            style={{
+              position: 'absolute', top: '8%', right: -95,
+              padding: 8, borderRadius: 12,
+              background: 'rgba(0,129,251,0.06)',
+              border: '1px solid rgba(0,129,251,0.15)',
+              boxShadow: '0 4px 20px rgba(0,129,251,0.08)',
+            }}
+          >
+            <MetaLogo size={20} opacity={0.7} />
+          </motion.div>
+
+          {/* Card 2 — Google Ads (right middle) */}
+          <motion.div
+            animate={{ y: [0, -7, 0], rotate: [0, 4, 0] }}
+            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1.2 }}
+            style={{
+              position: 'absolute', top: '38%', right: -100,
+              padding: 8, borderRadius: 12,
+              background: 'rgba(66,133,244,0.06)',
+              border: '1px solid rgba(66,133,244,0.15)',
+              boxShadow: '0 4px 20px rgba(66,133,244,0.08)',
+            }}
+          >
+            <GoogleAdsLogo size={22} opacity={0.8} />
+          </motion.div>
+
+          {/* Card 2 — GA4 (right bottom) */}
+          <motion.div
+            animate={{ y: [0, -4, 0], rotate: [0, -3, 0] }}
+            transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+            style={{
+              position: 'absolute', top: '68%', right: -85,
+              padding: 8, borderRadius: 12,
+              background: 'rgba(227,116,0,0.06)',
+              border: '1px solid rgba(227,116,0,0.15)',
+              boxShadow: '0 4px 20px rgba(227,116,0,0.08)',
+            }}
+          >
+            <GA4Logo size={20} opacity={0.7} />
+          </motion.div>
+
+          {/* Tech pills — well spaced */}
+          <motion.div
+            animate={{ y: [0, -3, 0], opacity: [0.25, 0.45, 0.25] }}
+            transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
+            style={{
+              position: 'absolute', top: '85%', left: -70,
+              padding: '3px 10px', borderRadius: 6,
+              background: 'rgba(119,189,172,0.06)',
+              border: '1px solid rgba(119,189,172,0.10)',
+              fontFamily: 'var(--font-mono), monospace',
+              fontSize: '0.45rem', fontWeight: 500, color: 'rgba(119,189,172,0.4)',
+              letterSpacing: '0.04em', whiteSpace: 'nowrap',
+            }}
+          >
+            sGTM
+          </motion.div>
+
+          <motion.div
+            animate={{ y: [0, -4, 0], opacity: [0.2, 0.4, 0.2] }}
+            transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut', delay: 1.8 }}
+            style={{
+              position: 'absolute', top: '90%', right: -70,
+              padding: '3px 10px', borderRadius: 6,
+              background: 'rgba(119,189,172,0.06)',
+              border: '1px solid rgba(119,189,172,0.10)',
+              fontFamily: 'var(--font-mono), monospace',
+              fontSize: '0.45rem', fontWeight: 500, color: 'rgba(119,189,172,0.4)',
+              letterSpacing: '0.04em', whiteSpace: 'nowrap',
+            }}
+          >
+            dedup
+          </motion.div>
+        </motion.div>
+
+        {/* ── Cards ── */}
+        <div style={{
+          display: 'flex', gap: 24,
+          maxWidth: 780, width: '100%', justifyContent: 'center',
+        }}>
+          {pricing.plans.map((plan, i) => (
+            <PricingCard
+              key={i}
+              plan={plan}
+              index={i}
+              opacity={cardOpacities[i]}
+              y={cardYs[i]}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* ── Ambient glow ── */}
+      <div style={{
+        position: 'absolute', top: '50%', left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400, height: 400, borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(119,189,172,0.04) 0%, transparent 70%)',
+        filter: 'blur(40px)', pointerEvents: 'none',
+      }} />
+
     </div>
   );
 }

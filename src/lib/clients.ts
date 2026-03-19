@@ -69,12 +69,31 @@ export interface Proposal {
   cta: string;
 }
 
+export interface PricingService {
+  title: string;
+  detail?: string;
+}
+
+export interface PricingPlan {
+  name: string;
+  label: string;
+  services: PricingService[];
+  installments: number;
+  amount: number;
+  discount: string;
+}
+
+export interface Pricing {
+  plans: PricingPlan[];
+}
+
 export interface ClientDiagnosis {
   headline: string;
   stapeChecker?: StapeChecker;
   goals: Goal[];
   desires?: Desires;
   opportunities: Opportunity[];
+  pricing?: Pricing;
   proposal: Proposal;
 }
 
