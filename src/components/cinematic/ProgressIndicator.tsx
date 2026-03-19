@@ -23,17 +23,17 @@ export function ProgressIndicator({ scrollYProgress, sections }: ProgressIndicat
 
   return (
     <>
-      {/* Dots no topo */}
+      {/* Dots na parte inferior */}
       <motion.div
         style={{
-          position: 'fixed', top: 12, left: '50%', transform: 'translateX(-50%)',
+          position: 'fixed', bottom: 28, left: '50%', transform: 'translateX(-50%)',
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
           zIndex: 50, opacity: overallOpacity,
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           {sections.map((label, i) => (
-            <TopDot key={label} index={i} label={label} scrollYProgress={scrollYProgress} />
+            <ProgressDot key={label} index={i} label={label} scrollYProgress={scrollYProgress} />
           ))}
         </div>
       </motion.div>
@@ -64,7 +64,7 @@ export function ProgressIndicator({ scrollYProgress, sections }: ProgressIndicat
   );
 }
 
-function TopDot({ index, label, scrollYProgress }: {
+function ProgressDot({ index, label, scrollYProgress }: {
   index: number; label: string; scrollYProgress: MotionValue<number>;
 }) {
   const mid = SLIDE_MIDS[index];
@@ -76,16 +76,16 @@ function TopDot({ index, label, scrollYProgress }: {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-      <motion.div style={{
-        width: 6, height: 6, borderRadius: '50%', backgroundColor: '#77BDAC',
-        scale, opacity: dotOpacity,
-      }} />
       <motion.span style={{
         opacity: lblOpacity, fontSize: '0.45rem', color: '#77BDAC',
         letterSpacing: '0.06em', whiteSpace: 'nowrap', fontFamily: 'monospace',
       }}>
         {label}
       </motion.span>
+      <motion.div style={{
+        width: 6, height: 6, borderRadius: '50%', backgroundColor: '#77BDAC',
+        scale, opacity: dotOpacity,
+      }} />
     </div>
   );
 }

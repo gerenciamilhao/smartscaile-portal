@@ -9,6 +9,7 @@ import {
   TrendingUp, Target, Rocket, Users,
   Server, Cookie, Shield, Zap,
   ArrowRight, MessageCircle, Clock, ExternalLink,
+  BarChart2, Activity, Sparkles,
 } from 'lucide-react';
 
 interface ProposalScrollProps {
@@ -77,44 +78,139 @@ export default function ProposalScroll({ scrollYProgress, clientData }: Proposal
         {/* Decorative layers */}
         <div className="slide-dot-grid" />
 
+        {/* Floating decorative orbs */}
+        <motion.div
+          animate={{ y: [0, -8, 0], opacity: [0.4, 0.7, 0.4] }}
+          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+          style={{
+            position: 'absolute', top: '15%', right: '12%', width: 6, height: 6,
+            borderRadius: '50%', background: 'rgba(119,189,172,0.3)',
+            boxShadow: '0 0 12px rgba(119,189,172,0.15)', pointerEvents: 'none',
+          }}
+        />
+        <motion.div
+          animate={{ y: [0, 6, 0], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
+          style={{
+            position: 'absolute', bottom: '22%', left: '8%', width: 4, height: 4,
+            borderRadius: '50%', background: 'rgba(119,189,172,0.25)',
+            boxShadow: '0 0 8px rgba(119,189,172,0.1)', pointerEvents: 'none',
+          }}
+        />
+        <motion.div
+          animate={{ y: [0, -5, 0], x: [0, 3, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
+          style={{
+            position: 'absolute', top: '35%', left: '18%', width: 3, height: 3,
+            borderRadius: '50%', background: 'rgba(119,189,172,0.2)',
+            pointerEvents: 'none',
+          }}
+        />
+
         <div className="slide-content">
-          <div className="mb-5 flex items-center justify-between">
-            <span className="text-[0.65rem] font-medium tracking-wide text-[#6B7280]">smartscaile.</span>
+          {/* Top bar */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-6 flex items-center justify-between"
+          >
+            <div className="flex items-center gap-2">
+              <span className="live-dot" />
+              <span className="text-[0.6rem] font-medium tracking-wide text-[#6B7280]" style={{ fontFamily: 'var(--font-mono), monospace' }}>
+                smartscaile.
+              </span>
+            </div>
             <SectionBadge label="Proposta Exclusiva" />
-          </div>
+          </motion.div>
 
           {/* Accent line */}
-          <div className="accent-line mb-4" />
-
-          <motion.h2
-            initial="hidden"
-            whileInView="visible"
+          <motion.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
             viewport={{ once: true }}
-            variants={fadeUpItem}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            style={{ transformOrigin: 'left' }}
+            className="accent-line mb-5"
+          />
+
+          {/* Main headline */}
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="font-serif"
             style={{ fontWeight: 700, lineHeight: 1.12, color: '#F3F4F6', fontSize: 'clamp(1.75rem, 7vw, 3rem)' }}
           >
-            <span className="text-glow" style={{ color: '#77BDAC' }}>{firstName}</span>, vamos escalar.
+            Escale com{' '}
+            <span className="text-glow" style={{ color: '#77BDAC' }}>inteligência.</span>
           </motion.h2>
 
+          {/* Subtitle */}
           <motion.p
-            initial="hidden"
-            whileInView="visible"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            variants={{ ...fadeUpItem, visible: { ...fadeUpItem.visible, transition: { ...fadeUpItem.visible.transition, delay: 0.1 } } }}
+            transition={{ duration: 0.6, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
             className="mt-4 max-w-[480px] text-[0.875rem] leading-relaxed text-[#9CA3AF]"
           >
-            Com base na nossa conversa de{' '}
-            <span className="text-[#F3F4F6]">{formattedDate}</span>, montamos um plano para destravar seus resultados.
+            {firstName}, com base na nossa conversa de{' '}
+            <span className="text-[#F3F4F6]">{formattedDate}</span>, preparamos um plano sob medida para destravar seus resultados.
           </motion.p>
 
-          {/* Decorative accent at bottom */}
-          <div className="mt-8 flex items-center gap-3">
+          {/* Mini metric pills */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-6 flex flex-wrap gap-2"
+          >
+            {[
+              { Icon: BarChart2, text: 'Diagnóstico completo' },
+              { Icon: Activity, text: 'Plano personalizado' },
+              { Icon: Sparkles, text: 'Resultados projetados' },
+            ].map(({ Icon, text }, i) => (
+              <motion.div
+                key={text}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: 0.35 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                className="glass-pill flex items-center gap-1.5 rounded-full px-3 py-1.5"
+              >
+                <Icon size={10} className="text-[#77BDAC]" strokeWidth={1.5} />
+                <span className="text-[0.6rem] text-[#9CA3AF]">{text}</span>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Decorative footer */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="mt-8 flex items-center gap-3"
+          >
             <div className="h-px flex-1" style={{ background: 'linear-gradient(90deg, rgba(119,189,172,0.15), transparent)' }} />
-            <span className="text-[0.5rem] font-medium uppercase tracking-[0.15em] text-[#374151]" style={{ fontFamily: 'var(--font-mono), monospace' }}>
-              role para continuar
-            </span>
-          </div>
+            <motion.div
+              animate={{ y: [0, 4, 0], opacity: [0.4, 0.8, 0.4] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+              className="flex flex-col items-center gap-1"
+            >
+              <span className="text-[0.5rem] font-medium uppercase tracking-[0.15em] text-[#374151]" style={{ fontFamily: 'var(--font-mono), monospace' }}>
+                role para continuar
+              </span>
+              {/* Mini chevron */}
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ opacity: 0.4 }}>
+                <path d="M1 1L5 5L9 1" stroke="#77BDAC" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </motion.div>
+            <div className="h-px flex-1" style={{ background: 'linear-gradient(270deg, rgba(119,189,172,0.15), transparent)' }} />
+          </motion.div>
         </div>
       </ScrollSlide>
 
