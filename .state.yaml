@@ -14,7 +14,8 @@ scroll_upgrade:
   prd: docs/prd/prd-smartscaile-portal-scroll.md
   stack: gsap-scrolltrigger-scrollsmoother
   lenis_removed: true
-  container_height: 1050vh
+  container_height: 1200vh
+  total_slides: 8
 slides:
   slide_1_header:
     status: complete
@@ -35,5 +36,10 @@ slides:
     status: complete-needs-polish
     features: [apple-notes-container, macos-chrome, floating-pills-both-sides, floating-orbs, checkbox-breathing, impact-dot-breathing, ambient-glow, scroll-driven-stagger]
     known_issues: [visual-flicker-on-scroll-needs-investigation]
-  slide_7_proposal:
-    status: pending-refinement
+  slide_7_pricing:
+    status: needs-refinement
+    features: [roas-card-dna, dual-pricing-cards, macos-chrome, breathing-glow, platform-logos-floating, meta-googleads-ga4-svgs, floating-orbs, tech-pills, scroll-driven-stagger]
+    known_issues: [card-layout-needs-polish]
+  slide_8_proposal:
+    status: complete
+    features: [scroll-driven-stagger, floating-orbs, ambient-glow, glass-pills, cta-glow-pulse, extracted-component]
