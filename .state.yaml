@@ -8,3 +8,9 @@ phase_2:
   setup_complete: true
   build_complete: true
   review_complete: false
+scroll_upgrade:
+  status: implemented
+  date: 2026-03-19
+  prd: docs/prd/prd-smartscaile-portal-scroll.md
+  stack: gsap-scrolltrigger-scrollsmoother
+  lenis_removed: true

@@ -357,4 +357,48 @@ const marginTop = useTransform(playerScale, (s) => {
 
 ---
 
-*Extracted from Hero.tsx, PainHero.tsx, VideoSection.tsx, page.tsx, globals.css, motion.tsx — v1.3*
+---
+
+## Padrão: Scroll Slide Crossfade (Proposal Slides)
+
+Sistema de slides cinematográficos sobrepostos dentro de viewport sticky, controlados via `scrollYProgress`.
+
+### Arquitetura
+```
+Container tall (600vh) → viewport sticky (100vh) → slides absolute sobrepostos
+```
+- **Background único**: `bg-hero-mesh` no viewport sticky. Slides são **transparentes** (sem background)
+- **Ambient glow persistente**: Elemento fixo (z-index 0) no viewport sticky com radial gradients teal. Cria continuidade visual entre slides
+
+### Transição entre slides
+```tsx
+// ScrollSlide.tsx
+const inEnd    = start + span * 0.30; // 30% do range para fade-in
+const outStart = end - span * 0.30;   // 30% do range para fade-out
+
+// Entrada: opacity 0→1, y 30→0
+// Saída: opacity 1→0, y 0→-20
+// isLast: sem fade-out
+```
+
+### Regras CRÍTICAS
+1. **NUNCA** colocar `background` opaco nos slides — causa "flash" escuro durante crossfade
+2. **30% overlap mínimo** para entrada e saída — valores menores criam corte visível
+3. **Drift sutil**: max 30px entrada, max -20px saída — mais que isso distrai
+4. **Ambient glow NO viewport**, não nos slides — glows por slide criam artefatos na transição
+5. **Dot grid parcial** com `mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 80%)` para fade suave nas bordas
+
+### Elementos decorativos por slide
+- Glassmorphism cards (`.glass-card`): `backdrop-filter: blur(12px)`, border teal sutil, hover scale(1.02)
+- Glass pills (`.glass-pill`): Para info badges (timeline, guarantee)
+- Step numbers (`.step-number`): 20px circle, monospace, teal border
+- Impact badges: `.impact-high` (teal glow), `.impact-medium` (amber glow)
+- Accent line: 40px, `linear-gradient(90deg, #77BDAC, rgba(119,189,172,0.1))`
+- Separator line: `linear-gradient(90deg, transparent, rgba(119,189,172,0.12) 30%, ... 70%, transparent)`
+- Stagger animation: `staggerChildren: 0.07`, `delayChildren: 0.1`
+- Icon pulse: `box-shadow` pulse 3s infinite
+- CTA glow pulse: `box-shadow` pulse 2.5s infinite
+
+---
+
+*Extracted from Hero.tsx, PainHero.tsx, VideoSection.tsx, ScrollSlide.tsx, ProposalScroll.tsx, page.tsx, globals.css, motion.tsx — v1.4*

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display, Fira_Code } from "next/font/google";
+import GSAPProvider from "@/components/providers/GSAPProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -34,7 +35,9 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${inter.variable} ${playfair.variable} ${firaCode.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full bg-[#050505] text-[#F3F4F6]">{children}</body>
+      <body className="min-h-full bg-[#050505] text-[#F3F4F6]">
+        <GSAPProvider>{children}</GSAPProvider>
+      </body>
     </html>
   );
 }

@@ -6,6 +6,7 @@ import {
   BarChart2, Tag, Target, Megaphone, Music, Server,
   ShoppingBag, Activity, Mail, ShoppingCart, Clock, CalendarCheck, Award,
 } from 'lucide-react';
+import type { ClientData } from '@/lib/clients';
 
 // ─── Ticker ───────────────────────────────────────────────────────────────────
 const tools = [
@@ -160,7 +161,12 @@ function FloatingCodeBg() {
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
-export default function Hero() {
+interface HeroProps {
+  clientData?: ClientData | null;
+}
+
+export default function Hero({ clientData }: HeroProps) {
+  const firstName = clientData?.client?.name?.split(' ')[0];
   const [rows, setRows] = useState<Row[]>([
     { uid: 'init-0', platform: PURCHASE_POOL[0].platform, name: PURCHASE_POOL[0].name, value: PURCHASE_POOL[0].value, status: 'browser'      },
     { uid: 'init-1', platform: PURCHASE_POOL[0].platform, name: PURCHASE_POOL[0].name, value: PURCHASE_POOL[0].value, status: 'server-dedup' },
@@ -275,10 +281,19 @@ export default function Hero() {
           className="font-serif"
           style={{ fontWeight: 700, lineHeight: 1.12, color: '#F3F4F6', marginBottom: '24px', fontSize: 'clamp(2.4rem, 9vw, 3.75rem)' }}
         >
-          O Diferencial das
-          <br />
-          Campanhas de{' '}
-          <span className="text-glow" style={{ color: '#77BDAC' }}>Alta performance.</span>
+          {firstName ? (
+            <>
+              {firstName},{' '}
+              <span className="text-glow" style={{ color: '#77BDAC' }}>vamos escalar.</span>
+            </>
+          ) : (
+            <>
+              O Diferencial das
+              <br />
+              Campanhas de{' '}
+              <span className="text-glow" style={{ color: '#77BDAC' }}>Alta performance.</span>
+            </>
+          )}
         </motion.h1>
 
         {/* Subtitle */}
@@ -288,8 +303,9 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.45, ease: 'easeOut' }}
           style={{ color: '#9CA3AF', fontSize: '1rem', lineHeight: 1.7, marginBottom: '16px', maxWidth: '520px', marginLeft: 'auto', marginRight: 'auto' }}
         >
-          Agende um diagnóstico estratégico gratuito. Em 30 minutos
-          identificamos o gargalo da sua estrutura de tracking.
+          {firstName
+            ? 'Preparamos algo especial para voce. Role para ver sua proposta personalizada.'
+            : 'Agende um diagnostico estrategico gratuito. Em 30 minutos identificamos o gargalo da sua estrutura de tracking.'}
         </motion.p>
 
         {/* ── 3 Balloons above live events ── */}
@@ -543,7 +559,9 @@ export default function Hero() {
           transition={{ duration: 0.5, delay: 1.6 }}
           style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '36px', gap: '8px' }}
         >
-          <span style={{ color: '#374151', fontSize: '0.58rem', fontFamily: 'monospace', letterSpacing: '0.12em', textTransform: 'uppercase' }}>scroll</span>
+          <span style={{ color: '#374151', fontSize: '0.58rem', fontFamily: 'monospace', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+            {clientData ? 'role para ver sua proposta' : 'scroll'}
+          </span>
           {/* Mouse outline */}
           <div style={{ position: 'relative', width: '18px', height: '28px', border: '1px solid rgba(119,189,172,0.25)', borderRadius: '9px' }}>
             <motion.div

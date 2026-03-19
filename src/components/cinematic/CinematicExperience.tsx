@@ -1,45 +1,53 @@
 'use client';
 
 import { useState, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import PainHero, { type PainHeroHandle } from './PainHero';
 import Hero from './Hero';
 import TokenModal from './TokenModal';
+import ProposalScroll from './ProposalScroll';
+import { ProgressIndicator } from './ProgressIndicator';
+import { ProposalFooter } from '@/components/portal/ProposalFooter';
+import type { ClientData } from '@/lib/clients';
 
 type PageState = 'locked' | 'unlocking' | 'unlocked';
 
-export default function CinematicExperience() {
-  const [pageState, setPageState] = useState<PageState>('locked');
+const SECTION_LABELS = ['Inicio', 'Resultados', 'Objetivos', 'Implementacao', 'Proposta'];
+
+interface CinematicExperienceProps {
+  initialData?: ClientData | null;
+}
+
+export default function CinematicExperience({ initialData }: CinematicExperienceProps) {
+  const [pageState, setPageState] = useState<PageState>(initialData ? 'unlocked' : 'locked');
   const [showModal, setShowModal] = useState(false);
+  const [clientData, setClientData] = useState<ClientData | null>(initialData || null);
   const painRef = useRef<PainHeroHandle>(null);
 
-  const handleUnlock = useCallback(() => {
-    setShowModal(true);
-  }, []);
+  const handleUnlock = useCallback(() => setShowModal(true), []);
 
-  const handleTokenSuccess = useCallback(() => {
+  const handleTokenSuccess = useCallback(async () => {
     setShowModal(false);
     setPageState('unlocking');
-    setTimeout(() => {
-      setPageState('unlocked');
-    }, 800);
+    try {
+      const res = await fetch('/api/client-data');
+      if (res.ok) setClientData(await res.json());
+    } catch {}
+    setTimeout(() => setPageState('unlocked'), 800);
   }, []);
 
   const handleModalClose = useCallback(() => {
     setShowModal(false);
-    // Reset slider to initial position without re-mounting PainHero
     painRef.current?.resetSlider();
   }, []);
 
   return (
     <>
       <AnimatePresence mode="wait">
-        {/* ── Pain Hero (locked) ── */}
         {pageState === 'locked' && (
           <PainHero key="pain" ref={painRef} onUnlock={handleUnlock} />
         )}
 
-        {/* ── Unlock overlay ── */}
         {pageState === 'unlocking' && (
           <motion.div
             key="unlock-transition"
@@ -50,27 +58,123 @@ export default function CinematicExperience() {
           />
         )}
 
-        {/* ── Hero (unlocked) ── */}
         {pageState === 'unlocked' && (
           <motion.div
             key="solution"
-            initial={{ opacity: 0 }}
+            initial={initialData ? { opacity: 1 } : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="bg-hero-mesh"
           >
-            <Hero />
+            <UnlockedExperience clientData={clientData} />
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* ── Token Modal (overlay, independent of AnimatePresence) ── */}
-      <TokenModal
-        open={showModal}
-        onClose={handleModalClose}
-        onSuccess={handleTokenSuccess}
-      />
+      <TokenModal open={showModal} onClose={handleModalClose} onSuccess={handleTokenSuccess} />
+    </>
+  );
+}
+
+// ─── Unlocked Experience ──────────────────────────────────────────────────────
+function UnlockedExperience({ clientData }: { clientData: ClientData | null }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const hasProposal = !!clientData;
+
+  // Scroll progress do container (sem useSpring — Lenis já suaviza)
+  const { scrollYProgress } = useScroll({
+    target: scrollRef,
+    offset: ['start start', 'end end'],
+  });
+
+  // Hero sai: fade + drift up — desativa completamente ao terminar
+  const heroOpacity    = useTransform(scrollYProgress, [0, 0.04, 0.10], [1, 1, 0]);
+  const heroY          = useTransform(scrollYProgress, [0, 0.04, 0.10], [0, 0, -40]);
+  const heroPointer    = useTransform(scrollYProgress, (v) => v > 0.10 ? 'none' : 'auto');
+  const heroVisibility = useTransform(scrollYProgress, (v) =>
+    v > 0.12 ? ('hidden' as const) : ('visible' as const)
+  );
+
+  return (
+    <>
+      {/* Container tall — 600vh dá respiração entre os 5 slides */}
+      <div
+        ref={scrollRef}
+        style={{ height: hasProposal ? '600vh' : 'auto', position: 'relative' }}
+      >
+        {/* Viewport sticky — fica preso no topo */}
+        <div
+          className="bg-hero-mesh"
+          style={{
+            position: hasProposal ? 'sticky' : 'relative',
+            top: 0,
+            height: '100vh',
+            overflow: 'hidden',
+          }}
+        >
+          {/* Persistent ambient glow — always visible, disguises slide transitions */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              zIndex: 0,
+              pointerEvents: 'none',
+            }}
+          >
+            {/* Top-center teal glow */}
+            <div
+              style={{
+                position: 'absolute',
+                top: '-15%',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '80%',
+                height: '50%',
+                background: 'radial-gradient(ellipse at center, rgba(119,189,172,0.07) 0%, transparent 70%)',
+                filter: 'blur(60px)',
+              }}
+            />
+            {/* Bottom-right subtle glow */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: '-10%',
+                right: '-5%',
+                width: '40%',
+                height: '40%',
+                background: 'radial-gradient(ellipse at center, rgba(119,189,172,0.04) 0%, transparent 70%)',
+                filter: 'blur(80px)',
+              }}
+            />
+          </div>
+
+          {/* Hero — fades e sobe ao scrollar */}
+          <motion.div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              zIndex: 1,
+              opacity:    hasProposal ? heroOpacity    : 1,
+              y:          hasProposal ? heroY          : 0,
+              pointerEvents: hasProposal ? heroPointer    : 'auto',
+              visibility: hasProposal ? heroVisibility : 'visible',
+            }}
+          >
+            <Hero clientData={clientData} />
+          </motion.div>
+
+          {/* Slides da proposta — cada um aparece por cima do Hero */}
+          {hasProposal && (
+            <ProposalScroll scrollYProgress={scrollYProgress} clientData={clientData} />
+          )}
+        </div>
+      </div>
+
+      {hasProposal && <ProposalFooter />}
+
+      {hasProposal && (
+        <ProgressIndicator scrollYProgress={scrollYProgress} sections={SECTION_LABELS} />
+      )}
     </>
   );
 }
