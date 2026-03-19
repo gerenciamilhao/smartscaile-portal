@@ -506,4 +506,35 @@ Pills em tom amber para indicar dados de alerta:
 
 ---
 
-*Extracted from Hero.tsx, PainHero.tsx, VideoSection.tsx, ScrollSlide.tsx, ProposalScroll.tsx, page.tsx, globals.css, motion.tsx — v1.7*
+## Padrão: Loss Calculator Ledger (Slide 5)
+
+Calculadora minimalista mostrando perda diária/mensal com cor interpolada:
+- **Layout**: ledger vertical, `max-w-[300px]`, mono font, `tabular-nums`
+- **Row 1** (contexto): investimento/dia R$4.000 — `#4B5563` label, `#6B7280` value, fw400
+- **Row 2** (animated): perda estimada -R$X — cor via `lerpRGB3(normalizedValue)`
+- **Split bar** (2px): teal (visível, encolhe 100→70%) + loss color (cresce 0→30%)
+- **Bar labels**: "visível" / "perdido" — `0.4rem`, opacity 0.4
+- **Row 3** (hero): perda/mês R$X — `clamp(1rem, 3.5vw, 1.25rem)`, fw600, dot 3px
+
+### `lerpRGB3()` — Smooth Color Interpolation
+```typescript
+// 3-stop linear interpolation: a (t=0) → b (t=0.5) → c (t=1)
+lerpRGB3(normalizedValue,
+  [119, 189, 172], // teal (no loss)
+  [245, 158, 11],  // amber (moderate)
+  [239, 68, 68],   // red (max loss)
+)
+// Returns [r, g, b] — construct with rgb() or rgba()
+```
+- Zero CSS transitions — cor atualiza frame-a-frame via rAF (~30fps)
+- `lossRgba(alpha)` helper para opacity variants
+
+### Danger Pills (causas técnicas)
+Pills em tom vermelho para causas root da perda:
+- **Texto + dot**: `#EF4444`
+- **Background**: `rgba(239,68,68,0.04)`, **border**: `rgba(239,68,68,0.12)`
+- Mesma animação hold-release (6 keyframes, stagger 1.2s)
+
+---
+
+*Extracted from Hero.tsx, PainHero.tsx, VideoSection.tsx, ScrollSlide.tsx, ProposalScroll.tsx, page.tsx, globals.css, motion.tsx — v1.8*

@@ -29,7 +29,8 @@ slides:
     status: complete
     features: [tracking-ring-synced, dual-counter-inverse, meta-badge-alive, amber-warning-pills, useLoopProgress-hook, rAF-throttled]
   slide_5_goal_dados:
-    status: pending-refinement
+    status: complete
+    features: [loss-calculator-ledger, smooth-rgb-interpolation, split-bar-visible-lost, lerpRGB3-helper, red-pills-causes, useLoopProgress-shared]
   slide_6_opportunities:
     status: pending-refinement
   slide_7_proposal:

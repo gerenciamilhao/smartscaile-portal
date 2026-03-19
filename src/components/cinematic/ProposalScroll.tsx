@@ -39,6 +39,24 @@ const oppIcons = [
   <Rocket key="4" size={13} strokeWidth={1.5} />,
 ];
 
+// ─── Shared helpers ──────────────────────────────────────────────────────────
+// Smooth RGB interpolation through 3 stops: a (t=0) → b (t=0.5) → c (t=1)
+// Returns [r, g, b] for flexible rgba usage
+function lerpRGB3(
+  t: number,
+  a: [number, number, number],
+  b: [number, number, number],
+  c: [number, number, number],
+): [number, number, number] {
+  const mix = (from: number, to: number, p: number) => Math.round(from + (to - from) * p);
+  if (t <= 0.5) {
+    const p = t / 0.5;
+    return [mix(a[0], b[0], p), mix(a[1], b[1], p), mix(a[2], b[2], p)];
+  }
+  const p = (t - 0.5) / 0.5;
+  return [mix(b[0], c[0], p), mix(b[1], c[1], p), mix(b[2], c[2], p)];
+}
+
 // ─── Shared loop hook — rAF synced with browser paint ────────────────────────
 // easeInOutCubic helper
 const easeInOutCubic = (x: number) =>
@@ -207,7 +225,7 @@ export default function ProposalScroll({ scrollYProgress, clientData }: Proposal
           ═══════════════════════════════════════════════════════════════════════ */}
       <ScrollSlide range={R.goal3} scrollYProgress={scrollYProgress} zIndex={6}>
         <div className="slide-dot-grid" />
-        <SingleGoalSlide scrollYProgress={scrollYProgress} goal={diagnosis.goals[2]} range={R.goal3} slideNum="05" totalSlides="07" badge="Perda de Dados" />
+        <DataLossSlide scrollYProgress={scrollYProgress} goal={diagnosis.goals[2]} range={R.goal3} />
       </ScrollSlide>
 
       {/* ═══════════════════════════════════════════════════════════════════════
@@ -1451,6 +1469,226 @@ function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
                 delay: i * 1.2,
               }}
               style={{ width: 4, height: 4, borderRadius: '50%', background: '#F59E0B' }}
+            />
+            {label}
+          </motion.span>
+        ))}
+      </motion.div>
+
+      {/* Footer chevron */}
+      <motion.div
+        style={{ opacity: footerOpacity }}
+        className="mt-10 flex w-full items-center gap-3"
+      >
+        <div className="h-px flex-1" style={{ background: 'linear-gradient(90deg, rgba(119,189,172,0.15), transparent)' }} />
+        <motion.div
+          animate={{ y: [0, 4, 0], opacity: [0.4, 0.8, 0.4] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ opacity: 0.4 }}>
+            <path d="M1 1L5 5L9 1" stroke="#77BDAC" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </motion.div>
+        <div className="h-px flex-1" style={{ background: 'linear-gradient(270deg, rgba(119,189,172,0.15), transparent)' }} />
+      </motion.div>
+    </div>
+  );
+}
+
+// ─── Data Loss Slide — daily loss counter + split bar + monthly badge ─────────
+function DataLossSlide({ scrollYProgress, goal, range }: {
+  scrollYProgress: MotionValue<number>;
+  goal: { metric: string; label: string; description: string };
+  range: [number, number];
+}) {
+  const [s] = range;
+  const span = range[1] - range[0];
+  const t = (offset: number) => s + span * offset;
+
+  const topBarOpacity   = useTransform(scrollYProgress, [t(0.05), t(0.18)], [0, 1]);
+  const metricOpacity   = useTransform(scrollYProgress, [t(0.10), t(0.28)], [0, 1]);
+  const metricY         = useTransform(scrollYProgress, [t(0.10), t(0.28)], [24, 0]);
+  const labelOpacity    = useTransform(scrollYProgress, [t(0.28), t(0.42)], [0, 1]);
+  const labelY          = useTransform(scrollYProgress, [t(0.28), t(0.42)], [12, 0]);
+  const descOpacity     = useTransform(scrollYProgress, [t(0.34), t(0.48)], [0, 1]);
+  const descY           = useTransform(scrollYProgress, [t(0.34), t(0.48)], [10, 0]);
+  const footerOpacity   = useTransform(scrollYProgress, [t(0.46), t(0.58)], [0, 1]);
+
+  // Loop animation — loss builds up each cycle
+  const DAILY_INVEST = 4000;
+  const DAILY_LOSS = 1200;
+  const MONTHLY_LOSS = 36000;
+  const normalizedValue = useLoopProgress();
+
+  const lossValue = Math.round(DAILY_LOSS * normalizedValue);
+  const monthlyLossValue = Math.round(MONTHLY_LOSS * normalizedValue);
+  const formattedLoss = lossValue.toLocaleString('pt-BR');
+  const formattedMonthly = monthlyLossValue.toLocaleString('pt-BR');
+
+  // Smooth color interpolation: teal (0) → amber (0.5) → red (1)
+  const [lr, lg, lb] = lerpRGB3(normalizedValue,
+    [119, 189, 172], // #77BDAC teal
+    [245, 158, 11],  // #F59E0B amber
+    [239, 68, 68],   // #EF4444 red
+  );
+  const lossColor = `rgb(${lr},${lg},${lb})`;
+  const lossRgba = (a: number) => `rgba(${lr},${lg},${lb},${a})`;
+
+  return (
+    <div className="slide-content">
+      {/* Top bar */}
+      <motion.div
+        style={{ opacity: topBarOpacity }}
+        className="mb-6 flex items-center justify-between"
+      >
+        <div className="flex items-center gap-2">
+          <span className="live-dot" />
+          <span className="text-[0.6rem] font-medium tracking-wide text-[#6B7280]" style={{ fontFamily: 'var(--font-mono), monospace' }}>
+            05 / 07
+          </span>
+        </div>
+        <SectionBadge label="Perda de Dados" />
+      </motion.div>
+
+      {/* Accent line */}
+      <motion.div
+        style={{ scaleX: useTransform(scrollYProgress, [t(0.08), t(0.24)], [0, 1]), transformOrigin: 'left' }}
+        className="accent-line mb-8"
+      />
+
+      {/* Loss calculator — quiet ledger with smooth color */}
+      <motion.div style={{ opacity: metricOpacity, y: metricY }} className="max-w-[300px]">
+        <div style={{ fontFamily: 'var(--font-mono), monospace', fontVariantNumeric: 'tabular-nums' }}>
+          {/* Row 1 — investment (context, very quiet) */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '6px 0' }}>
+            <span style={{ fontSize: '0.55rem', color: '#4B5563', fontWeight: 400, letterSpacing: '0.04em' }}>
+              investimento/dia
+            </span>
+            <span style={{ fontSize: '0.7rem', color: '#6B7280', fontWeight: 400 }}>
+              R$4.000
+            </span>
+          </div>
+
+          {/* Row 2 — daily loss (animated, subtle) */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '6px 0' }}>
+            <span style={{ fontSize: '0.55rem', fontWeight: 400, letterSpacing: '0.04em', color: lossRgba(0.5) }}>
+              perda estimada
+            </span>
+            <span style={{ fontSize: '0.7rem', fontWeight: 500, color: lossRgba(0.8) }}>
+              -R${formattedLoss}
+            </span>
+          </div>
+
+          {/* Split bar — visible (teal) shrinks, lost (color) grows */}
+          <div style={{
+            height: 2, borderRadius: 1, background: 'rgba(255,255,255,0.03)',
+            overflow: 'hidden', display: 'flex', margin: '8px 0 4px',
+          }}>
+            <div style={{
+              height: '100%',
+              width: `${100 - 30 * normalizedValue}%`,
+              background: 'linear-gradient(90deg, rgba(119,189,172,0.2), rgba(119,189,172,0.5))',
+              transition: 'width 50ms linear',
+              borderRadius: '1px 0 0 1px',
+            }} />
+            <div style={{
+              height: '100%',
+              width: `${30 * normalizedValue}%`,
+              background: `linear-gradient(90deg, ${lossRgba(0.6)}, ${lossRgba(0.2)})`,
+              transition: 'width 50ms linear',
+              borderRadius: '0 1px 1px 0',
+            }} />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
+            <span style={{ fontSize: '0.4rem', color: 'rgba(119,189,172,0.4)', fontFamily: 'var(--font-mono), monospace', fontWeight: 500, letterSpacing: '0.05em' }}>
+              visível
+            </span>
+            <span style={{ fontSize: '0.4rem', color: lossRgba(0.4), fontFamily: 'var(--font-mono), monospace', fontWeight: 500, letterSpacing: '0.05em' }}>
+              perdido
+            </span>
+          </div>
+
+          {/* Row 3 — monthly total (hero element, smooth color) */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '8px 0 0' }}>
+            <span style={{ fontSize: '0.55rem', fontWeight: 400, letterSpacing: '0.04em', color: lossRgba(0.5) }}>
+              perda/mês
+            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{
+                width: 3, height: 3, borderRadius: '50%',
+                background: lossRgba(0.6 + 0.4 * normalizedValue),
+              }} />
+              <span style={{
+                fontSize: 'clamp(1rem, 3.5vw, 1.25rem)', fontWeight: 600,
+                letterSpacing: '-0.02em', color: lossColor,
+              }}>
+                R${formattedMonthly}
+              </span>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Label */}
+      <motion.div style={{ opacity: labelOpacity, y: labelY }} className="mt-8">
+        <h3 style={{
+          fontSize: 'clamp(1rem, 3vw, 1.25rem)', fontWeight: 700, color: '#F3F4F6',
+          lineHeight: 1.3,
+        }}>
+          {goal.label}
+        </h3>
+      </motion.div>
+
+      {/* Description */}
+      <motion.p
+        style={{ opacity: descOpacity, y: descY }}
+        className="mt-3 max-w-[520px] text-[0.8rem] leading-[1.8] text-[#9CA3AF]"
+      >
+        {goal.description}
+      </motion.p>
+
+      {/* Red pills — technical causes */}
+      <motion.div
+        style={{ opacity: descOpacity, y: descY }}
+        className="mt-5 flex flex-wrap gap-2.5"
+      >
+        {['Sem CAPI', 'Cookie 1 dia', '100% client-side'].map((label, i) => (
+          <motion.span
+            key={label}
+            animate={{
+              opacity: [0.4, 0.4, 0.85, 0.85, 0.4, 0.4],
+              y: [0, 0, -3, -3, 0, 0],
+            }}
+            transition={{
+              duration: 5 + i * 0.8,
+              repeat: Infinity,
+              ease: 'easeInOut',
+              times: [0, 0.15, 0.3, 0.55, 0.7, 1],
+              delay: i * 1.2,
+            }}
+            style={{
+              fontSize: '0.55rem', color: '#EF4444',
+              fontFamily: 'var(--font-mono), monospace',
+              padding: '5px 12px', borderRadius: 20,
+              background: 'rgba(239,68,68,0.04)',
+              border: '1px solid rgba(239,68,68,0.12)',
+              letterSpacing: '0.04em',
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+            }}
+          >
+            <motion.span
+              animate={{
+                scale: [1, 1, 1.4, 1.4, 1, 1],
+                opacity: [0.4, 0.4, 0.9, 0.9, 0.4, 0.4],
+              }}
+              transition={{
+                duration: 5 + i * 0.8,
+                repeat: Infinity,
+                ease: 'easeInOut',
+                times: [0, 0.15, 0.3, 0.55, 0.7, 1],
+                delay: i * 1.2,
+              }}
+              style={{ width: 4, height: 4, borderRadius: '50%', background: '#EF4444' }}
             />
             {label}
           </motion.span>
