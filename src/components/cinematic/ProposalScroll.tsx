@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { ScrollSlide } from './ScrollSlide';
 import { SectionBadge } from '@/components/portal/SectionBadge';
 import { useTransform } from 'framer-motion';
-import type { ClientData } from '@/lib/clients';
+import type { ClientData, Opportunity } from '@/lib/clients';
 import {
   Target, Rocket,
   Server, Cookie, Shield, Zap,
@@ -233,58 +233,7 @@ export default function ProposalScroll({ scrollYProgress, clientData }: Proposal
           ═══════════════════════════════════════════════════════════════════════ */}
       <ScrollSlide range={R.opportunities} scrollYProgress={scrollYProgress} zIndex={7}>
         <div className="slide-dot-grid" />
-
-        <div className="slide-content">
-          <SectionBadge label="O que vamos implementar" />
-          <motion.h2
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUpItem}
-            className="mt-2.5 font-serif text-[clamp(1.375rem,5vw,2rem)] font-bold text-[#F3F4F6]"
-          >
-            Como vamos chegar la
-          </motion.h2>
-
-          {/* Top accent line */}
-          <div className="accent-line mt-2 mb-4" />
-
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-            className="flex flex-col gap-2"
-          >
-            {diagnosis.opportunities.map((opp, i) => (
-              <motion.div
-                key={opp.title}
-                variants={fadeUpItem}
-                className="proposal-card flex items-start gap-2.5 rounded-xl border border-[#1a1a1a] bg-[#0a0a0a] p-3 hover:border-[rgba(119,189,172,0.15)] hover:bg-[rgba(10,10,10,0.9)]"
-              >
-                {/* Step number */}
-                <div className="step-number mt-0.5">
-                  {i + 1}
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-1.5">
-                    <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded text-[#77BDAC]" style={{ opacity: 0.6 }}>
-                      {oppIcons[i] || <Zap size={13} strokeWidth={1.5} />}
-                    </div>
-                    <h3 className="text-[0.75rem] font-semibold text-[#F3F4F6]">{opp.title}</h3>
-                    <span className={`inline-flex shrink-0 items-center rounded-full border px-1.5 py-px text-[0.5rem] font-semibold uppercase tracking-wider ${
-                      opp.impact === 'high' ? 'impact-high' : 'impact-medium'
-                    }`}>
-                      {opp.impact === 'high' ? 'Alto' : 'Medio'}
-                    </span>
-                  </div>
-                  <p className="mt-0.5 line-clamp-2 text-[0.65rem] leading-relaxed text-[#9CA3AF]">{opp.description}</p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
+        <OpportunitiesSlide scrollYProgress={scrollYProgress} opportunities={diagnosis.opportunities} range={R.opportunities} />
       </ScrollSlide>
 
       {/* ═══════════════════════════════════════════════════════════════════════
@@ -1699,6 +1648,344 @@ function DataLossSlide({ scrollYProgress, goal, range }: {
       <motion.div
         style={{ opacity: footerOpacity }}
         className="mt-10 flex w-full items-center gap-3"
+      >
+        <div className="h-px flex-1" style={{ background: 'linear-gradient(90deg, rgba(119,189,172,0.15), transparent)' }} />
+        <motion.div
+          animate={{ y: [0, 4, 0], opacity: [0.4, 0.8, 0.4] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ opacity: 0.4 }}>
+            <path d="M1 1L5 5L9 1" stroke="#77BDAC" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </motion.div>
+        <div className="h-px flex-1" style={{ background: 'linear-gradient(270deg, rgba(119,189,172,0.15), transparent)' }} />
+      </motion.div>
+    </div>
+  );
+}
+
+// ─── Opportunity Card — extracted for hooks safety (no useTransform in .map) ─
+// ─── Opportunity Card (extracted for hooks rule) ─────────────────────────────
+function OpportunityCard({ opp, index, opacity, y }: {
+  opp: Opportunity;
+  index: number;
+  opacity: MotionValue<number>;
+  y: MotionValue<number>;
+}) {
+  const impactColor = opp.impact === 'high' ? '#77BDAC' : '#F59E0B';
+
+  return (
+    <motion.div style={{ opacity, y }}>
+      <div style={{
+        padding: '10px 18px',
+        borderBottom: '1px solid rgba(255,255,255,0.03)',
+        transition: 'background 0.3s ease',
+      }}>
+        {/* Title row: checkbox + title + impact dot */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {/* Checkbox — fills in with staggered delay */}
+          <motion.div
+            animate={{
+              borderColor: ['rgba(119,189,172,0.15)', 'rgba(119,189,172,0.3)', 'rgba(119,189,172,0.15)'],
+            }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: index * 0.8 }}
+            style={{
+              width: 14, height: 14, borderRadius: 3, flexShrink: 0,
+              border: '1.5px solid rgba(119,189,172,0.15)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            <motion.div
+              animate={{
+                scale: [0.8, 1, 0.8],
+                opacity: [0.35, 0.6, 0.35],
+              }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: index * 0.8 }}
+              style={{
+                width: 6, height: 6, borderRadius: 1.5,
+                background: '#77BDAC',
+              }}
+            />
+          </motion.div>
+          <span style={{
+            fontSize: '0.8rem', fontWeight: 500, color: '#E5E7EB',
+            lineHeight: 1.4, flex: 1,
+          }}>
+            {opp.title}
+          </span>
+          {/* Impact dot — breathing */}
+          <motion.div
+            animate={{
+              scale: [1, 1.3, 1],
+              opacity: [0.4, 0.7, 0.4],
+              boxShadow: [
+                `0 0 0px ${impactColor}00`,
+                `0 0 6px ${impactColor}30`,
+                `0 0 0px ${impactColor}00`,
+              ],
+            }}
+            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', delay: index * 0.6 }}
+            style={{
+              width: 5, height: 5, borderRadius: '50%', flexShrink: 0,
+              background: impactColor,
+            }}
+          />
+        </div>
+
+        {/* Description — indented to align with title */}
+        <p style={{
+          fontSize: '0.65rem', lineHeight: 1.7, color: '#6B7280',
+          marginTop: 4, marginLeft: 22,
+        }}>
+          {opp.description}
+        </p>
+      </div>
+    </motion.div>
+  );
+}
+
+// ─── Opportunities Slide — Apple Notes container ─────────────────────────────
+function OpportunitiesSlide({ scrollYProgress, opportunities, range }: {
+  scrollYProgress: MotionValue<number>;
+  opportunities: Opportunity[];
+  range: [number, number];
+}) {
+  const [s] = range;
+  const span = range[1] - range[0];
+  const t = (offset: number) => s + span * offset;
+
+  // Scroll-driven transforms
+  const topBarOpacity   = useTransform(scrollYProgress, [t(0.05), t(0.18)], [0, 1]);
+  const noteOpacity     = useTransform(scrollYProgress, [t(0.10), t(0.28)], [0, 1]);
+  const noteY           = useTransform(scrollYProgress, [t(0.10), t(0.28)], [24, 0]);
+
+  // Per-card stagger — tight stagger (3%), wider range (16%) for smooth entry
+  const c0Opacity = useTransform(scrollYProgress, [t(0.20), t(0.36)], [0, 1]);
+  const c0Y       = useTransform(scrollYProgress, [t(0.20), t(0.36)], [8, 0]);
+  const c1Opacity = useTransform(scrollYProgress, [t(0.23), t(0.39)], [0, 1]);
+  const c1Y       = useTransform(scrollYProgress, [t(0.23), t(0.39)], [8, 0]);
+  const c2Opacity = useTransform(scrollYProgress, [t(0.26), t(0.42)], [0, 1]);
+  const c2Y       = useTransform(scrollYProgress, [t(0.26), t(0.42)], [8, 0]);
+  const c3Opacity = useTransform(scrollYProgress, [t(0.29), t(0.45)], [0, 1]);
+  const c3Y       = useTransform(scrollYProgress, [t(0.29), t(0.45)], [8, 0]);
+  const c4Opacity = useTransform(scrollYProgress, [t(0.32), t(0.48)], [0, 1]);
+  const c4Y       = useTransform(scrollYProgress, [t(0.32), t(0.48)], [8, 0]);
+
+  const footerOpacity = useTransform(scrollYProgress, [t(0.48), t(0.60)], [0, 1]);
+
+  const cardTransforms = [
+    { opacity: c0Opacity, y: c0Y },
+    { opacity: c1Opacity, y: c1Y },
+    { opacity: c2Opacity, y: c2Y },
+    { opacity: c3Opacity, y: c3Y },
+    { opacity: c4Opacity, y: c4Y },
+  ];
+
+  return (
+    <div className="slide-content">
+      {/* Top bar */}
+      <motion.div
+        style={{ opacity: topBarOpacity }}
+        className="mb-6 flex items-center justify-between"
+      >
+        <div className="flex items-center gap-2">
+          <span className="live-dot" />
+          <span className="text-[0.6rem] font-medium tracking-wide text-[#6B7280]" style={{ fontFamily: 'var(--font-mono), monospace' }}>
+            06 / 07
+          </span>
+        </div>
+        <SectionBadge label="Implementação" />
+      </motion.div>
+
+      {/* Accent line */}
+      <motion.div
+        style={{ scaleX: useTransform(scrollYProgress, [t(0.08), t(0.24)], [0, 1]), transformOrigin: 'left' }}
+        className="accent-line mb-6"
+      />
+
+      {/* Apple Notes container + floating elements */}
+      <motion.div style={{ opacity: noteOpacity, y: noteY, position: 'relative' }}>
+
+        {/* Floating tech pills — distributed around card */}
+        {[
+          // Right side — hugging card edge
+          { label: 'CAPI', top: 12, right: -6, left: undefined, bottom: undefined, delay: 0, dur: 6 },
+          { label: 'server-side', top: 100, right: -10, left: undefined, bottom: undefined, delay: 1.5, dur: 7 },
+          { label: '90 dias', top: undefined, right: -4, left: undefined, bottom: 60, delay: 3, dur: 5.5 },
+          { label: 'dedup', top: undefined, right: 2, left: undefined, bottom: 10, delay: 2.2, dur: 6.5 },
+          // Left side
+          { label: 'GTM SS', top: 30, right: undefined, left: -60, bottom: undefined, delay: 0.8, dur: 6.8 },
+          { label: 'cookieper', top: undefined, right: undefined, left: -55, bottom: 80, delay: 2.5, dur: 5.8 },
+          { label: 'custom loader', top: 150, right: undefined, left: -80, bottom: undefined, delay: 1.2, dur: 7.2 },
+        ].map((pill) => (
+          <motion.span
+            key={pill.label}
+            animate={{
+              y: [0, -4, 0],
+              opacity: [0.2, 0.45, 0.2],
+            }}
+            transition={{
+              duration: pill.dur,
+              repeat: Infinity,
+              ease: 'easeInOut',
+              delay: pill.delay,
+            }}
+            style={{
+              position: 'absolute',
+              top: pill.top, right: pill.right, left: pill.left, bottom: pill.bottom,
+              fontSize: '0.4rem', color: 'rgba(119,189,172,0.45)',
+              fontFamily: 'var(--font-mono), monospace',
+              fontWeight: 500, letterSpacing: '0.06em',
+              padding: '3px 8px', borderRadius: 10,
+              border: '1px solid rgba(119,189,172,0.06)',
+              background: 'rgba(119,189,172,0.02)',
+              pointerEvents: 'none',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {pill.label}
+          </motion.span>
+        ))}
+
+        {/* Floating orbs — both sides */}
+        {[
+          { top: 20, left: -35, right: undefined, bottom: undefined, size: 4, delay: 0, dur: 8 },
+          { top: undefined, left: -25, right: undefined, bottom: 40, size: 3, delay: 2, dur: 9 },
+          { top: 8, left: undefined, right: -40, bottom: undefined, size: 3, delay: 1, dur: 7.5 },
+          { top: undefined, left: undefined, right: -25, bottom: 30, size: 4, delay: 3.5, dur: 8.5 },
+          { top: 120, left: -45, right: undefined, bottom: undefined, size: 2, delay: 4, dur: 10 },
+        ].map((orb, i) => (
+          <motion.div
+            key={i}
+            animate={{
+              y: [0, i % 2 === 0 ? -5 : 4, 0],
+              x: [0, i % 2 === 0 ? 2 : -2, 0],
+              opacity: [0.15, 0.35, 0.15],
+            }}
+            transition={{ duration: orb.dur, repeat: Infinity, ease: 'easeInOut', delay: orb.delay }}
+            style={{
+              position: 'absolute',
+              top: orb.top, left: orb.left, right: orb.right, bottom: orb.bottom,
+              width: orb.size, height: orb.size, borderRadius: '50%',
+              background: 'rgba(119,189,172,0.25)',
+              boxShadow: '0 0 6px rgba(119,189,172,0.08)',
+              pointerEvents: 'none',
+            }}
+          />
+        ))}
+
+        {/* Ambient glow behind note */}
+        <div style={{
+          position: 'absolute', top: '50%', left: '30%',
+          width: 280, height: 280, borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(119,189,172,0.04) 0%, transparent 70%)',
+          transform: 'translate(-50%, -50%)',
+          filter: 'blur(40px)', pointerEvents: 'none',
+        }} />
+
+        {/* Note card */}
+        <div style={{
+          borderRadius: 14, overflow: 'hidden', position: 'relative',
+          border: '1px solid rgba(119,189,172,0.08)',
+          background: 'linear-gradient(180deg, #0c0c0c 0%, #050505 100%)',
+          boxShadow: '0 12px 40px rgba(0,0,0,0.4), 0 0 1px rgba(119,189,172,0.12), inset 0 1px 0 rgba(255,255,255,0.03)',
+          maxWidth: 580,
+        }}>
+          {/* macOS title bar */}
+          <div style={{
+            padding: '10px 14px',
+            borderBottom: '1px solid rgba(255,255,255,0.04)',
+            display: 'flex', alignItems: 'center', gap: 8,
+            background: '#080808',
+          }}>
+            <div style={{ display: 'flex', gap: 6 }}>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#FF5F56', opacity: 0.65 }} />
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#FFBD2E', opacity: 0.65 }} />
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#27C93F', opacity: 0.65 }} />
+            </div>
+            <span style={{
+              fontSize: '0.65rem', color: '#4B5563', fontWeight: 500,
+              fontFamily: 'var(--font-mono), monospace',
+              letterSpacing: '0.03em', flex: 1, textAlign: 'center',
+              marginRight: 44,
+            }}>
+              implementação.md
+            </span>
+          </div>
+
+          {/* Note heading */}
+          <div style={{ padding: '16px 18px 6px' }}>
+            <h3 style={{
+              fontSize: '1rem', fontWeight: 600, color: '#F3F4F6',
+              lineHeight: 1.3,
+            }}>
+              O que vamos implementar
+            </h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 6 }}>
+              <span style={{
+                fontSize: '0.55rem', color: '#374151',
+                fontFamily: 'var(--font-mono), monospace',
+                letterSpacing: '0.04em',
+              }}>
+                {opportunities.length} itens
+              </span>
+              <div style={{ width: 2, height: 2, borderRadius: '50%', background: '#374151' }} />
+              <span style={{
+                fontSize: '0.55rem', color: '#374151',
+                fontFamily: 'var(--font-mono), monospace',
+                letterSpacing: '0.04em',
+              }}>
+                priorizadas por impacto
+              </span>
+            </div>
+          </div>
+
+          {/* Separator */}
+          <div style={{
+            height: 1, margin: '8px 18px',
+            background: 'linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.05), rgba(255,255,255,0.02))',
+          }} />
+
+          {/* Opportunity items */}
+          <div style={{ padding: '0 2px 6px' }}>
+            {opportunities.map((opp, i) => (
+              <OpportunityCard
+                key={opp.title}
+                opp={opp}
+                index={i}
+                opacity={cardTransforms[i]?.opacity ?? c4Opacity}
+                y={cardTransforms[i]?.y ?? c4Y}
+              />
+            ))}
+          </div>
+
+          {/* Bottom bar */}
+          <div style={{
+            padding: '8px 18px',
+            borderTop: '1px solid rgba(255,255,255,0.03)',
+            display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <motion.div
+                animate={{ opacity: [0.3, 0.8, 0.3] }}
+                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                style={{ width: 3, height: 3, borderRadius: '50%', background: '#77BDAC' }}
+              />
+              <span style={{
+                fontSize: '0.4rem', color: '#374151',
+                fontFamily: 'var(--font-mono), monospace',
+              }}>
+                smartscaile.
+              </span>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Footer chevron */}
+      <motion.div
+        style={{ opacity: footerOpacity }}
+        className="mt-8 flex w-full items-center gap-3"
       >
         <div className="h-px flex-1" style={{ background: 'linear-gradient(90deg, rgba(119,189,172,0.15), transparent)' }} />
         <motion.div

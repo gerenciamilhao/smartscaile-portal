@@ -32,6 +32,8 @@ slides:
     status: complete
     features: [loss-calculator-ledger, smooth-rgb-interpolation, split-bar-visible-lost, lerpRGB3-helper, red-pills-causes, useLoopProgress-shared]
   slide_6_opportunities:
-    status: pending-refinement
+    status: complete-needs-polish
+    features: [apple-notes-container, macos-chrome, floating-pills-both-sides, floating-orbs, checkbox-breathing, impact-dot-breathing, ambient-glow, scroll-driven-stagger]
+    known_issues: [visual-flicker-on-scroll-needs-investigation]
   slide_7_proposal:
     status: pending-refinement
