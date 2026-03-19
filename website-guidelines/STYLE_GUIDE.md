@@ -462,7 +462,7 @@ Separação clara de responsabilidades:
 ## Padrão: Synced Counter + Scale Bar (Slide 3)
 
 Counter numérico e barra de progresso sincronizados por uma única fonte de animação:
-- **Single source**: `Date.now() % (LOOP_S * 1000)` via `setInterval(50ms)` → `loopProgress` 0→1
+- **Single source**: `useLoopProgress()` hook — `requestAnimationFrame` com throttle ~30fps, retorna `normalizedValue` 0→1
 - **4 fases**: up (0→0.42, easeOutCubic) → hold topo (0.42→0.55) → down (0.55→0.88, easeInOutCubic) → hold fundo (0.88→1)
 - **Counter**: mono font, `tabular-nums`, `clamp(1.75rem, 6vw, 2.5rem)`, cor `#77BDAC`
 - **Barra**: `max-w-[380px]`, 3px height, gradiente `rgba(119,189,172,0.3) → #77BDAC`, glow condicional
@@ -488,4 +488,22 @@ transition={{
 
 ---
 
-*Extracted from Hero.tsx, PainHero.tsx, VideoSection.tsx, ScrollSlide.tsx, ProposalScroll.tsx, page.tsx, globals.css, motion.tsx — v1.6*
+## Padrão: Tracking Ring + CPA Counter (Slide 4)
+
+Ring SVG de tracking score inversamente correlacionado com counter CPA:
+- **Ring**: 120px, stroke 6, `CPATrackingRing` componente isolado
+- **Cores tracking**: `#EF4444` (≤30) → `#F59E0B` (31-50) → `#60A5FA` (51-89) → `#77BDAC` (90+)
+- **CPA counter**: mono font, `clamp(1.75rem, 6vw, 2.5rem)`, cor dinâmica (red→amber→teal)
+- **Correlação inversa**: tracking sobe (31→100) enquanto CPA desce (R$191→R$100), mesma `normalizedValue`
+- **Meta badge animado**: border pulse `rgba(119,189,172, 0.12→0.25)` 4s, glow `boxShadow` 4s, dot pulsante `scale 1→1.3` 2.5s
+- **Layout**: ring à esquerda + CPA counter + meta badge à direita (`flex, gap: 32`)
+
+### Warning Pills (dados negativos)
+Pills em tom amber para indicar dados de alerta:
+- **Texto**: `#D97706`, **dot**: `#F59E0B`
+- **Background**: `rgba(245,158,11,0.04)`, **border**: `rgba(245,158,11,0.12)`
+- Mesma animação hold-release das pills teal (6 keyframes, stagger 1.2s)
+
+---
+
+*Extracted from Hero.tsx, PainHero.tsx, VideoSection.tsx, ScrollSlide.tsx, ProposalScroll.tsx, page.tsx, globals.css, motion.tsx — v1.7*

@@ -39,6 +39,48 @@ const oppIcons = [
   <Rocket key="4" size={13} strokeWidth={1.5} />,
 ];
 
+// ─── Shared loop hook — rAF synced with browser paint ────────────────────────
+// easeInOutCubic helper
+const easeInOutCubic = (x: number) =>
+  x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+
+function useLoopProgress() {
+  const startRef = useRef(Date.now());
+  const lastRef = useRef(0);
+  const [normalizedValue, setNormalizedValue] = useState(0);
+
+  useEffect(() => {
+    let raf: number;
+    const tick = () => {
+      const now = Date.now();
+      // Throttle to ~30fps (33ms) to avoid excess re-renders
+      if (now - lastRef.current >= 33) {
+        lastRef.current = now;
+        const elapsed = (now - startRef.current) % (LOOP_S * 1000);
+        const progress = elapsed / (LOOP_S * 1000);
+
+        // 4 phases: up (0→0.42), hold top (0.42→0.55), down (0.55→0.88), hold bottom (0.88→1)
+        let val: number;
+        if (progress < 0.42) {
+          val = 1 - Math.pow(1 - progress / 0.42, 3); // easeOutCubic
+        } else if (progress < 0.55) {
+          val = 1;
+        } else if (progress < 0.88) {
+          val = 1 - easeInOutCubic((progress - 0.55) / 0.33);
+        } else {
+          val = 0;
+        }
+        setNormalizedValue(val);
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  return normalizedValue;
+}
+
 // Stagger animation variants
 const staggerContainer = {
   hidden: {},
@@ -157,7 +199,7 @@ export default function ProposalScroll({ scrollYProgress, clientData }: Proposal
           ═══════════════════════════════════════════════════════════════════════ */}
       <ScrollSlide range={R.goal2} scrollYProgress={scrollYProgress} zIndex={5}>
         <div className="slide-dot-grid" />
-        <SingleGoalSlide scrollYProgress={scrollYProgress} goal={diagnosis.goals[1]} range={R.goal2} slideNum="04" totalSlides="07" badge="Meta de CPA" />
+        <CPAGoalSlide scrollYProgress={scrollYProgress} goal={diagnosis.goals[1]} range={R.goal2} trackingScore={diagnosis.stapeChecker?.scores?.overall ?? 31} />
       </ScrollSlide>
 
       {/* ═══════════════════════════════════════════════════════════════════════
@@ -963,39 +1005,10 @@ function ScaleGoalSlide({ scrollYProgress, goal, range }: {
   const descY           = useTransform(scrollYProgress, [t(0.34), t(0.48)], [10, 0]);
   const footerOpacity   = useTransform(scrollYProgress, [t(0.46), t(0.58)], [0, 1]);
 
-  // Single animation source: Date.now() modulo → loopProgress 0→1
-  // Both counter and bar derive from this — guaranteed sync
+  // Single animation source — rAF synced
   const TARGET = 100000;
   const START = 3000;
-  const startRef = useRef(Date.now());
-  const [loopProgress, setLoopProgress] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const elapsed = (Date.now() - startRef.current) % (LOOP_S * 1000);
-      setLoopProgress(elapsed / (LOOP_S * 1000));
-    }, 50);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Derive values from loopProgress
-  // Phases: up (0→0.42), hold top (0.42→0.55), down (0.55→0.88), hold bottom (0.88→1)
-  // easeInOutCubic helper
-  const easeInOut = (x: number) =>
-    x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
-
-  let normalizedValue: number;
-  if (loopProgress < 0.42) {
-    const raw = loopProgress / 0.42;
-    normalizedValue = 1 - Math.pow(1 - raw, 3); // easeOutCubic — fast start, brakes at top
-  } else if (loopProgress < 0.55) {
-    normalizedValue = 1; // hold at peak
-  } else if (loopProgress < 0.88) {
-    const raw = (loopProgress - 0.55) / 0.33;
-    normalizedValue = 1 - easeInOut(raw); // easeInOut down — brakes at both ends
-  } else {
-    normalizedValue = 0; // hold at bottom before next cycle
-  }
+  const normalizedValue = useLoopProgress();
 
   const barPct = 3 + 97 * normalizedValue;
   const counterValue = Math.round(START + (TARGET - START) * normalizedValue);
@@ -1137,6 +1150,307 @@ function ScaleGoalSlide({ scrollYProgress, goal, range }: {
                 delay: i * 1.2,
               }}
               style={{ width: 4, height: 4, borderRadius: '50%', background: '#77BDAC' }}
+            />
+            {label}
+          </motion.span>
+        ))}
+      </motion.div>
+
+      {/* Footer chevron */}
+      <motion.div
+        style={{ opacity: footerOpacity }}
+        className="mt-10 flex w-full items-center gap-3"
+      >
+        <div className="h-px flex-1" style={{ background: 'linear-gradient(90deg, rgba(119,189,172,0.15), transparent)' }} />
+        <motion.div
+          animate={{ y: [0, 4, 0], opacity: [0.4, 0.8, 0.4] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ opacity: 0.4 }}>
+            <path d="M1 1L5 5L9 1" stroke="#77BDAC" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </motion.div>
+        <div className="h-px flex-1" style={{ background: 'linear-gradient(270deg, rgba(119,189,172,0.15), transparent)' }} />
+      </motion.div>
+    </div>
+  );
+}
+
+// ─── CPA Tracking Ring — smaller version of slide 2 ring, driven by value ────
+function CPATrackingRing({ trackingValue, trackingColor, normalizedValue, trackingStart }: {
+  trackingValue: number; trackingColor: string; normalizedValue: number; trackingStart: number;
+}) {
+  const size = 120;
+  const stroke = 6;
+  const r = (size - stroke) / 2;
+  const circ = 2 * Math.PI * r;
+  const filledOffset = circ - (trackingValue / 100) * circ;
+
+  return (
+    <div style={{
+      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+      position: 'relative', flexShrink: 0,
+    }}>
+      {/* Floating orbs */}
+      <motion.div
+        animate={{ y: [0, -5, 0], opacity: [0.3, 0.6, 0.3] }}
+        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+        style={{
+          position: 'absolute', top: -6, right: -14, width: 4, height: 4,
+          borderRadius: '50%', background: `${trackingColor}80`,
+          boxShadow: `0 0 6px ${trackingColor}30`, pointerEvents: 'none', zIndex: 3,
+        }}
+      />
+      <motion.div
+        animate={{ y: [0, 4, 0], x: [0, -2, 0] }}
+        transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
+        style={{
+          position: 'absolute', bottom: 20, left: -10, width: 3, height: 3,
+          borderRadius: '50%', background: `${trackingColor}60`,
+          pointerEvents: 'none', zIndex: 3,
+        }}
+      />
+
+      <div style={{ position: 'relative', width: size, height: size }}>
+        {/* Breathing glow */}
+        <div
+          style={{
+            position: 'absolute', inset: -20, borderRadius: '50%',
+            background: `radial-gradient(circle, ${trackingColor}${normalizedValue > 0.5 ? '18' : '08'} 0%, transparent 65%)`,
+            filter: 'blur(20px)', pointerEvents: 'none',
+            transition: 'background 200ms ease',
+          }}
+        />
+
+        <svg width={size} height={size} style={{ transform: 'rotate(-90deg)', position: 'relative', zIndex: 1 }}>
+          {/* Track */}
+          <circle cx={size / 2} cy={size / 2} r={r}
+            fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth={stroke}
+          />
+          {/* Arc — driven by normalizedValue via trackingValue */}
+          <circle cx={size / 2} cy={size / 2} r={r}
+            fill="none" stroke={trackingColor} strokeWidth={stroke}
+            strokeLinecap="round"
+            strokeDasharray={circ}
+            strokeDashoffset={filledOffset}
+            style={{ transition: 'stroke-dashoffset 50ms linear, stroke 100ms linear' }}
+            filter={`drop-shadow(0 0 6px ${trackingColor}40)`}
+          />
+        </svg>
+
+        {/* Center content */}
+        <div style={{
+          position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center', zIndex: 2,
+        }}>
+          <span style={{
+            fontSize: '0.4rem', color: '#6B7280', fontFamily: 'var(--font-mono), monospace',
+            textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 500,
+            marginBottom: 4,
+          }}>
+            tracking
+          </span>
+          <span style={{
+            fontFamily: 'var(--font-serif)', fontWeight: 700,
+            fontSize: '2rem', lineHeight: 1, color: trackingColor,
+            transition: 'color 100ms linear',
+          }}>
+            {trackingValue}
+          </span>
+          <span style={{
+            fontSize: '0.5rem', color: '#6B7280', fontFamily: 'var(--font-mono), monospace',
+            marginTop: 2,
+          }}>
+            <span style={{ color: '#4B5563' }}>/</span>100
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── CPA Goal Slide — tracking score ↑ while CPA ↓ ─────────────────────────
+function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
+  scrollYProgress: MotionValue<number>;
+  goal: { metric: string; label: string; description: string };
+  range: [number, number];
+  trackingScore: number;
+}) {
+  const [s] = range;
+  const span = range[1] - range[0];
+  const t = (offset: number) => s + span * offset;
+
+  const topBarOpacity   = useTransform(scrollYProgress, [t(0.05), t(0.18)], [0, 1]);
+  const metricOpacity   = useTransform(scrollYProgress, [t(0.10), t(0.28)], [0, 1]);
+  const metricY         = useTransform(scrollYProgress, [t(0.10), t(0.28)], [24, 0]);
+  const labelOpacity    = useTransform(scrollYProgress, [t(0.28), t(0.42)], [0, 1]);
+  const labelY          = useTransform(scrollYProgress, [t(0.28), t(0.42)], [12, 0]);
+  const descOpacity     = useTransform(scrollYProgress, [t(0.34), t(0.48)], [0, 1]);
+  const descY           = useTransform(scrollYProgress, [t(0.34), t(0.48)], [10, 0]);
+  const footerOpacity   = useTransform(scrollYProgress, [t(0.46), t(0.58)], [0, 1]);
+
+  // Single animation source — rAF synced
+  const TRACKING_START = trackingScore;
+  const TRACKING_TARGET = 100;
+  const CPA_START = 191;
+  const CPA_TARGET = 100;
+  const normalizedValue = useLoopProgress();
+
+  // Tracking goes UP: 31→100, CPA goes DOWN: 191→100
+  const trackingValue = Math.round(TRACKING_START + (TRACKING_TARGET - TRACKING_START) * normalizedValue);
+  const cpaValue = Math.round(CPA_START - (CPA_START - CPA_TARGET) * normalizedValue);
+  const trackingColor = trackingValue <= 30 ? '#EF4444' : trackingValue <= 50 ? '#F59E0B' : trackingValue < 90 ? '#60A5FA' : '#77BDAC';
+  const cpaColor = cpaValue <= CPA_TARGET ? '#77BDAC' : cpaValue > 150 ? '#EF4444' : '#F59E0B';
+
+
+  return (
+    <div className="slide-content">
+      {/* Top bar */}
+      <motion.div
+        style={{ opacity: topBarOpacity }}
+        className="mb-6 flex items-center justify-between"
+      >
+        <div className="flex items-center gap-2">
+          <span className="live-dot" />
+          <span className="text-[0.6rem] font-medium tracking-wide text-[#6B7280]" style={{ fontFamily: 'var(--font-mono), monospace' }}>
+            04 / 07
+          </span>
+        </div>
+        <SectionBadge label="Meta de CPA" />
+      </motion.div>
+
+      {/* Accent line */}
+      <motion.div
+        style={{ scaleX: useTransform(scrollYProgress, [t(0.08), t(0.24)], [0, 1]), transformOrigin: 'left' }}
+        className="accent-line mb-8"
+      />
+
+      {/* Ring + CPA counter layout */}
+      <motion.div style={{ opacity: metricOpacity, y: metricY }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+          {/* Tracking Score Ring — synced with normalizedValue */}
+          <CPATrackingRing trackingValue={trackingValue} trackingColor={trackingColor} normalizedValue={normalizedValue} trackingStart={TRACKING_START} />
+
+          {/* CPA counter + meta badge */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {/* CPA counter */}
+            <div>
+              <span style={{
+                fontSize: '0.5rem', color: '#6B7280', fontFamily: 'var(--font-mono), monospace',
+                fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase' as const,
+                display: 'block', marginBottom: 6,
+              }}>
+                CPA média
+              </span>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
+                <span style={{ fontSize: '0.7rem', color: '#4B5563', fontFamily: 'var(--font-mono), monospace', fontWeight: 500 }}>R$</span>
+                <span style={{
+                  fontFamily: 'var(--font-mono), monospace', fontWeight: 600,
+                  fontSize: 'clamp(1.75rem, 6vw, 2.5rem)', lineHeight: 1,
+                  color: cpaColor,
+                  fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em',
+                }}>
+                  {cpaValue}
+                </span>
+              </div>
+            </div>
+
+            {/* Meta badge — alive */}
+            <motion.div
+              animate={{
+                borderColor: ['rgba(119,189,172,0.12)', 'rgba(119,189,172,0.25)', 'rgba(119,189,172,0.12)'],
+                boxShadow: ['0 0 0px rgba(119,189,172,0)', '0 0 12px rgba(119,189,172,0.08)', '0 0 0px rgba(119,189,172,0)'],
+              }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6, alignSelf: 'flex-start',
+                padding: '5px 12px', borderRadius: 20,
+                background: 'rgba(119,189,172,0.06)',
+                border: '1px solid rgba(119,189,172,0.12)',
+              }}
+            >
+              <motion.div
+                animate={{ scale: [1, 1.3, 1], opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+                style={{ width: 4, height: 4, borderRadius: '50%', background: '#77BDAC' }}
+              />
+              <span style={{
+                fontSize: '0.5rem', color: '#77BDAC', fontFamily: 'var(--font-mono), monospace',
+                fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' as const,
+              }}>
+                meta
+              </span>
+              <span style={{
+                fontFamily: 'var(--font-mono), monospace', fontWeight: 600,
+                fontSize: '0.7rem', color: '#77BDAC',
+              }}>
+                R$100
+              </span>
+            </motion.div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Label */}
+      <motion.div style={{ opacity: labelOpacity, y: labelY }} className="mt-8">
+        <h3 style={{
+          fontSize: 'clamp(1rem, 3vw, 1.25rem)', fontWeight: 700, color: '#F3F4F6',
+          lineHeight: 1.3,
+        }}>
+          {goal.label}
+        </h3>
+      </motion.div>
+
+      {/* Description */}
+      <motion.p
+        style={{ opacity: descOpacity, y: descY }}
+        className="mt-3 max-w-[520px] text-[0.8rem] leading-[1.8] text-[#9CA3AF]"
+      >
+        {goal.description}
+      </motion.p>
+
+      {/* Context pills — same hold-release pattern */}
+      <motion.div
+        style={{ opacity: descOpacity, y: descY }}
+        className="mt-5 flex flex-wrap gap-2.5"
+      >
+        {['30-40% invisível', `Score ${TRACKING_START}/100`, 'Pixel desatualizado'].map((label, i) => (
+          <motion.span
+            key={label}
+            animate={{
+              opacity: [0.4, 0.4, 0.85, 0.85, 0.4, 0.4],
+              y: [0, 0, -3, -3, 0, 0],
+            }}
+            transition={{
+              duration: 5 + i * 0.8,
+              repeat: Infinity,
+              ease: 'easeInOut',
+              times: [0, 0.15, 0.3, 0.55, 0.7, 1],
+              delay: i * 1.2,
+            }}
+            style={{
+              fontSize: '0.55rem', color: '#D97706',
+              fontFamily: 'var(--font-mono), monospace',
+              padding: '5px 12px', borderRadius: 20,
+              background: 'rgba(245,158,11,0.04)',
+              border: '1px solid rgba(245,158,11,0.12)',
+              letterSpacing: '0.04em',
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+            }}
+          >
+            <motion.span
+              animate={{
+                scale: [1, 1, 1.4, 1.4, 1, 1],
+                opacity: [0.4, 0.4, 0.9, 0.9, 0.4, 0.4],
+              }}
+              transition={{
+                duration: 5 + i * 0.8,
+                repeat: Infinity,
+                ease: 'easeInOut',
+                times: [0, 0.15, 0.3, 0.55, 0.7, 1],
+                delay: i * 1.2,
+              }}
+              style={{ width: 4, height: 4, borderRadius: '50%', background: '#F59E0B' }}
             />
             {label}
           </motion.span>
