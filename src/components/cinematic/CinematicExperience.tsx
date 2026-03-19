@@ -12,7 +12,7 @@ import type { ClientData } from '@/lib/clients';
 
 type PageState = 'locked' | 'unlocking' | 'unlocked';
 
-const SECTION_LABELS = ['Inicio', 'Resultados', 'Objetivos', 'Implementacao', 'Proposta'];
+const SECTION_LABELS = ['Inicio', 'Auditoria', 'Escala', 'CPA', 'Dados', 'Implementacao', 'Proposta'];
 
 interface CinematicExperienceProps {
   initialData?: ClientData | null;
@@ -88,19 +88,19 @@ function UnlockedExperience({ clientData }: { clientData: ClientData | null }) {
   });
 
   // Hero sai: fade + drift up — desativa completamente ao terminar
-  const heroOpacity    = useTransform(scrollYProgress, [0, 0.03, 0.08], [1, 1, 0]);
-  const heroY          = useTransform(scrollYProgress, [0, 0.03, 0.08], [0, 0, -40]);
-  const heroPointer    = useTransform(scrollYProgress, (v) => v > 0.08 ? 'none' : 'auto');
+  const heroOpacity    = useTransform(scrollYProgress, [0, 0.02, 0.06], [1, 1, 0]);
+  const heroY          = useTransform(scrollYProgress, [0, 0.02, 0.06], [0, 0, -40]);
+  const heroPointer    = useTransform(scrollYProgress, (v) => v > 0.06 ? 'none' : 'auto');
   const heroVisibility = useTransform(scrollYProgress, (v) =>
-    v > 0.10 ? ('hidden' as const) : ('visible' as const)
+    v > 0.08 ? ('hidden' as const) : ('visible' as const)
   );
 
   return (
     <>
-      {/* Container tall — 600vh dá respiração entre os 5 slides */}
+      {/* Container tall — 1050vh dá respiração entre os 7 slides */}
       <div
         ref={scrollRef}
-        style={{ height: hasProposal ? '750vh' : 'auto', position: 'relative' }}
+        style={{ height: hasProposal ? '1050vh' : 'auto', position: 'relative' }}
       >
         {/* Viewport sticky — fica preso no topo */}
         <div

@@ -155,32 +155,6 @@
         "description": "A cada R$4.000 investidos por dia, pelo menos R$1.200 rodam sem dados de volta para o algoritmo. Ele não otimiza o que não vê. São R$36.000 por mês em investimento que o Meta simplesmente ignora na hora de decidir onde alocar o próximo real."
       }
     ],
-    "desires": {
-      "headline": "O que a Atom Educacional precisa agora",
-      "intro": "A Pré-Especialização em Trading vende a R$297 com escadinha de upsell chegando a R$570 de ticket médio. O nicho de educação financeira é gigante, o budget existe para R$100-200k/dia. Só que a estrutura de tracking trava tudo em R$3-4k/dia. O gerenciador mostra CPA de R$700 enquanto o real é R$140-191. Os dados não batem, o algoritmo trabalha cego, e cada dia que passa são mais dados perdidos.",
-      "items": [
-        {
-          "icon": "scale",
-          "title": "Destravar a escala de R$3-4k para R$100-200k/dia",
-          "description": "O fôlego existe, o nicho de educação financeira é enorme. Para escalar sem o CPA disparar, o algoritmo do Meta precisa enxergar 100% das conversões. Hoje ele trabalha com 60-70% dos dados. É como pilotar um avião com metade dos instrumentos desligados."
-        },
-        {
-          "icon": "target",
-          "title": "Derrubar o CPA para R$100",
-          "description": "A diferença entre R$140-191 e R$100 de CPA está nos dados que se perdem no caminho. Com ticket de R$297 e escadinha de upsell chegando a R$570, um CPA de R$100 significa ROAS de 4.5x a 5.7x no front-end. Aí a escala faz sentido."
-        },
-        {
-          "icon": "check",
-          "title": "Limpar os dados do gerenciador",
-          "description": "CPA de R$700 no gerenciador quando o real é R$140. Dados duplicados, atribuição quebrada, números que não batem com a Hotmart. Quando o Meta, o GA4 e o backoffice mostram o mesmo número, as decisões deixam de ser no achismo."
-        },
-        {
-          "icon": "shield",
-          "title": "Resultado comprovado antes do compromisso",
-          "description": "A Atom é empresa de capital aberto com processo de aprovação rigoroso. A proposta inclui teste A/B de 30 dias: pixel antigo vs novo, lado a lado. Se o antigo performar melhor, devolvemos as 2 últimas parcelas. O resultado fala por si."
-        }
-      ]
-    },
     "opportunities": [
       {
         "title": "Recuperar 30-40% dos dados que se perdem hoje",
@@ -209,7 +183,7 @@
     ],
     "proposal": {
       "headline": "Cada dia com a estrutura atual é dinheiro que não volta",
-      "description": "A R$4k/dia, a operação da Atom perde no mínimo R$1.200 diários em dados que nunca chegam ao Meta. São R$36.000 por mês de investimento rodando no escuro. A implementação inclui server-side tracking completo, CAPI Meta, cookie persistence de 90 dias, custom loader e dedup nativa para a escadinha de upsell/downsell. Em 30 dias de teste A/B, os números falam por si.",
+      "description": "A R$4k/dia, a operação perde no mínimo R$1.200 diários em dados que nunca chegam ao Meta. São R$36.000 por mês rodando no escuro. Server-side tracking completo, CAPI Meta, cookie persistence de 90 dias, custom loader e dedup nativa para a escadinha de upsell/downsell. A Atom é empresa de capital aberto com processo de aprovação rigoroso. Por isso a proposta inclui teste A/B de 30 dias: pixel antigo vs novo, lado a lado. O resultado fala por si.",
       "timeline": "3-4 semanas para implementar + 30 dias de teste A/B",
       "investment": "Sob consulta",
       "guarantee": "Se o pixel antigo performar melhor nos 30 dias de teste, devolvemos as 2 últimas parcelas",

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { type MotionValue } from 'framer-motion';
 import { motion } from 'framer-motion';
 import { ScrollSlide } from './ScrollSlide';
@@ -8,10 +8,10 @@ import { SectionBadge } from '@/components/portal/SectionBadge';
 import { useTransform } from 'framer-motion';
 import type { ClientData } from '@/lib/clients';
 import {
-  TrendingUp, Target, Rocket, Users,
+  Target, Rocket,
   Server, Cookie, Shield, Zap,
   ArrowRight, MessageCircle, Clock, ExternalLink,
-  BarChart2, Activity, Sparkles,
+  BarChart2, Activity,
 } from 'lucide-react';
 
 interface ProposalScrollProps {
@@ -22,18 +22,13 @@ interface ProposalScrollProps {
 // Ranges sequenciais dentro do 750vh (hero ocupa 0→~0.08)
 // 5 slides dividem 0.08 → 1.0 = 0.92 / 5 = ~0.184 cada
 const R = {
-  header:        [0.08, 0.26] as [number, number],
-  results:       [0.26, 0.44] as [number, number],
-  desires:       [0.44, 0.62] as [number, number],
-  opportunities: [0.62, 0.80] as [number, number],
-  proposal:      [0.80, 1.00] as [number, number],
-};
-
-const desireIcons: Record<string, React.ReactNode> = {
-  scale:  <TrendingUp size={15} strokeWidth={1.5} />,
-  target: <Target size={15} strokeWidth={1.5} />,
-  rocket: <Rocket size={15} strokeWidth={1.5} />,
-  users:  <Users size={15} strokeWidth={1.5} />,
+  header:        [0.06, 0.19] as [number, number],
+  results:       [0.19, 0.33] as [number, number],
+  goal1:         [0.33, 0.46] as [number, number],
+  goal2:         [0.46, 0.59] as [number, number],
+  goal3:         [0.59, 0.72] as [number, number],
+  opportunities: [0.72, 0.86] as [number, number],
+  proposal:      [0.86, 1.00] as [number, number],
 };
 
 const oppIcons = [
@@ -150,67 +145,33 @@ export default function ProposalScroll({ scrollYProgress, clientData }: Proposal
       </ScrollSlide>
 
       {/* ═══════════════════════════════════════════════════════════════════════
-          SLIDE 3 — Objetivos / Desires
+          SLIDE 3 — Goal 1: Escala (counter + scale bar)
           ═══════════════════════════════════════════════════════════════════════ */}
-      <ScrollSlide range={R.desires} scrollYProgress={scrollYProgress} zIndex={4}>
+      <ScrollSlide range={R.goal1} scrollYProgress={scrollYProgress} zIndex={4}>
         <div className="slide-dot-grid" />
-
-        <div className="slide-content">
-          <SectionBadge label="Seus Objetivos" />
-          <motion.h2
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUpItem}
-            className="mt-2.5 font-serif text-[clamp(1.375rem,5vw,2rem)] font-bold text-[#F3F4F6]"
-          >
-            {diagnosis.desires.headline}
-          </motion.h2>
-          <motion.p
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={{ ...fadeUpItem, visible: { ...fadeUpItem.visible, transition: { ...fadeUpItem.visible.transition, delay: 0.05 } } }}
-            className="mt-2 max-w-[520px] text-[0.8rem] leading-relaxed text-[#9CA3AF]"
-          >
-            {diagnosis.desires.intro}
-          </motion.p>
-
-          {/* Separator */}
-          <div className="separator-line my-4" />
-
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-            className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-2.5"
-          >
-            {diagnosis.desires.items.map((item) => (
-              <motion.div
-                key={item.title}
-                variants={fadeUpItem}
-                className="proposal-card flex items-start gap-2.5 rounded-xl border border-[rgba(119,189,172,0.06)] bg-[#0a0a0a] p-3 hover:border-[rgba(119,189,172,0.18)] hover:bg-[rgba(10,10,10,0.9)]"
-              >
-                <div className="icon-pulse mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[rgba(119,189,172,0.08)] text-[#77BDAC]"
-                  style={{ border: '1px solid rgba(119,189,172,0.12)' }}
-                >
-                  {desireIcons[item.icon] || <Target size={15} strokeWidth={1.5} />}
-                </div>
-                <div className="min-w-0">
-                  <h3 className="text-[0.75rem] font-semibold text-[#F3F4F6]">{item.title}</h3>
-                  <p className="mt-0.5 line-clamp-2 text-[0.65rem] leading-relaxed text-[#9CA3AF]">{item.description}</p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
+        <ScaleGoalSlide scrollYProgress={scrollYProgress} goal={diagnosis.goals[0]} range={R.goal1} />
       </ScrollSlide>
 
       {/* ═══════════════════════════════════════════════════════════════════════
-          SLIDE 4 — Implementacao / Opportunities
+          SLIDE 4 — Goal 2: CPA
           ═══════════════════════════════════════════════════════════════════════ */}
-      <ScrollSlide range={R.opportunities} scrollYProgress={scrollYProgress} zIndex={5}>
+      <ScrollSlide range={R.goal2} scrollYProgress={scrollYProgress} zIndex={5}>
+        <div className="slide-dot-grid" />
+        <SingleGoalSlide scrollYProgress={scrollYProgress} goal={diagnosis.goals[1]} range={R.goal2} slideNum="04" totalSlides="07" badge="Meta de CPA" />
+      </ScrollSlide>
+
+      {/* ═══════════════════════════════════════════════════════════════════════
+          SLIDE 5 — Goal 3: Dados perdidos
+          ═══════════════════════════════════════════════════════════════════════ */}
+      <ScrollSlide range={R.goal3} scrollYProgress={scrollYProgress} zIndex={6}>
+        <div className="slide-dot-grid" />
+        <SingleGoalSlide scrollYProgress={scrollYProgress} goal={diagnosis.goals[2]} range={R.goal3} slideNum="05" totalSlides="07" badge="Perda de Dados" />
+      </ScrollSlide>
+
+      {/* ═══════════════════════════════════════════════════════════════════════
+          SLIDE 6 — Implementacao / Opportunities
+          ═══════════════════════════════════════════════════════════════════════ */}
+      <ScrollSlide range={R.opportunities} scrollYProgress={scrollYProgress} zIndex={7}>
         <div className="slide-dot-grid" />
 
         <div className="slide-content">
@@ -267,9 +228,9 @@ export default function ProposalScroll({ scrollYProgress, clientData }: Proposal
       </ScrollSlide>
 
       {/* ═══════════════════════════════════════════════════════════════════════
-          SLIDE 5 — Proposta + CTA (isLast: permanece visivel, sem fade-out)
+          SLIDE 7 — Proposta + CTA (isLast: permanece visivel, sem fade-out)
           ═══════════════════════════════════════════════════════════════════════ */}
-      <ScrollSlide range={R.proposal} scrollYProgress={scrollYProgress} zIndex={6} isLast>
+      <ScrollSlide range={R.proposal} scrollYProgress={scrollYProgress} zIndex={8} isLast>
         <div className="slide-dot-grid" />
 
         <div className="slide-content text-center">
@@ -520,8 +481,8 @@ function HeaderSlideContent({ scrollYProgress, firstName, formattedDate, diagnos
   formattedDate: string;
   diagnosis: ClientData['diagnosis'];
 }) {
-  const s = 0.08;
-  const span = 0.18;
+  const s = 0.06;
+  const span = 0.13;
   const t = (offset: number) => s + span * offset;
 
   const topBarOpacity    = useTransform(scrollYProgress, [t(0.05), t(0.20)], [0, 1]);
@@ -711,8 +672,8 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
   scrollYProgress: MotionValue<number>;
   diagnosis: ClientData['diagnosis'];
 }) {
-  const s = 0.26;
-  const span = 0.18;
+  const s = 0.19;
+  const span = 0.14;
   const t = (offset: number) => s + span * offset;
 
   // Scroll-driven entry (layout only) — data animations are loop-based
@@ -976,6 +937,321 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
           </motion.div>
           <div className="h-px flex-1" style={{ background: 'linear-gradient(270deg, rgba(119,189,172,0.15), transparent)' }} />
         </div>
+      </motion.div>
+    </div>
+  );
+}
+
+// ─── Scale Goal Slide — counter + scale bar (single animation source) ────────
+function ScaleGoalSlide({ scrollYProgress, goal, range }: {
+  scrollYProgress: MotionValue<number>;
+  goal: { metric: string; label: string; description: string };
+  range: [number, number];
+}) {
+  const [s] = range;
+  const span = range[1] - range[0];
+  const t = (offset: number) => s + span * offset;
+
+  const topBarOpacity   = useTransform(scrollYProgress, [t(0.05), t(0.18)], [0, 1]);
+  const metricOpacity   = useTransform(scrollYProgress, [t(0.10), t(0.28)], [0, 1]);
+  const metricY         = useTransform(scrollYProgress, [t(0.10), t(0.28)], [24, 0]);
+  const barOpacity      = useTransform(scrollYProgress, [t(0.20), t(0.36)], [0, 1]);
+  const barY            = useTransform(scrollYProgress, [t(0.20), t(0.36)], [16, 0]);
+  const labelOpacity    = useTransform(scrollYProgress, [t(0.28), t(0.42)], [0, 1]);
+  const labelY          = useTransform(scrollYProgress, [t(0.28), t(0.42)], [12, 0]);
+  const descOpacity     = useTransform(scrollYProgress, [t(0.34), t(0.48)], [0, 1]);
+  const descY           = useTransform(scrollYProgress, [t(0.34), t(0.48)], [10, 0]);
+  const footerOpacity   = useTransform(scrollYProgress, [t(0.46), t(0.58)], [0, 1]);
+
+  // Single animation source: Date.now() modulo → loopProgress 0→1
+  // Both counter and bar derive from this — guaranteed sync
+  const TARGET = 100000;
+  const START = 3000;
+  const startRef = useRef(Date.now());
+  const [loopProgress, setLoopProgress] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const elapsed = (Date.now() - startRef.current) % (LOOP_S * 1000);
+      setLoopProgress(elapsed / (LOOP_S * 1000));
+    }, 50);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Derive values from loopProgress
+  // Phases: up (0→0.42), hold top (0.42→0.55), down (0.55→0.88), hold bottom (0.88→1)
+  // easeInOutCubic helper
+  const easeInOut = (x: number) =>
+    x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+
+  let normalizedValue: number;
+  if (loopProgress < 0.42) {
+    const raw = loopProgress / 0.42;
+    normalizedValue = 1 - Math.pow(1 - raw, 3); // easeOutCubic — fast start, brakes at top
+  } else if (loopProgress < 0.55) {
+    normalizedValue = 1; // hold at peak
+  } else if (loopProgress < 0.88) {
+    const raw = (loopProgress - 0.55) / 0.33;
+    normalizedValue = 1 - easeInOut(raw); // easeInOut down — brakes at both ends
+  } else {
+    normalizedValue = 0; // hold at bottom before next cycle
+  }
+
+  const barPct = 3 + 97 * normalizedValue;
+  const counterValue = Math.round(START + (TARGET - START) * normalizedValue);
+  const formattedCounter = counterValue.toLocaleString('pt-BR');
+
+  return (
+    <div className="slide-content">
+      {/* Top bar */}
+      <motion.div
+        style={{ opacity: topBarOpacity }}
+        className="mb-6 flex items-center justify-between"
+      >
+        <div className="flex items-center gap-2">
+          <span className="live-dot" />
+          <span className="text-[0.6rem] font-medium tracking-wide text-[#6B7280]" style={{ fontFamily: 'var(--font-mono), monospace' }}>
+            03 / 07
+          </span>
+        </div>
+        <SectionBadge label="Meta de Escala" />
+      </motion.div>
+
+      {/* Accent line */}
+      <motion.div
+        style={{ scaleX: useTransform(scrollYProgress, [t(0.08), t(0.24)], [0, 1]), transformOrigin: 'left' }}
+        className="accent-line mb-8"
+      />
+
+      {/* Counter — clean, minimal */}
+      <motion.div style={{ opacity: metricOpacity, y: metricY }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+          <span style={{
+            fontSize: '0.75rem', color: '#4B5563',
+            fontFamily: 'var(--font-mono), monospace', fontWeight: 500,
+          }}>
+            R$
+          </span>
+          <span style={{
+            fontFamily: 'var(--font-mono), monospace', fontWeight: 600,
+            fontSize: 'clamp(1.75rem, 6vw, 2.5rem)', lineHeight: 1,
+            color: '#77BDAC',
+            fontVariantNumeric: 'tabular-nums',
+            letterSpacing: '-0.02em',
+          }}>
+            {formattedCounter}
+          </span>
+          <span style={{
+            fontSize: '0.6rem', color: '#374151',
+            fontFamily: 'var(--font-mono), monospace', fontWeight: 500,
+          }}>
+            /dia
+          </span>
+        </div>
+      </motion.div>
+
+      {/* Scale bar — synced with counter via normalizedValue */}
+      <motion.div style={{ opacity: barOpacity, y: barY }} className="mt-5 max-w-[380px]">
+        <div style={{
+          height: 3, borderRadius: 1.5, background: 'rgba(255,255,255,0.04)',
+          overflow: 'hidden', position: 'relative',
+        }}>
+          <div
+            style={{
+              height: '100%', borderRadius: 1.5,
+              width: `${barPct}%`,
+              background: 'linear-gradient(90deg, rgba(119,189,172,0.3), #77BDAC)',
+              transition: 'width 50ms linear',
+              boxShadow: normalizedValue > 0.1 ? '0 0 8px rgba(119,189,172,0.15)' : 'none',
+            }}
+          />
+        </div>
+        {/* Labels below */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
+          <span style={{ fontSize: '0.5rem', color: '#4B5563', fontFamily: 'var(--font-mono), monospace', fontWeight: 500, letterSpacing: '0.03em' }}>
+            atual
+          </span>
+          <span style={{ fontSize: '0.5rem', color: '#4B5563', fontFamily: 'var(--font-mono), monospace', fontWeight: 500, letterSpacing: '0.03em' }}>
+            potencial
+          </span>
+        </div>
+      </motion.div>
+
+      {/* Label */}
+      <motion.div style={{ opacity: labelOpacity, y: labelY }} className="mt-8">
+        <h3 style={{
+          fontSize: 'clamp(1rem, 3vw, 1.25rem)', fontWeight: 700, color: '#F3F4F6',
+          lineHeight: 1.3,
+        }}>
+          {goal.label}
+        </h3>
+      </motion.div>
+
+      {/* Description */}
+      <motion.p
+        style={{ opacity: descOpacity, y: descY }}
+        className="mt-3 max-w-[520px] text-[0.8rem] leading-[1.8] text-[#9CA3AF]"
+      >
+        {goal.description}
+      </motion.p>
+
+      {/* Context pills — floating with staggered movement */}
+      <motion.div
+        style={{ opacity: descOpacity, y: descY }}
+        className="mt-5 flex flex-wrap gap-2.5"
+      >
+        {['117k seguidores', 'R$297 ticket', 'Funil ativo', 'Nicho amplo'].map((label, i) => (
+          <motion.span
+            key={label}
+            animate={{
+              opacity: [0.4, 0.4, 0.85, 0.85, 0.4, 0.4],
+              y: [0, 0, -3, -3, 0, 0],
+            }}
+            transition={{
+              duration: 5 + i * 0.8,
+              repeat: Infinity,
+              ease: 'easeInOut',
+              times: [0, 0.15, 0.3, 0.55, 0.7, 1],
+              delay: i * 1.2,
+            }}
+            style={{
+              fontSize: '0.55rem', color: '#9CA3AF',
+              fontFamily: 'var(--font-mono), monospace',
+              padding: '5px 12px', borderRadius: 20,
+              background: 'rgba(119,189,172,0.04)',
+              border: '1px solid rgba(119,189,172,0.08)',
+              letterSpacing: '0.04em',
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+            }}
+          >
+            <motion.span
+              animate={{
+                scale: [1, 1, 1.4, 1.4, 1, 1],
+                opacity: [0.4, 0.4, 0.9, 0.9, 0.4, 0.4],
+              }}
+              transition={{
+                duration: 5 + i * 0.8,
+                repeat: Infinity,
+                ease: 'easeInOut',
+                times: [0, 0.15, 0.3, 0.55, 0.7, 1],
+                delay: i * 1.2,
+              }}
+              style={{ width: 4, height: 4, borderRadius: '50%', background: '#77BDAC' }}
+            />
+            {label}
+          </motion.span>
+        ))}
+      </motion.div>
+
+      {/* Footer chevron */}
+      <motion.div
+        style={{ opacity: footerOpacity }}
+        className="mt-10 flex w-full items-center gap-3"
+      >
+        <div className="h-px flex-1" style={{ background: 'linear-gradient(90deg, rgba(119,189,172,0.15), transparent)' }} />
+        <motion.div
+          animate={{ y: [0, 4, 0], opacity: [0.4, 0.8, 0.4] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ opacity: 0.4 }}>
+            <path d="M1 1L5 5L9 1" stroke="#77BDAC" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </motion.div>
+        <div className="h-px flex-1" style={{ background: 'linear-gradient(270deg, rgba(119,189,172,0.15), transparent)' }} />
+      </motion.div>
+    </div>
+  );
+}
+
+// ─── Single Goal Slide — one metric per slide, hero-style ────────────────────
+function SingleGoalSlide({ scrollYProgress, goal, range, slideNum, totalSlides, badge }: {
+  scrollYProgress: MotionValue<number>;
+  goal: { metric: string; label: string; description: string };
+  range: [number, number];
+  slideNum: string;
+  totalSlides: string;
+  badge: string;
+}) {
+  const [s] = range;
+  const span = range[1] - range[0];
+  const t = (offset: number) => s + span * offset;
+
+  const topBarOpacity   = useTransform(scrollYProgress, [t(0.05), t(0.18)], [0, 1]);
+  const metricOpacity   = useTransform(scrollYProgress, [t(0.10), t(0.28)], [0, 1]);
+  const metricY         = useTransform(scrollYProgress, [t(0.10), t(0.28)], [24, 0]);
+  const labelOpacity    = useTransform(scrollYProgress, [t(0.18), t(0.36)], [0, 1]);
+  const labelY          = useTransform(scrollYProgress, [t(0.18), t(0.36)], [16, 0]);
+  const descOpacity     = useTransform(scrollYProgress, [t(0.26), t(0.44)], [0, 1]);
+  const descY           = useTransform(scrollYProgress, [t(0.26), t(0.44)], [12, 0]);
+  const footerOpacity   = useTransform(scrollYProgress, [t(0.42), t(0.56)], [0, 1]);
+
+  return (
+    <div className="slide-content">
+      {/* Top bar */}
+      <motion.div
+        style={{ opacity: topBarOpacity }}
+        className="mb-6 flex items-center justify-between"
+      >
+        <div className="flex items-center gap-2">
+          <span className="live-dot" />
+          <span className="text-[0.6rem] font-medium tracking-wide text-[#6B7280]" style={{ fontFamily: 'var(--font-mono), monospace' }}>
+            {slideNum} / {totalSlides}
+          </span>
+        </div>
+        <SectionBadge label={badge} />
+      </motion.div>
+
+      {/* Accent line */}
+      <motion.div
+        style={{ scaleX: useTransform(scrollYProgress, [t(0.08), t(0.24)], [0, 1]), transformOrigin: 'left' }}
+        className="accent-line mb-8"
+      />
+
+      {/* Metric — hero element */}
+      <motion.div style={{ opacity: metricOpacity, y: metricY }}>
+        <span style={{
+          fontFamily: 'var(--font-serif)', fontWeight: 700,
+          fontSize: 'clamp(2.5rem, 8vw, 4rem)', lineHeight: 1,
+          color: '#77BDAC',
+          display: 'block',
+        }}>
+          {goal.metric}
+        </span>
+      </motion.div>
+
+      {/* Label */}
+      <motion.div style={{ opacity: labelOpacity, y: labelY }} className="mt-4">
+        <span style={{
+          fontSize: '0.9rem', fontWeight: 600, color: '#F3F4F6',
+          lineHeight: 1.4,
+        }}>
+          {goal.label}
+        </span>
+      </motion.div>
+
+      {/* Description */}
+      <motion.p
+        style={{ opacity: descOpacity, y: descY }}
+        className="mt-3 max-w-[480px] text-[0.8rem] leading-relaxed text-[#9CA3AF]"
+      >
+        {goal.description}
+      </motion.p>
+
+      {/* Footer chevron */}
+      <motion.div
+        style={{ opacity: footerOpacity }}
+        className="mt-12 flex w-full items-center gap-3"
+      >
+        <div className="h-px flex-1" style={{ background: 'linear-gradient(90deg, rgba(119,189,172,0.15), transparent)' }} />
+        <motion.div
+          animate={{ y: [0, 4, 0], opacity: [0.4, 0.8, 0.4] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ opacity: 0.4 }}>
+            <path d="M1 1L5 5L9 1" stroke="#77BDAC" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </motion.div>
+        <div className="h-px flex-1" style={{ background: 'linear-gradient(270deg, rgba(119,189,172,0.15), transparent)' }} />
       </motion.div>
     </div>
   );

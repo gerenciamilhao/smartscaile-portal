@@ -73,7 +73,7 @@ export interface ClientDiagnosis {
   headline: string;
   stapeChecker?: StapeChecker;
   goals: Goal[];
-  desires: Desires;
+  desires?: Desires;
   opportunities: Opportunity[];
   proposal: Proposal;
 }

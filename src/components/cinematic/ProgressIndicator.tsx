@@ -8,25 +8,27 @@ interface ProgressIndicatorProps {
 }
 
 // Midpoints — exatamente no centro de cada slide range
-const SLIDE_MIDS = [0.17, 0.35, 0.53, 0.71, 0.90];
+const SLIDE_MIDS = [0.125, 0.26, 0.395, 0.525, 0.655, 0.79, 0.93];
 
 // Each slide's exact range boundaries (from ProposalScroll R)
 const SLIDE_RANGES: [number, number][] = [
-  [0.08, 0.26],
-  [0.26, 0.44],
-  [0.44, 0.62],
-  [0.62, 0.80],
-  [0.80, 1.00],
+  [0.06, 0.19],
+  [0.19, 0.33],
+  [0.33, 0.46],
+  [0.46, 0.59],
+  [0.59, 0.72],
+  [0.72, 0.86],
+  [0.86, 1.00],
 ];
 
 export function ProgressIndicator({ scrollYProgress, sections }: ProgressIndicatorProps) {
   const overallOpacity = useTransform(
     scrollYProgress,
-    [0, 0.06, 0.10, 0.96, 1.0],
+    [0, 0.04, 0.08, 0.96, 1.0],
     [0, 0, 1, 1, 0],
   );
 
-  const thumbPercent = useTransform(scrollYProgress, [0.08, 1.0], [0, 100]);
+  const thumbPercent = useTransform(scrollYProgress, [0.06, 1.0], [0, 100]);
   const thumbTop = useTransform(thumbPercent, (v) => `${Math.min(100, Math.max(0, v))}%`);
 
   return (
@@ -41,7 +43,7 @@ export function ProgressIndicator({ scrollYProgress, sections }: ProgressIndicat
           opacity: overallOpacity,
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           {sections.map((label, i) => (
             <ProgressDot key={label} index={i} label={label} scrollYProgress={scrollYProgress} />
           ))}

@@ -365,7 +365,7 @@ Sistema de slides cinematográficos sobrepostos dentro de viewport sticky, contr
 
 ### Arquitetura
 ```
-Container tall (600vh) → viewport sticky (100vh) → slides absolute sobrepostos
+Container tall (750vh) → viewport sticky (100vh) → slides absolute sobrepostos
 ```
 - **Background único**: `bg-hero-mesh` no viewport sticky. Slides são **transparentes** (sem background)
 - **Ambient glow persistente**: Elemento fixo (z-index 0) no viewport sticky com radial gradients teal. Cria continuidade visual entre slides
@@ -401,4 +401,91 @@ const outStart = end - span * 0.30;   // 30% do range para fade-out
 
 ---
 
-*Extracted from Hero.tsx, PainHero.tsx, VideoSection.tsx, ScrollSlide.tsx, ProposalScroll.tsx, page.tsx, globals.css, motion.tsx — v1.4*
+## Padrão: Terminal Typing (Slide 1)
+
+Terminal com efeito de digitação char-by-char em loop:
+- **Window chrome**: 3 macOS dots (`#EF4444`, `#F59E0B`, `#22C55E`, opacity 0.65), 8px
+- **Body**: glassmorphism (`backdrop-filter: blur(16px)`), bg linear gradient `rgba(12,12,12,0.92)` → `rgba(5,5,5,0.88)`
+- **Border**: `1px solid rgba(119,189,172,0.08)`, radius `14px`
+- **Font**: mono, `0.7rem`, `lineHeight: 1.8`
+- **Line numbers**: `0.55rem`, color `#27272a`, width 20px + 12px margin
+- **Bottom bar**: live dot pulsante + referência `stape.io/checker`
+- **Cursor**: `▌`, blink 0.8s infinite
+- **Typing speed**: 25 + random * 20ms (variação natural)
+- **Loop**: todas as linhas tipadas → hold 3s → reset → recomeça
+- **Fixed height**: linhas futuras renderizadas com `visibility: hidden` (evita layout shift)
+- **Perspectiva 3D**: `rotateY(8deg) rotateX(1deg)`, `transformOrigin: 'left center'`, `perspective: 800`
+- **Ambient glow**: `radial-gradient` atrás do terminal, blur 20px
+- **Shadow**: `0 12px 40px rgba(0,0,0,0.4), 0 0 1px rgba(119,189,172,0.12), inset 0 1px 0 rgba(255,255,255,0.03)`
+
+---
+
+## Padrão: Score Ring Diagnostic (Slide 2)
+
+Anel SVG animado com loop para exibir score geral:
+- **Ring**: 180px, stroke 8px, `strokeLinecap: round`
+- **Track**: `rgba(255,255,255,0.04)`
+- **Arc**: cor dinâmica via `scoreColor(v)` — `#EF4444` (≤30), `#F59E0B` (31-50), `#77BDAC` (>50)
+- **Loop timing**: `LOOP_S = 6`, `LOOP_TIMES = [0, 0.5, 0.67, 1]` — 3s fill, 1s hold, 2s smooth reset
+- **Breathing glow**: synced com ring fill, `inset: -32`, blur 28px
+- **Center**: "Overall score" (mono 0.5rem uppercase) + score number (serif 3rem bold) + "/100" (mono 0.65rem)
+- **Status badge**: pill com pulsing dot, label dinâmico ("Crítico" / "Atenção" / "Bom")
+- **Floating orbs**: 3 decorativos ao redor do ring
+
+### Sub-scores (minimalistas)
+- **Layout**: horizontal row — icon (13px, opacity 0.6) + label (mono 0.65rem) + score com `margin-left: auto`
+- **Score**: mono 0.85rem bold, cor dinâmica
+- **Barra de progresso**: 2px height, gradient `${clr}30` → `${clr}`, glow sutil
+- **Loop**: mesmo timing do ring com delay staggered (`delay * 0.15`)
+- **Separadores**: `1px rgba(255,255,255,0.03)` entre itens
+- **Container**: `maxWidth: 280px`, sem background/borda (sem visual de card)
+- **Padding vertical**: 12px por item
+
+### Layout geral (Slide 2)
+- Ring à esquerda + sub-scores à direita em desktop (`md:flex-row md:gap-12`)
+- Stack vertical em mobile (`flex-col gap-8`)
+- Gap top (headline → painel): `mb-10`
+- Gap bottom (painel → footer): `mt-10`
+
+---
+
+## Padrão: Scroll-Driven Entry + Loop Animation
+
+Separação clara de responsabilidades:
+- **Scroll** (`useTransform`) controla **entrada** dos elementos (opacity + y drift)
+- **Loop** (`animate` com `repeat: Infinity`) controla **dados visuais** (ring, bars, typing)
+- Animações de dados são independentes do scroll — iniciam quando o elemento aparece e rodam indefinidamente
+- Hooks rule: `useTransform` não pode ser chamado dentro de `.map()` — extrair componente próprio
+
+---
+
+## Padrão: Synced Counter + Scale Bar (Slide 3)
+
+Counter numérico e barra de progresso sincronizados por uma única fonte de animação:
+- **Single source**: `Date.now() % (LOOP_S * 1000)` via `setInterval(50ms)` → `loopProgress` 0→1
+- **4 fases**: up (0→0.42, easeOutCubic) → hold topo (0.42→0.55) → down (0.55→0.88, easeInOutCubic) → hold fundo (0.88→1)
+- **Counter**: mono font, `tabular-nums`, `clamp(1.75rem, 6vw, 2.5rem)`, cor `#77BDAC`
+- **Barra**: `max-w-[380px]`, 3px height, gradiente `rgba(119,189,172,0.3) → #77BDAC`, glow condicional
+- **Barra renderizada com `<div>` inline** (`width: ${barPct}%`, `transition: width 50ms linear`) — NÃO Framer Motion `animate`
+- **Labels**: "atual" / "potencial" (mono 0.5rem, `#4B5563`)
+- **CRÍTICO**: Ambos derivam do mesmo `normalizedValue` — garantia de sync perfeito
+
+### Context Pills — Hold-Release Animation
+Pills com animação que sobe, segura, e volta:
+```tsx
+animate={{
+  opacity: [0.4, 0.4, 0.85, 0.85, 0.4, 0.4],
+  y: [0, 0, -3, -3, 0, 0],
+}}
+transition={{
+  duration: 5 + i * 0.8,    // 5-8s por pill
+  times: [0, 0.15, 0.3, 0.55, 0.7, 1],  // rest → ease in → hold ~25% → ease out → rest
+  delay: i * 1.2,           // stagger entre pills
+}}
+```
+- **Dot pulsante**: `scale: [1, 1, 1.4, 1.4, 1, 1]` + `opacity: [0.4, 0.4, 0.9, 0.9, 0.4, 0.4]` no mesmo timing
+- **Estilo**: mono 0.55rem, `padding: 5px 12px`, border `rgba(119,189,172,0.08)`, bg `rgba(119,189,172,0.04)`
+
+---
+
+*Extracted from Hero.tsx, PainHero.tsx, VideoSection.tsx, ScrollSlide.tsx, ProposalScroll.tsx, page.tsx, globals.css, motion.tsx — v1.6*

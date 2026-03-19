@@ -14,3 +14,22 @@ scroll_upgrade:
   prd: docs/prd/prd-smartscaile-portal-scroll.md
   stack: gsap-scrolltrigger-scrollsmoother
   lenis_removed: true
+  container_height: 1050vh
+slides:
+  slide_1_header:
+    status: complete
+    features: [terminal-typing, perspective-3d, glassmorphism, char-by-char-loop]
+  slide_2_results:
+    status: complete
+    features: [score-ring-loop, sub-scores-minimal, stape-diagnostic, score-color-system]
+  slide_3_goal_escala:
+    status: complete
+    features: [synced-counter-bar, single-animation-source, easeInOut-braking, floating-pills-hold, context-pills]
+  slide_4_goal_cpa:
+    status: pending-refinement
+  slide_5_goal_dados:
+    status: pending-refinement
+  slide_6_opportunities:
+    status: pending-refinement
+  slide_7_proposal:
+    status: pending-refinement

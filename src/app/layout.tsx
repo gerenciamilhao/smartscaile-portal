@@ -35,7 +35,7 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${inter.variable} ${playfair.variable} ${firaCode.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full bg-[#050505] text-[#F3F4F6]">
+      <body className="min-h-full bg-[#050505] text-[#F3F4F6]" suppressHydrationWarning>
         <GSAPProvider>{children}</GSAPProvider>
       </body>
     </html>
