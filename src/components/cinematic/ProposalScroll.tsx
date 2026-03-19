@@ -653,73 +653,54 @@ function SubScoreCard({ label, score, opacity, y, delay }: {
   const pct = `${score}%`;
 
   return (
-    <motion.div style={{ opacity, y }}>
-      <div className="proposal-card" style={{
-        padding: '14px 16px', borderRadius: 14,
-        background: 'rgba(255,255,255,0.02)',
-        border: `1px solid ${clr}12`,
-        backdropFilter: 'blur(8px)',
-      }}>
-        {/* Icon + label */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 10 }}>
-          <div style={{
-            width: 24, height: 24, borderRadius: 6,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: `${clr}10`, border: `1px solid ${clr}18`,
-          }}>
-            <motion.div
-              animate={{ opacity: [0.5, 0.9, 0.5] }}
-              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', delay: delay * 0.4 }}
-              style={{ color: clr, display: 'flex', alignItems: 'center' }}
-            >
-              {subScoreIcons[label] || <Activity size={12} strokeWidth={1.5} />}
-            </motion.div>
-          </div>
-          <span style={{
-            fontSize: '0.6rem', color: '#9CA3AF',
-            fontFamily: 'var(--font-mono), monospace', fontWeight: 500,
-            textTransform: 'uppercase', letterSpacing: '0.06em',
-          }}>
-            {label}
-          </span>
+    <motion.div style={{ opacity, y, padding: '12px 0' }}>
+      {/* Row: icon + label + score */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+        <div style={{ color: clr, opacity: 0.6, display: 'flex', alignItems: 'center' }}>
+          {subScoreIcons[label] || <Activity size={13} strokeWidth={1.5} />}
         </div>
-        {/* Score number — large */}
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 8 }}>
+        <span style={{
+          fontSize: '0.65rem', color: '#9CA3AF',
+          fontFamily: 'var(--font-mono), monospace', fontWeight: 500,
+          letterSpacing: '0.04em',
+        }}>
+          {label}
+        </span>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 3, marginLeft: 'auto' }}>
           <span style={{
-            fontFamily: 'var(--font-serif)', fontWeight: 700,
-            fontSize: '1.75rem', lineHeight: 1, color: clr,
-            textShadow: `0 0 16px ${clr}30`,
+            fontFamily: 'var(--font-mono), monospace', fontWeight: 600,
+            fontSize: '0.85rem', lineHeight: 1, color: clr,
           }}>
             {score}
           </span>
           <span style={{
-            fontSize: '0.55rem', color: '#4B5563',
+            fontSize: '0.45rem', color: '#374151',
             fontFamily: 'var(--font-mono), monospace',
           }}>
             /100
           </span>
         </div>
-        {/* Progress bar — fill → hold → reset loop */}
-        <div style={{
-          height: 3, borderRadius: 2, background: 'rgba(255,255,255,0.04)',
-          overflow: 'hidden',
-        }}>
-          <motion.div
-            animate={{ width: ['0%', pct, pct, '0%'] }}
-            transition={{
-              duration: LOOP_S,
-              repeat: Infinity,
-              ease: [0.16, 1, 0.3, 1],
-              times: LOOP_TIMES,
-              delay: delay * 0.15,
-            }}
-            style={{
-              height: '100%', borderRadius: 2,
-              background: `linear-gradient(90deg, ${clr}40, ${clr})`,
-              boxShadow: `0 0 10px ${clr}40`,
-            }}
-          />
-        </div>
+      </div>
+      {/* Thin progress bar — fill → hold → reset loop */}
+      <div style={{
+        height: 2, borderRadius: 1, background: 'rgba(255,255,255,0.04)',
+        overflow: 'hidden',
+      }}>
+        <motion.div
+          animate={{ width: ['0%', pct, pct, '0%'] }}
+          transition={{
+            duration: LOOP_S,
+            repeat: Infinity,
+            ease: [0.16, 1, 0.3, 1],
+            times: LOOP_TIMES,
+            delay: delay * 0.15,
+          }}
+          style={{
+            height: '100%', borderRadius: 1,
+            background: `linear-gradient(90deg, ${clr}30, ${clr})`,
+            boxShadow: `0 0 6px ${clr}25`,
+          }}
+        />
       </div>
     </motion.div>
   );
@@ -755,8 +736,8 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
   const overallScore = scores?.overall ?? 0;
 
   // Ring SVG math — loop animation (not scroll-driven)
-  const ringSize = 160;
-  const ringStroke = 10;
+  const ringSize = 180;
+  const ringStroke = 8;
   const r = (ringSize - ringStroke) / 2;
   const circ = 2 * Math.PI * r;
   const filledOffset = circ - (overallScore / 100) * circ;
@@ -799,27 +780,27 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
       </motion.h2>
       <motion.p
         style={{ opacity: headlineOpacity, y: headlineY }}
-        className="mt-2 mb-6 max-w-[480px] text-[0.8rem] leading-relaxed text-[#9CA3AF]"
+        className="mt-2 mb-10 max-w-[480px] text-[0.8rem] leading-relaxed text-[#9CA3AF]"
       >
         Analisamos a estrutura de tracking atual. O resultado fala por si.
       </motion.p>
 
-      {/* ── Diagnostic panel: ring centered + 2x2 grid below ── */}
+      {/* ── Diagnostic panel: ring left + sub-scores right ── */}
       <motion.div
         style={{ opacity: panelOpacity, y: panelY }}
-        className="flex flex-col items-center gap-6"
+        className="flex flex-col items-center gap-8 md:flex-row md:items-center md:gap-12"
       >
-        {/* Overall ring — centered */}
+        {/* Left: Overall ring */}
         <div style={{
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
-          position: 'relative',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12,
+          position: 'relative', flexShrink: 0,
         }}>
           {/* Floating orbs */}
           <motion.div
             animate={{ y: [0, -6, 0], opacity: [0.3, 0.6, 0.3] }}
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
             style={{
-              position: 'absolute', top: -8, right: -20, width: 5, height: 5,
+              position: 'absolute', top: -10, right: -24, width: 5, height: 5,
               borderRadius: '50%', background: `${scoreColor(overallScore)}80`,
               boxShadow: `0 0 8px ${scoreColor(overallScore)}30`, pointerEvents: 'none', zIndex: 3,
             }}
@@ -828,7 +809,7 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
             animate={{ y: [0, 5, 0], x: [0, -3, 0] }}
             transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
             style={{
-              position: 'absolute', bottom: 24, left: -14, width: 3, height: 3,
+              position: 'absolute', bottom: 28, left: -18, width: 3, height: 3,
               borderRadius: '50%', background: `${scoreColor(overallScore)}60`,
               pointerEvents: 'none', zIndex: 3,
             }}
@@ -837,7 +818,7 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
             animate={{ y: [0, -4, 0], x: [0, 2, 0] }}
             transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
             style={{
-              position: 'absolute', top: '40%', left: -22, width: 4, height: 4,
+              position: 'absolute', top: '45%', left: -26, width: 4, height: 4,
               borderRadius: '50%', background: `${scoreColor(overallScore)}40`,
               pointerEvents: 'none', zIndex: 3,
             }}
@@ -857,9 +838,9 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
                 times: LOOP_TIMES,
               }}
               style={{
-                position: 'absolute', inset: -28, borderRadius: '50%',
+                position: 'absolute', inset: -32, borderRadius: '50%',
                 background: `radial-gradient(circle, ${scoreColor(overallScore)}18 0%, transparent 65%)`,
-                filter: 'blur(24px)', pointerEvents: 'none',
+                filter: 'blur(28px)', pointerEvents: 'none',
               }}
             />
             <svg width={ringSize} height={ringSize} style={{ transform: 'rotate(-90deg)', position: 'relative', zIndex: 1 }}>
@@ -881,7 +862,7 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
                   ease: [0.16, 1, 0.3, 1],
                   times: LOOP_TIMES,
                 }}
-                filter={`drop-shadow(0 0 6px ${scoreColor(overallScore)}60)`}
+                filter={`drop-shadow(0 0 8px ${scoreColor(overallScore)}50)`}
               />
             </svg>
             {/* Center content */}
@@ -892,7 +873,7 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
               <span style={{
                 fontSize: '0.5rem', color: '#6B7280', fontFamily: 'var(--font-mono), monospace',
                 textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 500,
-                marginBottom: 4,
+                marginBottom: 6,
               }}>
                 Overall score
               </span>
@@ -905,23 +886,24 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
                 transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
                 style={{
                   fontFamily: 'var(--font-serif)', fontWeight: 700,
-                  fontSize: '2.75rem', lineHeight: 1, color: scoreColor(overallScore),
+                  fontSize: '3rem', lineHeight: 1, color: scoreColor(overallScore),
                 }}
               >
                 {overallScore}
               </motion.span>
               <span style={{
-                fontSize: '0.6rem', color: '#6B7280', fontFamily: 'var(--font-mono), monospace',
-                marginTop: 2,
+                fontSize: '0.65rem', color: '#6B7280', fontFamily: 'var(--font-mono), monospace',
+                marginTop: 3,
               }}>
                 <span style={{ color: '#4B5563' }}>/</span>100
               </span>
             </div>
           </div>
+
           {/* Status badge */}
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
-            padding: '4px 12px', borderRadius: 20,
+            padding: '5px 14px', borderRadius: 20,
             background: `${scoreColor(overallScore)}10`,
             border: `1px solid ${scoreColor(overallScore)}20`,
           }}>
@@ -950,20 +932,21 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
           </div>
         </div>
 
-        {/* Sub-scores — 2×2 grid */}
-        <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)',
-          gap: 8, width: '100%',
-        }}>
+        {/* Right: Sub-scores — clean vertical list */}
+        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, width: '100%', maxWidth: 280 }}>
           {subScoreItems.map((item, i) => (
-            <SubScoreCard
-              key={item.label}
-              label={item.label}
-              score={item.score}
-              opacity={item.opacity}
-              y={item.y}
-              delay={i}
-            />
+            <div key={item.label}>
+              <SubScoreCard
+                label={item.label}
+                score={item.score}
+                opacity={item.opacity}
+                y={item.y}
+                delay={i}
+              />
+              {i < subScoreItems.length - 1 && (
+                <div style={{ height: 1, background: 'rgba(255,255,255,0.03)' }} />
+              )}
+            </div>
           ))}
         </div>
       </motion.div>
@@ -971,7 +954,7 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
       {/* ── Footer: Stape link + scroll chevron ── */}
       <motion.div
         style={{ opacity: footerOpacity, y: footerY }}
-        className="mt-6 flex flex-col items-center gap-4"
+        className="mt-10 flex flex-col items-center gap-4"
       >
         {diagnosis.stapeChecker && (
           <a href={diagnosis.stapeChecker.url} target="_blank" rel="noopener noreferrer"
