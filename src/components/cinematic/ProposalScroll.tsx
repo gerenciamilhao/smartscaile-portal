@@ -266,7 +266,7 @@ interface TerminalLine {
   delay?: number;   // ms before this line starts
 }
 
-function TerminalTyping({ lines }: { lines: TerminalLine[] }) {
+function TerminalTyping({ lines, isMobile = false }: { lines: TerminalLine[]; isMobile?: boolean }) {
   const [visibleChars, setVisibleChars] = useState<number[]>(lines.map(() => 0));
   const [activeLine, setActiveLine] = useState(0);
   const [loopKey, setLoopKey] = useState(0);
@@ -308,19 +308,21 @@ function TerminalTyping({ lines }: { lines: TerminalLine[] }) {
 
   return (
     <div style={{ position: 'relative' }}>
-      {/* Ambient glow behind terminal */}
-      <div style={{
-        position: 'absolute', inset: -16, borderRadius: 20,
-        background: 'radial-gradient(ellipse at 30% 20%, rgba(119,189,172,0.06) 0%, transparent 60%)',
-        filter: 'blur(20px)', pointerEvents: 'none',
-      }} />
+      {/* Ambient glow behind terminal — hidden on mobile */}
+      {!isMobile && (
+        <div style={{
+          position: 'absolute', inset: -16, borderRadius: 20,
+          background: 'radial-gradient(ellipse at 30% 20%, rgba(119,189,172,0.06) 0%, transparent 60%)',
+          filter: 'blur(20px)', pointerEvents: 'none',
+        }} />
+      )}
 
       <div style={{
         position: 'relative',
         borderRadius: 14,
         background: 'linear-gradient(180deg, rgba(12,12,12,0.92) 0%, rgba(5,5,5,0.88) 100%)',
         border: '1px solid rgba(119,189,172,0.08)',
-        backdropFilter: 'blur(16px)',
+        backdropFilter: isMobile ? 'none' : 'blur(16px)',
         overflow: 'hidden',
         fontFamily: 'var(--font-mono), monospace',
         fontSize: '0.7rem',
@@ -376,7 +378,7 @@ function TerminalTyping({ lines }: { lines: TerminalLine[] }) {
                 }}>
                   {i + 1}
                 </span>
-                <span>
+                <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1, minWidth: 0 }}>
                   {notYet ? '\u00A0' : displayed}
                   {showCursor && (
                     <motion.span
@@ -425,6 +427,7 @@ function HeaderSlideContent({ scrollYProgress, firstName, formattedDate, diagnos
   formattedDate: string;
   diagnosis: ClientData['diagnosis'];
 }) {
+  const isMobile = useIsMobile();
   const s = 0.06;
   const span = 0.13;
   const t = (offset: number) => s + span * offset;
@@ -502,7 +505,7 @@ function HeaderSlideContent({ scrollYProgress, firstName, formattedDate, diagnos
           transformOrigin: 'left center',
           maxWidth: 520,
         }}>
-          <TerminalTyping lines={terminalLines} />
+          <TerminalTyping lines={terminalLines} isMobile={isMobile} />
         </div>
       </motion.div>
 
@@ -876,6 +879,7 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
   scrollYProgress: MotionValue<number>;
   diagnosis: ClientData['diagnosis'];
 }) {
+  const isMobile = useIsMobile();
   const s = 0.19;
   const span = 0.14;
   const t = (offset: number) => s + span * offset;
@@ -1012,7 +1016,7 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
               style={{
                 position: 'absolute', inset: -32, borderRadius: '50%',
                 background: `radial-gradient(circle, ${scoreColor(overallScore)}18 0%, transparent 65%)`,
-                filter: 'blur(28px)', pointerEvents: 'none',
+                filter: isMobile ? 'none' : 'blur(28px)', pointerEvents: 'none',
               }}
             />
             <svg width={ringSize} height={ringSize} style={{ transform: 'rotate(-90deg)', position: 'relative', zIndex: 1 }}>
@@ -1340,8 +1344,8 @@ function ScaleGoalSlide({ scrollYProgress, goal, range }: {
 }
 
 // ─── CPA Tracking Ring — smaller version of slide 2 ring, driven by value ────
-function CPATrackingRing({ trackingValue, trackingColor, normalizedValue }: {
-  trackingValue: number; trackingColor: string; normalizedValue: number;
+function CPATrackingRing({ trackingValue, trackingColor, normalizedValue, isMobile = false }: {
+  trackingValue: number; trackingColor: string; normalizedValue: number; isMobile?: boolean;
 }) {
   const size = 120;
   const stroke = 6;
@@ -1380,7 +1384,7 @@ function CPATrackingRing({ trackingValue, trackingColor, normalizedValue }: {
           style={{
             position: 'absolute', inset: -20, borderRadius: '50%',
             background: `radial-gradient(circle, ${trackingColor}${normalizedValue > 0.5 ? '18' : '08'} 0%, transparent 65%)`,
-            filter: 'blur(20px)', pointerEvents: 'none',
+            filter: isMobile ? 'none' : 'blur(20px)', pointerEvents: 'none',
             transition: 'background 200ms ease',
           }}
         />
@@ -1506,7 +1510,7 @@ function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
       <motion.div style={{ opacity: labelOpacity, y: labelY }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
           {/* Tracking Score Ring — synced with normalizedValue */}
-          <CPATrackingRing trackingValue={trackingValue} trackingColor={trackingColor} normalizedValue={normalizedValue} />
+          <CPATrackingRing trackingValue={trackingValue} trackingColor={trackingColor} normalizedValue={normalizedValue} isMobile={isMobile} />
 
           {/* CPA counter + meta badge */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -1895,6 +1899,7 @@ function PricingSlide({ scrollYProgress, pricing, range }: {
   pricing: { plans: PricingPlan[] };
   range: [number, number];
 }) {
+  const isMobile = useIsMobile();
   const [start, end] = range;
   const span = end - start;
 
@@ -2020,7 +2025,7 @@ function PricingSlide({ scrollYProgress, pricing, range }: {
         transform: 'translate(-50%, -50%)',
         width: 400, height: 400, borderRadius: '50%',
         background: 'radial-gradient(circle, rgba(119,189,172,0.04) 0%, transparent 70%)',
-        filter: 'blur(40px)', pointerEvents: 'none',
+        filter: isMobile ? 'none' : 'blur(40px)', pointerEvents: 'none',
       }} />
 
     </div>
@@ -2328,6 +2333,7 @@ function OpportunitiesSlide({ scrollYProgress, opportunities, range }: {
   opportunities: Opportunity[];
   range: [number, number];
 }) {
+  const isMobile = useIsMobile();
   const [s] = range;
   const span = range[1] - range[0];
   const t = (offset: number) => s + span * offset;
@@ -2458,7 +2464,7 @@ function OpportunitiesSlide({ scrollYProgress, opportunities, range }: {
           width: 280, height: 280, borderRadius: '50%',
           background: 'radial-gradient(circle, rgba(119,189,172,0.04) 0%, transparent 70%)',
           transform: 'translate(-50%, -50%)',
-          filter: 'blur(40px)', pointerEvents: 'none',
+          filter: isMobile ? 'none' : 'blur(40px)', pointerEvents: 'none',
         }} />
 
         {/* Note card */}

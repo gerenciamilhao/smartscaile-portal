@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { useIsMobile } from '@/lib/useIsMobile';
 import PainHero, { type PainHeroHandle } from './PainHero';
 import Hero from './Hero';
 import TokenModal from './TokenModal';
@@ -86,6 +87,7 @@ export default function CinematicExperience({ initialData }: CinematicExperience
 function UnlockedExperience({ clientData }: { clientData: ClientData | null }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const hasProposal = !!clientData;
+  const isMobile = useIsMobile();
 
   // Scroll progress do container
   const { scrollYProgress } = useScroll({
@@ -98,7 +100,7 @@ function UnlockedExperience({ clientData }: { clientData: ClientData | null }) {
   const heroY          = useTransform(scrollYProgress, [0, 0.02, 0.06], [0, 0, -40]);
   const heroPointer    = useTransform(scrollYProgress, (v) => v > 0.06 ? 'none' : 'auto');
   const heroVisibility = useTransform(scrollYProgress, (v) =>
-    v > 0.08 ? ('hidden' as const) : ('visible' as const)
+    v > 0.06 ? ('hidden' as const) : ('visible' as const)
   );
 
   return (
@@ -127,31 +129,35 @@ function UnlockedExperience({ clientData }: { clientData: ClientData | null }) {
               pointerEvents: 'none',
             }}
           >
-            {/* Top-center teal glow */}
-            <div
-              style={{
-                position: 'absolute',
-                top: '-15%',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                width: '80%',
-                height: '50%',
-                background: 'radial-gradient(ellipse at center, rgba(119,189,172,0.07) 0%, transparent 70%)',
-                filter: 'blur(60px)',
-              }}
-            />
-            {/* Bottom-right subtle glow */}
-            <div
-              style={{
-                position: 'absolute',
-                bottom: '-10%',
-                right: '-5%',
-                width: '40%',
-                height: '40%',
-                background: 'radial-gradient(ellipse at center, rgba(119,189,172,0.04) 0%, transparent 70%)',
-                filter: 'blur(80px)',
-              }}
-            />
+            {/* Top-center teal glow — hidden on mobile for performance */}
+            {!isMobile && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '-15%',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: '80%',
+                  height: '50%',
+                  background: 'radial-gradient(ellipse at center, rgba(119,189,172,0.07) 0%, transparent 70%)',
+                  filter: 'blur(60px)',
+                }}
+              />
+            )}
+            {/* Bottom-right subtle glow — hidden on mobile for performance */}
+            {!isMobile && (
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '-10%',
+                  right: '-5%',
+                  width: '40%',
+                  height: '40%',
+                  background: 'radial-gradient(ellipse at center, rgba(119,189,172,0.04) 0%, transparent 70%)',
+                  filter: 'blur(80px)',
+                }}
+              />
+            )}
           </div>
 
           {/* Hero — fades e sobe ao scrollar */}
