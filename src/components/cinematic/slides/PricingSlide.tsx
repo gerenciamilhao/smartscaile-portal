@@ -68,7 +68,7 @@ function PricingCard({ plan, opacity, y }: {
   const highlightService = filtered[filtered.length - 1];
 
   return (
-    <motion.div style={{ opacity, y, width: '100%', maxWidth: 580 }}>
+    <motion.div style={{ opacity, y, width: '100%', maxWidth: 620 }}>
       <div
         style={{
           borderRadius: 14,
@@ -108,7 +108,7 @@ function PricingCard({ plan, opacity, y }: {
           </span>
         </div>
 
-        <div style={{ padding: '16px 20px 0', textAlign: 'center' }}>
+        <div style={{ padding: '10px 20px 0', textAlign: 'center' }}>
           <span style={{
             fontFamily: 'var(--font-mono), monospace', fontSize: '0.6rem', fontWeight: 600,
             color: 'rgba(119,189,172,0.65)', letterSpacing: '0.12em', textTransform: 'uppercase',
@@ -117,7 +117,7 @@ function PricingCard({ plan, opacity, y }: {
           </span>
         </div>
 
-        <div style={{ padding: '14px 20px 0', textAlign: 'center' }}>
+        <div style={{ padding: '8px 20px 0', textAlign: 'center' }}>
           <div style={{ display: 'inline-flex', alignItems: 'baseline', gap: 6, whiteSpace: 'nowrap' }}>
             <span style={{ fontFamily: 'var(--font-mono), monospace', fontWeight: 500, fontSize: '0.95rem', lineHeight: 1, color: '#77BDAC', opacity: 0.6 }}>
               {plan.installments}x
@@ -130,7 +130,7 @@ function PricingCard({ plan, opacity, y }: {
               R${formattedAmount}
             </span>
           </div>
-          <div style={{ marginTop: 8, display: 'flex', justifyContent: 'center' }}>
+          <div style={{ marginTop: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: 5,
               padding: '3px 10px', borderRadius: 99,
@@ -141,51 +141,40 @@ function PricingCard({ plan, opacity, y }: {
               <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#77BDAC', opacity: 0.6 }} />
               SEM JUROS
             </span>
+            <span style={{
+              padding: '3px 10px', borderRadius: 6,
+              background: 'rgba(119,189,172,0.08)', border: '1px solid rgba(119,189,172,0.20)',
+              fontSize: '0.6rem', fontWeight: 600, color: 'rgba(119,189,172,0.85)', letterSpacing: '0.02em',
+            }}>
+              {plan.discount}
+            </span>
           </div>
         </div>
 
-        <div style={{ padding: '12px 20px 18px', display: 'flex', justifyContent: 'center' }}>
-          <span style={{
-            padding: '5px 14px', borderRadius: 6,
-            background: 'rgba(119,189,172,0.08)', border: '1px solid rgba(119,189,172,0.20)',
-            fontSize: '0.65rem', fontWeight: 600, color: 'rgba(119,189,172,0.85)', letterSpacing: '0.02em',
-          }}>
-            {plan.discount}
-          </span>
-        </div>
-
-        <div style={{
-          padding: '10px 20px', fontSize: '0.6rem', fontWeight: 600,
-          color: 'rgba(119,189,172,0.6)', letterSpacing: '0.1em', textTransform: 'uppercase',
-          textAlign: 'center', borderTop: '1px solid rgba(119,189,172,0.10)',
-        }}>
-          O que está incluso
-        </div>
-
-        <div style={{ padding: '6px 16px 0' }}>
+        <div style={{ padding: '8px 16px 0', borderTop: '1px solid rgba(119,189,172,0.10)' }}>
           {coreServices.map((service, i) => {
             const Icon = getServiceIcon(service.title);
             return (
               <div key={i} style={{
-                marginBottom: 5, padding: '10px 14px', borderRadius: 10,
+                marginBottom: 3, padding: '6px 12px', borderRadius: 8,
                 background: 'rgba(119,189,172,0.03)', border: '1px solid rgba(119,189,172,0.06)',
-                display: 'flex', alignItems: 'flex-start', gap: 12,
+                display: 'flex', alignItems: 'center', gap: 8,
               }}>
                 <div style={{
-                  flexShrink: 0, marginTop: 2, width: 28, height: 28, borderRadius: 8,
+                  flexShrink: 0, width: 20, height: 20, borderRadius: 6,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   background: 'rgba(119,189,172,0.08)', border: '1px solid rgba(119,189,172,0.14)',
                 }}>
-                  <Icon size={14} color="rgba(119,189,172,0.7)" strokeWidth={1.5} />
+                  <Icon size={11} color="rgba(119,189,172,0.7)" strokeWidth={1.5} />
                 </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: '0.78rem', color: '#E5E7EB', lineHeight: 1.5, fontWeight: 500 }}>
+                <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'baseline', gap: 6, flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: '0.72rem', color: '#E5E7EB', lineHeight: 1.4, fontWeight: 500 }}>
                     {service.title}
-                  </div>
+                  </span>
                   {service.detail && (
-                    <div style={{ fontSize: '0.65rem', color: 'rgba(119,189,172,0.55)', marginTop: 2, lineHeight: 1.4 }}>
+                    <span style={{ fontSize: '0.6rem', color: 'rgba(119,189,172,0.50)', lineHeight: 1.3 }}>
                       {service.detail}
-                    </div>
+                    </span>
                   )}
                 </div>
               </div>
@@ -194,26 +183,26 @@ function PricingCard({ plan, opacity, y }: {
         </div>
 
         {highlightService && (
-          <div style={{ padding: '6px 16px 18px' }}>
+          <div style={{ padding: '4px 16px 14px' }}>
             <div style={{
-              marginTop: 4, padding: '12px 14px', borderRadius: 8,
+              marginTop: 2, padding: '8px 12px', borderRadius: 8,
               background: 'rgba(119,189,172,0.06)',
               border: '1px solid rgba(119,189,172,0.18)',
               borderLeftWidth: 3, borderLeftColor: '#77BDAC',
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
                 <span style={{
-                  fontFamily: 'var(--font-mono), monospace', fontSize: '0.55rem', fontWeight: 600,
+                  fontFamily: 'var(--font-mono), monospace', fontSize: '0.5rem', fontWeight: 600,
                   color: '#77BDAC', opacity: 0.85, letterSpacing: '0.08em', textTransform: 'uppercase',
                 }}>
                   Diferencial
                 </span>
               </div>
-              <div style={{ fontSize: '0.85rem', color: '#F3F4F6', lineHeight: 1.5, fontWeight: 600 }}>
+              <div style={{ fontSize: '0.78rem', color: '#F3F4F6', lineHeight: 1.4, fontWeight: 600 }}>
                 {highlightService.title}
               </div>
               {highlightService.detail && (
-                <div style={{ fontSize: '0.7rem', color: 'rgba(119,189,172,0.7)', marginTop: 3, lineHeight: 1.45 }}>
+                <div style={{ fontSize: '0.62rem', color: 'rgba(119,189,172,0.7)', marginTop: 2, lineHeight: 1.35 }}>
                   {highlightService.detail}
                 </div>
               )}
@@ -242,7 +231,7 @@ export function PricingSlide({ scrollYProgress, pricing, range }: {
   const elemOpacity = useTransform(scrollYProgress, [start + span * 0.25, start + span * 0.42], [0, 1]);
 
   return (
-    <div className="slide-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', paddingBottom: 60, transform: 'scale(0.88)', transformOrigin: 'center center' }}>
+    <div className="slide-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', paddingBottom: 60 }}>
       {/* Orbs decorativos */}
       {[
         { top: '10%', left: '6%', size: 5, dur: 5.5, delay: 0 },

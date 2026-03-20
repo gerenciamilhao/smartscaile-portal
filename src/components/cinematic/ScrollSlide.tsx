@@ -36,7 +36,7 @@ export function ScrollSlide({
   const [scaleFactor, setScaleFactor] = useState(1);
   useEffect(() => {
     const factor = window.innerHeight / CONTENT_HEIGHT;
-    setScaleFactor(factor);
+    setScaleFactor(Math.min(factor, 1.20));
   }, []);
   const [start, end] = range;
   const span = end - start;

@@ -44,7 +44,7 @@ slides:
     features: [apple-notes-container, macos-chrome, checkbox-breathing, impact-dot-breathing, scroll-driven-stagger]
   slide_7_pricing:
     status: complete
-    features: [pricing-card-static, macos-chrome, scroll-driven-stagger, scale-compensated-badge]
+    features: [pricing-card-compact, macos-chrome, scroll-driven-stagger, inline-service-rows, inline-discount-badge]
   slide_8_proposal:
     status: complete
     features: [scroll-driven-stagger, cta-terminal-typing, lock-state-reactive]
