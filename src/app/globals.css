@@ -146,19 +146,12 @@ body {
   animation: float-y 3.5s ease-in-out infinite;
 }
 
-/* ─── Slide content (mobile-first, right gap for scroll rail) ─── */
+/* ─── Slide content (uniform scale — single layout, zoomed on mobile) ─── */
 .slide-content {
   width: 100%;
-  max-width: 800px;
-  padding-left: 20px;
-  padding-right: 40px; /* extra right space for scroll rail */
-}
-
-@media (min-width: 768px) {
-  .slide-content {
-    padding-left: 24px;
-    padding-right: 24px;
-  }
+  max-width: 640px;
+  padding-left: 24px;
+  padding-right: 24px;
 }
 
 /* ─── Proposal Slide Enhancements ─── */

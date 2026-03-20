@@ -960,7 +960,7 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
       {/* ── Diagnostic panel: ring left + sub-scores right ── */}
       <motion.div
         style={{ opacity: panelOpacity, y: panelY }}
-        className="flex flex-col items-center gap-8 md:flex-row md:items-center md:gap-12"
+        className="flex flex-row items-center gap-12"
       >
         {/* Left: Overall ring */}
         <div style={{

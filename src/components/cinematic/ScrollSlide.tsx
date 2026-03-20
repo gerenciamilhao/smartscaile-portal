@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useState, useEffect } from 'react';
 import { motion, useTransform, useMotionValueEvent, type MotionValue } from 'framer-motion';
 
 interface ScrollSlideProps {
@@ -21,6 +21,8 @@ interface ScrollSlideProps {
  * Dessa forma a transição entre slides parece um crossfade elegante,
  * não um bloco duro. O slide atual some enquanto o próximo aparece.
  */
+const CONTENT_HEIGHT = 860;
+
 export function ScrollSlide({
   children,
   range,
@@ -28,6 +30,10 @@ export function ScrollSlide({
   zIndex = 2,
   isLast = false,
 }: ScrollSlideProps) {
+  const [zoom, setZoom] = useState(1);
+  useEffect(() => {
+    setZoom(Math.min(1, window.innerHeight / CONTENT_HEIGHT));
+  }, []);
   const [start, end] = range;
   const span = end - start;
 
@@ -75,7 +81,9 @@ export function ScrollSlide({
         willChange: 'opacity, transform',
       }}
     >
-      <LazyContent isVisible={isVisible}>{children}</LazyContent>
+      <div style={{ zoom, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <LazyContent isVisible={isVisible}>{children}</LazyContent>
+      </div>
     </motion.div>
   );
 }
