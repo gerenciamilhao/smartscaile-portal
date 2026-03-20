@@ -21,7 +21,7 @@ const firaCode = Fira_Code({
 });
 
 export const metadata: Metadata = {
-  title: "smartscaile. — Proposta Exclusiva",
+  title: "smartscaile. <> Proposta Exclusiva",
   description: "Sua proposta personalizada de server-side tracking.",
   icons: {
     icon: "/favicon.png",
