@@ -45,7 +45,7 @@ export default function CinematicExperience({ initialData, clienteSlug }: Cinema
 
   return (
     <>
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="sync">
         {pageState === 'locked' && (
           <PainHero key="pain" ref={painRef} onUnlock={handleUnlock} clientData={clientData} />
         )}

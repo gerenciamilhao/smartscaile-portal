@@ -289,13 +289,8 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
 
   useEffect(() => {
     const CONTENT_HEIGHT = 800;
-    const updateZoom = () => {
-      const vh = window.visualViewport?.height ?? window.innerHeight;
-      setZoom(Math.min(1, vh / CONTENT_HEIGHT));
-    };
-    updateZoom();
-    window.visualViewport?.addEventListener('resize', updateZoom);
-    return () => window.visualViewport?.removeEventListener('resize', updateZoom);
+    const vh = window.visualViewport?.height ?? window.innerHeight;
+    setZoom(Math.min(1, vh / CONTENT_HEIGHT));
   }, []);
 
   const [lostCount, setLostCount] = useState(10);
@@ -362,8 +357,8 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
       key="pain-hero"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0, scale: 0.95, filter: 'blur(8px)' }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
       className="bg-pain-mesh select-none"
       style={{
         position: 'relative',
@@ -379,7 +374,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
       <div className="bg-mesh-subtle" style={{ position: 'absolute', inset: 0, opacity: 0.45, pointerEvents: 'none' }} />
 
 
-      <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '640px', margin: '0 auto', padding: '60px 0 40px', textAlign: 'center', transform: zoom < 1 ? `scale(${zoom})` : undefined, transformOrigin: 'center center' }}>
+      <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '640px', margin: '0 auto', padding: '40px 0 20px', textAlign: 'center', transform: zoom < 1 ? `scale(${zoom})` : undefined, transformOrigin: 'center center' }}>
 
         {/* ─── Badge ─── */}
         <div style={{ position: 'relative', display: 'inline-block', marginBottom: '14px' }}>
@@ -496,7 +491,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
           transition={{ duration: 0.6, delay: 0.7 }}
           style={{ marginTop: '4px', position: 'relative' }}
         >
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', marginBottom: '32px' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', marginBottom: '20px' }}>
             {[
               { Icon: XCircle,   text: painCopy?.balloons?.[0] ?? 'Conversões invisíveis' },
               { Icon: BarChart2, text: painCopy?.balloons?.[1] ?? 'Má atribuição'      },
@@ -742,7 +737,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.0 }}
-          style={{ marginTop: '32px', display: 'flex', justifyContent: 'center' }}
+          style={{ marginTop: '24px', display: 'flex', justifyContent: 'center' }}
         >
           <HoldToUnlock key={resetKey} onUnlock={handleUnlock} />
         </motion.div>
