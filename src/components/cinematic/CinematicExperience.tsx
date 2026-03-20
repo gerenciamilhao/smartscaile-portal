@@ -10,9 +10,9 @@ import { ProgressIndicator } from './ProgressIndicator';
 import { ProposalFooter } from '@/components/portal/ProposalFooter';
 import type { ClientData } from '@/lib/clients';
 
-type PageState = 'locked' | 'unlocking' | 'unlocked';
+type PageState = 'locked' | 'unlocked';
 
-const SECTION_LABELS = ['Inicio', 'Auditoria', 'Escala', 'CPA', 'Dados', 'Implementacao', 'Investimento', 'Proposta'];
+const SECTION_LABELS = ['Início', 'Auditoria', 'Escala', 'CPA', 'Dados', 'Implementação', 'Investimento', 'Proposta'];
 
 interface CinematicExperienceProps {
   initialData?: ClientData | null;
@@ -28,12 +28,12 @@ export default function CinematicExperience({ initialData }: CinematicExperience
 
   const handleTokenSuccess = useCallback(async () => {
     setShowModal(false);
-    setPageState('unlocking');
+    // Fetch data first, then transition
     try {
       const res = await fetch('/api/client-data');
       if (res.ok) setClientData(await res.json());
     } catch {}
-    setTimeout(() => setPageState('unlocked'), 800);
+    setPageState('unlocked');
   }, []);
 
   const handleModalClose = useCallback(() => {
@@ -45,17 +45,7 @@ export default function CinematicExperience({ initialData }: CinematicExperience
     <>
       <AnimatePresence mode="wait">
         {pageState === 'locked' && (
-          <PainHero key="pain" ref={painRef} onUnlock={handleUnlock} />
-        )}
-
-        {pageState === 'unlocking' && (
-          <motion.div
-            key="unlock-transition"
-            initial={{ opacity: 1 }}
-            animate={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'linear-gradient(to bottom, #0a0505, #050505)' }}
-          />
+          <PainHero key="pain" ref={painRef} onUnlock={handleUnlock} clientData={clientData} />
         )}
 
         {pageState === 'unlocked' && (
@@ -64,7 +54,7 @@ export default function CinematicExperience({ initialData }: CinematicExperience
             initial={initialData ? { opacity: 1 } : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
             <UnlockedExperience clientData={clientData} />
           </motion.div>
