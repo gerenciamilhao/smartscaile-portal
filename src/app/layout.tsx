@@ -21,8 +21,12 @@ const firaCode = Fira_Code({
 });
 
 export const metadata: Metadata = {
-  title: "smartscaile. — Portal",
-  description: "Portal de clientes smartscaile.",
+  title: "smartscaile. — Proposta Exclusiva",
+  description: "Sua proposta personalizada de server-side tracking.",
+  icons: {
+    icon: "/favicon.png",
+    apple: "/favicon.png",
+  },
 };
 
 export default function RootLayout({
