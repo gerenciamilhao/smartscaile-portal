@@ -123,7 +123,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
   const [zoom, setZoom] = useState(1);
 
   useEffect(() => {
-    const CONTENT_HEIGHT = 660;
+    const CONTENT_HEIGHT = 860; // altura real do conteúdo + padding vertical (60+40px) incluídos no zoom
     const update = () => setZoom(Math.min(1, window.innerHeight / CONTENT_HEIGHT));
     update();
     window.addEventListener('resize', update);
@@ -194,7 +194,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '60px 20px 40px',
+        padding: '0 20px',
         overflow: 'hidden',
       }}
     >
@@ -203,7 +203,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
       <div className="bg-mesh-subtle" style={{ position: 'absolute', inset: 0, opacity: 0.45, pointerEvents: 'none' }} />
 
 
-      <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '640px', margin: '0 auto', padding: '0', textAlign: 'center', zoom: zoom }}>
+      <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '640px', margin: '0 auto', padding: '60px 0 40px', textAlign: 'center', zoom: zoom }}>
 
         {/* ─── Badge ─── */}
         <div style={{ position: 'relative', display: 'inline-block', marginBottom: '14px' }}>
