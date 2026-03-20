@@ -123,11 +123,8 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
   const [zoom, setZoom] = useState(1);
 
   useEffect(() => {
-    const CONTENT_HEIGHT = 860; // altura real do conteúdo + padding vertical (60+40px) incluídos no zoom
-    const update = () => setZoom(Math.min(1, window.innerHeight / CONTENT_HEIGHT));
-    update();
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
+    const CONTENT_HEIGHT = 860;
+    setZoom(Math.min(1, window.innerHeight / CONTENT_HEIGHT));
   }, []);
 
   const [lostCount, setLostCount] = useState(10);
