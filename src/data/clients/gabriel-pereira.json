@@ -93,9 +93,9 @@
             "description": "UTMFY demonstrado perdendo ~50% de atribuição. Substituir por solução server-side nativa com cookie persistence."
           },
           {
-            "area": "Cookie Persistence (cookieper)",
+            "area": "Cookie Keeper (restauração de cookies)",
             "impact": "high",
-            "description": "FBC atual com janela de 1 dia. Estender para 90 dias com cookieper, melhorando drasticamente a janela de atribuição."
+            "description": "FBC atual com janela de 1 dia. Cookie Keeper restaura cookies apagados ou expirados pelo navegador, mantendo a atribuição mesmo após ITP/Safari limpar os dados."
           },
           {
             "area": "Custom Loader",
@@ -242,7 +242,7 @@
     },
     "proposal": {
       "headline": "Cada dia com a estrutura atual é dinheiro que não volta",
-      "description": "A R$4k/dia, a operação perde no mínimo R$1.200 diários em dados que nunca chegam ao Meta. São R$36.000 por mês rodando no escuro. Server-side tracking completo, CAPI Meta, cookie persistence de 90 dias, custom loader e dedup nativa para a escadinha de upsell/downsell. A Atom é empresa de capital aberto com processo de aprovação rigoroso. Por isso a proposta inclui teste A/B de 30 dias: pixel antigo vs novo, lado a lado. O resultado fala por si.",
+      "description": "A R$4k/dia, a operação perde no mínimo R$1.200 diários em dados que nunca chegam ao Meta. São R$36.000 por mês rodando no escuro. Server-side tracking completo, CAPI Meta, Cookie Keeper, custom loader e dedup nativa para a escadinha de upsell/downsell. A Atom é empresa de capital aberto com processo de aprovação rigoroso. Por isso a proposta inclui teste A/B de 30 dias: pixel antigo vs novo, lado a lado. O resultado fala por si.",
       "timeline": "3-4 semanas para implementar + 30 dias de teste A/B",
       "investment": "Sob consulta",
       "guarantee": "Se o pixel antigo performar melhor nos 30 dias de teste, devolvemos as 2 últimas parcelas",

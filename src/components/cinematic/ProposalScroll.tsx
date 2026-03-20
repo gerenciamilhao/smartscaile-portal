@@ -569,32 +569,46 @@ function HeaderSlideContent({ scrollYProgress, firstName, formattedDate, diagnos
 // ─── CTA Slide — terminal typing + synced lock ──────────────────────────────
 const CTA_LINES: TerminalLine[] = [
   { text: 'smartscaile deploy --client atom-traders', prefix: '$', color: '#6B7280' },
-  { text: '1ª parcela confirmada', prefix: '>', color: '#9CA3AF', delay: 400 },
-  { text: 'kick-off liberado', prefix: '✓', color: '#22C55E', delay: 200 },
-  { text: 'configurando server-side...', prefix: ' ', color: '#4B5563', delay: 300 },
-  { text: 'GTM first-party domain', prefix: '  →', color: '#77BDAC', delay: 80 },
-  { text: 'Custom Loader (antiblock)', prefix: '  →', color: '#77BDAC', delay: 80 },
-  { text: 'Cookie Keeper 90 dias', prefix: '  →', color: '#77BDAC', delay: 80 },
-  { text: 'Dedup browser x server', prefix: '  →', color: '#77BDAC', delay: 80 },
-  { text: 'Purchase via Webhook', prefix: '  →', color: '#77BDAC', delay: 80 },
-  { text: 'UTM tracking & backup', prefix: '  →', color: '#77BDAC', delay: 80 },
-  { text: 'First Touch + Last Touch', prefix: '  →', color: '#77BDAC', delay: 80 },
-  { text: 'go live → tracking ativo', prefix: '>', color: '#F3F4F6', delay: 300 },
-  { text: 'teste A/B pixel antigo vs novo (30 dias)', prefix: '>', color: '#F59E0B', delay: 200 },
-  { text: '40 dias de acompanhamento', prefix: '>', color: '#77BDAC', delay: 200 },
-  { text: 'ciclo completo', prefix: '!', color: '#22C55E', delay: 500 },
+  { text: '1ª parcela confirmada', prefix: '>', color: '#9CA3AF', delay: 500 },
+  { text: 'verificando pagamento...', prefix: ' ', color: '#4B5563', delay: 1200 },
+  { text: 'kick-off liberado', prefix: '✓', color: '#22C55E', delay: 300 },
+  { text: '', prefix: ' ', color: '#1a1a1a', delay: 200 },
+  { text: 'configurando server-side...', prefix: ' ', color: '#4B5563', delay: 400 },
+  { text: 'GTM first-party domain', prefix: '  →', color: '#77BDAC', delay: 100 },
+  { text: 'Custom Loader (antiblock)', prefix: '  →', color: '#77BDAC', delay: 100 },
+  { text: 'Cookie Keeper (restaura cookies apagados)', prefix: '  →', color: '#77BDAC', delay: 100 },
+  { text: 'Dedup browser x server', prefix: '  →', color: '#77BDAC', delay: 100 },
+  { text: 'Purchase via Webhook', prefix: '  →', color: '#77BDAC', delay: 100 },
+  { text: 'UTM tracking & backup', prefix: '  →', color: '#77BDAC', delay: 100 },
+  { text: 'First Touch + Last Touch', prefix: '  →', color: '#77BDAC', delay: 100 },
+  { text: '', prefix: ' ', color: '#1a1a1a', delay: 200 },
+  { text: '2ª parcela confirmada', prefix: '>', color: '#9CA3AF', delay: 400 },
+  { text: 'verificando pagamento...', prefix: ' ', color: '#4B5563', delay: 1200 },
+  { text: 'go live → tracking ativo', prefix: '✓', color: '#22C55E', delay: 300 },
+  { text: '', prefix: ' ', color: '#1a1a1a', delay: 200 },
+  { text: 'teste A/B pixel antigo vs novo (30 dias)', prefix: '>', color: '#F59E0B', delay: 300 },
+  { text: '40 dias de acompanhamento + validação', prefix: '✓', color: '#77BDAC', delay: 300 },
+  { text: '', prefix: ' ', color: '#1a1a1a', delay: 200 },
+  { text: '3ª parcela confirmada', prefix: '>', color: '#9CA3AF', delay: 400 },
+  { text: 'verificando pagamento...', prefix: ' ', color: '#4B5563', delay: 1200 },
+  { text: 'estrutura validada', prefix: '✓', color: '#22C55E', delay: 300 },
+  { text: '', prefix: ' ', color: '#1a1a1a', delay: 200 },
+  { text: 'ciclo completo', prefix: '!', color: '#22C55E', delay: 600 },
 ];
 
 // Line index where lock opens (kick-off liberado)
-const LOCK_OPEN_LINE = 2;
+const LOCK_OPEN_LINE = 3;
 
 function CTASlideContent({ diagnosis }: { diagnosis: ClientData['diagnosis'] }) {
   const [visibleChars, setVisibleChars] = useState<number[]>(CTA_LINES.map(() => 0));
   const [activeLine, setActiveLine] = useState(0);
   const [loopKey, setLoopKey] = useState(0);
 
-  const lockOpen = activeLine >= LOCK_OPEN_LINE && activeLine < CTA_LINES.length;
+  // Lock is open from kick-off until terminal resets (activeLine back to 0)
+  const lockOpen = activeLine >= LOCK_OPEN_LINE;
   const lockColor = lockOpen ? '#22C55E' : '#EF4444';
+  const accentColor = lockOpen ? '#77BDAC' : '#EF4444';
+  const accentRgba = (a: number) => lockOpen ? `rgba(119,189,172,${a})` : `rgba(239,68,68,${a})`;
 
   const resetAndLoop = useCallback(() => {
     setVisibleChars(CTA_LINES.map(() => 0));
@@ -604,7 +618,8 @@ function CTASlideContent({ diagnosis }: { diagnosis: ClientData['diagnosis'] }) 
 
   useEffect(() => {
     if (activeLine >= CTA_LINES.length) {
-      const holdTimer = setTimeout(resetAndLoop, 3000);
+      // Hold green for 1.5s showing completed state, then reset (goes red)
+      const holdTimer = setTimeout(resetAndLoop, 1500);
       return () => clearTimeout(holdTimer);
     }
     const line = CTA_LINES[activeLine];
@@ -649,76 +664,83 @@ function CTASlideContent({ diagnosis }: { diagnosis: ClientData['diagnosis'] }) 
       </div>
 
       {/* Badge */}
-      <span style={{ display: 'inline-flex', alignItems: 'center', borderRadius: 9999, border: '1px solid rgba(119,189,172,0.12)', padding: '3px 10px', fontSize: '0.58rem', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#77BDAC', background: 'rgba(119,189,172,0.06)', marginBottom: 12 }}>
+      <span style={{ display: 'inline-flex', alignItems: 'center', borderRadius: 9999, border: `1px solid ${accentRgba(0.15)}`, padding: '3px 10px', fontSize: '0.58rem', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: accentColor, background: accentRgba(0.06), marginBottom: 10, transition: 'all 0.6s ease' }}>
         {diagnosis.copy?.cta?.badge ?? 'Proposta smartscaile.'}
       </span>
 
       {/* Headline */}
       <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 'clamp(1.45rem, 4.5vw, 1.9rem)', color: '#F3F4F6', lineHeight: 1.3, letterSpacing: '-0.02em', maxWidth: 400, margin: '0 auto 8px' }}>
-        {renderAccentText(diagnosis.copy?.cta?.headline ?? 'O *resultado* é a garantia.', '#77BDAC')}
+        {renderAccentText(diagnosis.copy?.cta?.headline ?? 'O *resultado* é a garantia.', accentColor)}
       </h2>
-      <p style={{ fontSize: '0.875rem', color: '#9CA3AF', lineHeight: 1.55, maxWidth: 380, margin: '0 auto 16px' }}>
+      <p style={{ fontSize: '0.875rem', color: lockOpen ? '#9CA3AF' : '#6B7280', lineHeight: 1.55, maxWidth: 380, margin: '0 auto 14px', transition: 'color 0.6s ease' }}>
         {diagnosis.copy?.cta?.subtitle ?? 'Teste A/B por 30 dias. Pixel antigo vs. novo. O resultado decide. Setup se paga em 2 semanas.'}
       </p>
 
-      {/* Terminal — same style as slide 1 */}
-      <div style={{ maxWidth: 480, margin: '0 auto 20px', textAlign: 'left' }}>
+      {/* Terminal — same style as slide 1, larger */}
+      <div style={{ maxWidth: 540, margin: '0 auto 20px', textAlign: 'left' }}>
         <div style={{
           borderRadius: 14,
-          background: 'linear-gradient(180deg, rgba(12,12,12,0.92) 0%, rgba(5,5,5,0.88) 100%)',
-          border: '1px solid rgba(119,189,172,0.08)',
+          background: 'linear-gradient(180deg, rgba(12,12,12,0.95) 0%, rgba(5,5,5,0.92) 100%)',
+          border: `1px solid ${accentRgba(0.12)}`,
           overflow: 'hidden',
           fontFamily: 'var(--font-mono), monospace',
-          fontSize: '0.65rem',
-          lineHeight: 1.7,
-          boxShadow: '0 12px 40px rgba(0,0,0,0.4), 0 0 1px rgba(119,189,172,0.12), inset 0 1px 0 rgba(255,255,255,0.03)',
+          fontSize: '0.7rem',
+          lineHeight: 1.8,
+          boxShadow: `0 16px 48px rgba(0,0,0,0.5), 0 0 1px ${accentRgba(0.15)}, inset 0 1px 0 rgba(255,255,255,0.03)`,
+          transition: 'border-color 0.8s ease, box-shadow 0.8s ease',
         }}>
           {/* Window chrome */}
           <div style={{
-            padding: '8px 14px',
-            display: 'flex', alignItems: 'center', gap: 7,
+            padding: '10px 16px',
+            display: 'flex', alignItems: 'center', gap: 8,
             background: 'rgba(255,255,255,0.015)',
             borderBottom: '1px solid rgba(255,255,255,0.04)',
           }}>
-            <div style={{ display: 'flex', gap: 5 }}>
-              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#EF4444', opacity: 0.65 }} />
-              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#F59E0B', opacity: 0.65 }} />
-              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#22C55E', opacity: 0.65 }} />
+            <div style={{ display: 'flex', gap: 6 }}>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#EF4444', opacity: 0.65 }} />
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#F59E0B', opacity: 0.65 }} />
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#22C55E', opacity: 0.65 }} />
             </div>
-            <span style={{ flex: 1, textAlign: 'center', fontSize: '0.45rem', color: '#374151', letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 500 }}>
+            <span style={{ flex: 1, textAlign: 'center', fontSize: '0.5rem', color: '#374151', letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 500 }}>
               smartscaile — deploy
             </span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
               <motion.div
                 animate={{ opacity: [0.4, 1, 0.4] }}
                 transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                style={{ width: 4, height: 4, borderRadius: '50%', background: lockOpen ? '#22C55E' : '#EF4444', transition: 'background 0.6s ease' }}
+                style={{ width: 5, height: 5, borderRadius: '50%', background: lockColor, transition: 'background 0.8s ease' }}
               />
-              <span style={{ fontSize: '0.4rem', color: '#374151', letterSpacing: '0.05em' }}>
+              <span style={{ fontSize: '0.45rem', color: lockOpen ? '#4B5563' : '#374151', letterSpacing: '0.05em', transition: 'color 0.8s ease' }}>
                 {lockOpen ? 'active' : 'idle'}
               </span>
             </div>
           </div>
 
           {/* Terminal body */}
-          <div style={{ padding: '12px 16px', minHeight: 200 }}>
+          <div style={{ padding: '14px 20px' }}>
             {CTA_LINES.map((line, i) => {
-              const fullText = `${line.prefix ?? '>'} ${line.text}`;
+              const isBlank = line.text === '';
+              const fullText = isBlank ? '' : `${line.prefix ?? '>'} ${line.text}`;
               const chars = visibleChars[i];
               const notYet = i > activeLine && chars === 0;
               const displayed = fullText.slice(0, chars);
-              const showCursor = i === activeLine && activeLine < CTA_LINES.length;
+              const showCursor = i === activeLine && activeLine < CTA_LINES.length && !isBlank;
+
+              // Blank lines = spacers (no line number, shorter height)
+              if (isBlank) {
+                return <div key={`${loopKey}-${i}`} style={{ height: '0.6em' }} />;
+              }
 
               return (
                 <div key={`${loopKey}-${i}`} style={{
                   color: line.color ?? '#77BDAC',
-                  height: '1.45em',
+                  height: '1.55em',
                   visibility: notYet ? 'hidden' : 'visible',
                   display: 'flex', alignItems: 'center',
                 }}>
                   <span style={{
-                    width: 18, flexShrink: 0, textAlign: 'right', marginRight: 10,
-                    color: '#27272a', fontSize: '0.5rem', userSelect: 'none',
+                    width: 20, flexShrink: 0, textAlign: 'right', marginRight: 12,
+                    color: '#1f1f1f', fontSize: '0.55rem', userSelect: 'none',
                   }}>
                     {i + 1}
                   </span>
@@ -728,7 +750,7 @@ function CTASlideContent({ diagnosis }: { diagnosis: ClientData['diagnosis'] }) 
                       <motion.span
                         animate={{ opacity: [1, 0, 1] }}
                         transition={{ duration: 0.8, repeat: Infinity }}
-                        style={{ color: '#77BDAC', marginLeft: 1 }}
+                        style={{ color: accentColor, marginLeft: 1, transition: 'color 0.8s ease' }}
                       >
                         ▌
                       </motion.span>
@@ -745,26 +767,12 @@ function CTASlideContent({ diagnosis }: { diagnosis: ClientData['diagnosis'] }) 
       <a
         href="https://wa.me/5511999999999"
         target="_blank" rel="noopener noreferrer"
-        style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: '0.75rem', color: '#77BDAC', border: '1px solid rgba(119,189,172,0.2)', borderRadius: 10, padding: '9px 20px', textDecoration: 'none' }}
+        style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: '0.75rem', color: accentColor, border: `1px solid ${accentRgba(0.25)}`, borderRadius: 10, padding: '9px 20px', textDecoration: 'none', transition: 'all 0.6s ease' }}
       >
         <MessageCircle size={14} strokeWidth={1.5} />
         Falar no WhatsApp
       </a>
 
-      {/* Footer logo */}
-      <div style={{ marginTop: 16, display: 'flex', justifyContent: 'center' }}>
-        <img
-          src="/avatar-sm.png"
-          alt="smartscaile."
-          width={50}
-          height={50}
-          style={{
-            opacity: 0.15,
-            filter: 'brightness(1.8) contrast(0.85)',
-            mixBlendMode: 'screen',
-          }}
-        />
-      </div>
     </>
   );
 }
@@ -2372,7 +2380,7 @@ function OpportunitiesSlide({ scrollYProgress, opportunities, range }: {
           // Right side — hugging card edge
           { label: 'CAPI', top: 12, right: -6, left: undefined, bottom: undefined, delay: 0, dur: 6 },
           { label: 'server-side', top: 100, right: -10, left: undefined, bottom: undefined, delay: 1.5, dur: 7 },
-          { label: '90 dias', top: undefined, right: -4, left: undefined, bottom: 60, delay: 3, dur: 5.5 },
+          { label: 'cookie keeper', top: undefined, right: -4, left: undefined, bottom: 60, delay: 3, dur: 5.5 },
           { label: 'dedup', top: undefined, right: 2, left: undefined, bottom: 10, delay: 2.2, dur: 6.5 },
           // Left side
           { label: 'GTM SS', top: 30, right: undefined, left: -60, bottom: undefined, delay: 0.8, dur: 6.8 },
