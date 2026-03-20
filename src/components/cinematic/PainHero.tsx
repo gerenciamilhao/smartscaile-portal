@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import SlideToUnlock, { type SlideToUnlockHandle } from '@/components/ui/SlideToUnlock';
 import type { ClientData } from '@/lib/clients';
+import { PURCHASE_POOL_EXTENDED as PURCHASE_POOL } from '@/lib/purchase-pool';
 
 export interface PainHeroHandle {
   resetSlider: () => void;
@@ -21,18 +22,6 @@ interface PainHeroProps {
 const DEFAULT_TICKER_NAMES = [
   'Hotmart', 'Kiwify', 'Meta Pixel', 'Google Ads',
   'Google Analytics 4', 'TikTok Pixel', 'Facebook CAPI', 'Elementor',
-];
-
-// ─── Purchase pool (same as Hero) ────────────────────────────────────────────
-const PURCHASE_POOL = [
-  { platform: { initial: 'GA', color: '#E37400', bg: 'rgba(227,116,0,0.14)' }, name: 'purchase',        value: 'R$ 749,00' },
-  { platform: { initial: 'M',  color: '#0081FB', bg: 'rgba(0,129,251,0.14)' }, name: 'Purchase',        value: 'R$ 215,00' },
-  { platform: { initial: 'GA', color: '#E37400', bg: 'rgba(227,116,0,0.14)' }, name: 'purchase',        value: 'R$ 1.247,00' },
-  { platform: { initial: 'TK', color: '#fe2c55', bg: 'rgba(254,44,85,0.14)' }, name: 'CompletePayment', value: 'R$ 89,90' },
-  { platform: { initial: 'M',  color: '#0081FB', bg: 'rgba(0,129,251,0.14)' }, name: 'Purchase',        value: 'R$ 412,00' },
-  { platform: { initial: 'GA', color: '#E37400', bg: 'rgba(227,116,0,0.14)' }, name: 'add_to_cart',     value: 'R$ 145,00' },
-  { platform: { initial: 'TK', color: '#fe2c55', bg: 'rgba(254,44,85,0.14)' }, name: 'ViewContent',     value: 'R$ 67,50' },
-  { platform: { initial: 'M',  color: '#0081FB', bg: 'rgba(0,129,251,0.14)' }, name: 'InitiateCheckout', value: 'R$ 523,00' },
 ];
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -131,6 +120,16 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
     { uid: 'init-2', ...PURCHASE_POOL[2], status: 'processed' },
   ]);
 
+  const [zoom, setZoom] = useState(1);
+
+  useEffect(() => {
+    const CONTENT_HEIGHT = 660;
+    const update = () => setZoom(Math.min(1, window.innerHeight / CONTENT_HEIGHT));
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
   const [lostCount, setLostCount] = useState(10);
   const [counterPulse, setCounterPulse] = useState(false);
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -187,7 +186,6 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, scale: 0.95, filter: 'blur(8px)' }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      suppressHydrationWarning
       className="bg-pain-mesh select-none"
       style={{
         position: 'relative',
@@ -205,7 +203,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
       <div className="bg-mesh-subtle" style={{ position: 'absolute', inset: 0, opacity: 0.45, pointerEvents: 'none' }} />
 
 
-      <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '640px', margin: '0 auto', padding: '0', textAlign: 'center' }}>
+      <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '640px', margin: '0 auto', padding: '0', textAlign: 'center', zoom: zoom }}>
 
         {/* ─── Badge ─── */}
         <div style={{ position: 'relative', display: 'inline-block', marginBottom: '14px' }}>

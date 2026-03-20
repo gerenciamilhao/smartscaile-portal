@@ -1,12 +1,13 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   BarChart2, Tag, Target, Megaphone, Music, Server,
-  ShoppingBag, Activity, Mail, ShoppingCart, Clock, CalendarCheck, Award,
+  ShoppingBag, Activity, Mail, ShoppingCart, Award,
 } from 'lucide-react';
 import type { ClientData } from '@/lib/clients';
+import { PURCHASE_POOL } from '@/lib/purchase-pool';
 
 // ─── Ticker ───────────────────────────────────────────────────────────────────
 const tools = [
@@ -21,17 +22,6 @@ const tools = [
   { name: 'Klaviyo',             Icon: Mail,         color: '#B68AD4' },
   { name: 'WooCommerce',         Icon: ShoppingCart, color: '#7F54B3' },
 ];
-const tickerItems = [...tools, ...tools];
-
-// ─── Purchase pool ────────────────────────────────────────────────────────────
-const PURCHASE_POOL = [
-  { platform: { initial: 'GA', color: '#E37400', bg: 'rgba(227,116,0,0.14)'  }, name: 'purchase',        value: 'R$ 749,00'   },
-  { platform: { initial: 'M',  color: '#0081FB', bg: 'rgba(0,129,251,0.14)'  }, name: 'Purchase',        value: 'R$ 215,00'   },
-  { platform: { initial: 'GA', color: '#E37400', bg: 'rgba(227,116,0,0.14)'  }, name: 'purchase',        value: 'R$ 1.247,00' },
-  { platform: { initial: 'TK', color: '#fe2c55', bg: 'rgba(254,44,85,0.14)'  }, name: 'CompletePayment', value: 'R$ 89,90'    },
-  { platform: { initial: 'M',  color: '#0081FB', bg: 'rgba(0,129,251,0.14)'  }, name: 'Purchase',        value: 'R$ 412,00'   },
-];
-
 // ─── Types ────────────────────────────────────────────────────────────────────
 type RowStatus = 'browser' | 'server-dedup' | 'server-only';
 
@@ -171,7 +161,7 @@ export default function Hero({ clientData }: HeroProps) {
   const firstName = clientData?.client?.name?.split(' ')[0];
   const heroCopy = clientData?.diagnosis?.copy?.pageHero;
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  useEffect(() => { setMounted(true); }, []); // eslint-disable-line react-hooks/set-state-in-effect
   const defaultTickerNames = tools.map(t => t.name);
   const tickerNames = heroCopy?.ticker ?? defaultTickerNames;
   const tickerDoubled = [...tickerNames, ...tickerNames];
@@ -237,7 +227,6 @@ export default function Hero({ clientData }: HeroProps) {
 
   return (
     <section
-      suppressHydrationWarning
       className="select-none"
       style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px 40px', overflow: 'hidden' }}
     >
@@ -309,7 +298,6 @@ export default function Hero({ clientData }: HeroProps) {
 
         {/* Subtitle */}
         <motion.p
-          suppressHydrationWarning
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.45, ease: 'easeOut' }}

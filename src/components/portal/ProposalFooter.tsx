@@ -1,6 +1,6 @@
 "use client";
 
-import { FadeUp } from "@/components/ui/motion";
+import Image from "next/image";
 
 const LinkedInIcon = () => (
   <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.7 }}>
@@ -16,7 +16,7 @@ export function ProposalFooter() {
 
           {/* Logo + badge inline */}
           <div className="flex items-center gap-3">
-            <img
+            <Image
               src="/avatar-sm.png"
               alt="smartscaile."
               width={28}
@@ -60,7 +60,7 @@ export function ProposalFooter() {
 
           {/* Legal */}
           <p className="text-[0.5rem] text-[#1f1f1f]">
-            © 2025 SMARTSCAILE MARTECH LTDA · 61.918.211/0001-00
+            © 2026 SMARTSCAILE MARTECH LTDA · 61.918.211/0001-00
           </p>
 
         </div>

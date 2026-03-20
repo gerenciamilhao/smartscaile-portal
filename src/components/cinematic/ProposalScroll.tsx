@@ -1,16 +1,13 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { type MotionValue } from 'framer-motion';
-import { motion } from 'framer-motion';
+import { motion, useTransform, type MotionValue } from 'framer-motion';
 import { ScrollSlide } from './ScrollSlide';
 import { SectionBadge } from '@/components/portal/SectionBadge';
-import { useTransform } from 'framer-motion';
 import type { ClientData, Opportunity, PricingPlan } from '@/lib/clients';
 import {
-  Target, Rocket,
-  Server, Cookie, Shield, Zap, Check,
-  ArrowRight, MessageCircle, Clock, ExternalLink,
+  Target, Cookie, Zap,
+  MessageCircle, ExternalLink,
   BarChart2, Activity,
 } from 'lucide-react';
 
@@ -31,14 +28,6 @@ const R = {
   pricing:       [0.77, 0.89] as [number, number],
   proposal:      [0.89, 1.00] as [number, number],
 };
-
-const oppIcons = [
-  <Server key="0" size={13} strokeWidth={1.5} />,
-  <Cookie key="1" size={13} strokeWidth={1.5} />,
-  <Shield key="2" size={13} strokeWidth={1.5} />,
-  <Zap    key="3" size={13} strokeWidth={1.5} />,
-  <Rocket key="4" size={13} strokeWidth={1.5} />,
-];
 
 // ─── Accent text helper — parses *word* into serif+glow spans ────────────────
 // Usage: renderAccentText("Esse *teto* não é do mercado.", "#77BDAC")
@@ -87,11 +76,12 @@ const easeInOutCubic = (x: number) =>
   x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
 
 function useLoopProgress() {
-  const startRef = useRef(Date.now());
+  const startRef = useRef(0);
   const lastRef = useRef(0);
   const [normalizedValue, setNormalizedValue] = useState(0);
 
   useEffect(() => {
+    startRef.current = Date.now();
     let raf: number;
     const tick = () => {
       const now = Date.now();
@@ -122,23 +112,6 @@ function useLoopProgress() {
 
   return normalizedValue;
 }
-
-// Stagger animation variants
-const staggerContainer = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.07, delayChildren: 0.1 },
-  },
-};
-
-const fadeUpItem = {
-  hidden: { opacity: 0, y: 16 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const },
-  },
-};
 
 export default function ProposalScroll({ scrollYProgress, clientData }: ProposalScrollProps) {
   const { client, meetings, diagnosis } = clientData;
@@ -1194,8 +1167,6 @@ function ScaleGoalSlide({ scrollYProgress, goal, range }: {
   const metricY         = useTransform(scrollYProgress, [t(0.10), t(0.28)], [24, 0]);
   const barOpacity      = useTransform(scrollYProgress, [t(0.20), t(0.36)], [0, 1]);
   const barY            = useTransform(scrollYProgress, [t(0.20), t(0.36)], [16, 0]);
-  const labelOpacity    = useTransform(scrollYProgress, [t(0.28), t(0.42)], [0, 1]);
-  const labelY          = useTransform(scrollYProgress, [t(0.28), t(0.42)], [12, 0]);
   const descOpacity     = useTransform(scrollYProgress, [t(0.34), t(0.48)], [0, 1]);
   const descY           = useTransform(scrollYProgress, [t(0.34), t(0.48)], [10, 0]);
   const footerOpacity   = useTransform(scrollYProgress, [t(0.46), t(0.58)], [0, 1]);
@@ -1367,8 +1338,8 @@ function ScaleGoalSlide({ scrollYProgress, goal, range }: {
 }
 
 // ─── CPA Tracking Ring — smaller version of slide 2 ring, driven by value ────
-function CPATrackingRing({ trackingValue, trackingColor, normalizedValue, trackingStart }: {
-  trackingValue: number; trackingColor: string; normalizedValue: number; trackingStart: number;
+function CPATrackingRing({ trackingValue, trackingColor, normalizedValue }: {
+  trackingValue: number; trackingColor: string; normalizedValue: number;
 }) {
   const size = 120;
   const stroke = 6;
@@ -1532,7 +1503,7 @@ function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
       <motion.div style={{ opacity: labelOpacity, y: labelY }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
           {/* Tracking Score Ring — synced with normalizedValue */}
-          <CPATrackingRing trackingValue={trackingValue} trackingColor={trackingColor} normalizedValue={normalizedValue} trackingStart={TRACKING_START} />
+          <CPATrackingRing trackingValue={trackingValue} trackingColor={trackingColor} normalizedValue={normalizedValue} />
 
           {/* CPA counter + meta badge */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -1663,9 +1634,8 @@ function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
 }
 
 // ─── Pricing Card — ROAS ComparisonCard DNA (extracted for hooks rule) ────────
-function PricingCard({ plan, index, opacity, y }: {
+function PricingCard({ plan, opacity, y }: {
   plan: PricingPlan;
-  index: number;
   opacity: MotionValue<number>;
   y: MotionValue<number>;
 }) {
@@ -1940,9 +1910,6 @@ function PricingSlide({ scrollYProgress, pricing, range }: {
   // Elements entry
   const elemOpacity = useTransform(scrollYProgress, [start + span * 0.25, start + span * 0.42], [0, 1]);
 
-  const cardOpacities = [card1Opacity, card2Opacity];
-  const cardYs = [card1Y, card2Y];
-
   return (
     <div className="slide-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', paddingBottom: 60, transform: 'scale(0.82)', transformOrigin: 'center center' }}>
 
@@ -2031,14 +1998,12 @@ function PricingSlide({ scrollYProgress, pricing, range }: {
           {pricing.plans.length > 1 ? (
             <PricingCard
               plan={pricing.plans[1]}
-              index={1}
               opacity={card2Opacity}
               y={card2Y}
             />
           ) : (
             <PricingCard
               plan={pricing.plans[0]}
-              index={1}
               opacity={card1Opacity}
               y={card1Y}
             />
@@ -2079,7 +2044,6 @@ function DataLossSlide({ scrollYProgress, goal, range }: {
   const footerOpacity   = useTransform(scrollYProgress, [t(0.46), t(0.58)], [0, 1]);
 
   // Loop animation — loss builds up each cycle
-  const DAILY_INVEST = 4000;
   const DAILY_LOSS = 1200;
   const MONTHLY_LOSS = 36000;
   const normalizedValue = useLoopProgress();
@@ -2596,100 +2560,6 @@ function OpportunitiesSlide({ scrollYProgress, opportunities, range }: {
       <motion.div
         style={{ opacity: footerOpacity }}
         className="mt-8 flex w-full items-center gap-3"
-      >
-        <div className="h-px flex-1" style={{ background: 'linear-gradient(90deg, rgba(119,189,172,0.15), transparent)' }} />
-        <motion.div
-          animate={{ y: [0, 4, 0], opacity: [0.4, 0.8, 0.4] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ opacity: 0.4 }}>
-            <path d="M1 1L5 5L9 1" stroke="#77BDAC" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </motion.div>
-        <div className="h-px flex-1" style={{ background: 'linear-gradient(270deg, rgba(119,189,172,0.15), transparent)' }} />
-      </motion.div>
-    </div>
-  );
-}
-
-// ─── Single Goal Slide — one metric per slide, hero-style ────────────────────
-function SingleGoalSlide({ scrollYProgress, goal, range, slideNum, totalSlides, badge }: {
-  scrollYProgress: MotionValue<number>;
-  goal: { metric: string; label: string; description: string };
-  range: [number, number];
-  slideNum: string;
-  totalSlides: string;
-  badge: string;
-}) {
-  const [s] = range;
-  const span = range[1] - range[0];
-  const t = (offset: number) => s + span * offset;
-
-  const topBarOpacity   = useTransform(scrollYProgress, [t(0.05), t(0.18)], [0, 1]);
-  const metricOpacity   = useTransform(scrollYProgress, [t(0.10), t(0.28)], [0, 1]);
-  const metricY         = useTransform(scrollYProgress, [t(0.10), t(0.28)], [24, 0]);
-  const labelOpacity    = useTransform(scrollYProgress, [t(0.18), t(0.36)], [0, 1]);
-  const labelY          = useTransform(scrollYProgress, [t(0.18), t(0.36)], [16, 0]);
-  const descOpacity     = useTransform(scrollYProgress, [t(0.26), t(0.44)], [0, 1]);
-  const descY           = useTransform(scrollYProgress, [t(0.26), t(0.44)], [12, 0]);
-  const footerOpacity   = useTransform(scrollYProgress, [t(0.42), t(0.56)], [0, 1]);
-
-  return (
-    <div className="slide-content">
-      {/* Top bar */}
-      <motion.div
-        style={{ opacity: topBarOpacity }}
-        className="mb-6 flex items-center justify-between"
-      >
-        <div className="flex items-center gap-2">
-          <span className="live-dot" />
-          <span className="text-[0.6rem] font-medium tracking-wide text-[#6B7280]" style={{ fontFamily: 'var(--font-mono), monospace' }}>
-            {slideNum} / {totalSlides}
-          </span>
-        </div>
-        <SectionBadge label={badge} />
-      </motion.div>
-
-      {/* Accent line */}
-      <motion.div
-        style={{ scaleX: useTransform(scrollYProgress, [t(0.08), t(0.24)], [0, 1]), transformOrigin: 'left' }}
-        className="accent-line mb-5"
-      />
-
-      {/* Metric — hero element */}
-      <motion.div style={{ opacity: metricOpacity, y: metricY }}>
-        <span style={{
-          fontFamily: 'var(--font-serif)', fontWeight: 700,
-          fontSize: 'clamp(2.5rem, 8vw, 4rem)', lineHeight: 1,
-          color: '#77BDAC',
-          display: 'block',
-        }}>
-          {goal.metric}
-        </span>
-      </motion.div>
-
-      {/* Label */}
-      <motion.div style={{ opacity: labelOpacity, y: labelY }} className="mt-4">
-        <span style={{
-          fontSize: '0.9rem', fontWeight: 600, color: '#F3F4F6',
-          lineHeight: 1.4,
-        }}>
-          {goal.label.includes('*') ? renderAccentText(goal.label, '#77BDAC') : goal.label}
-        </span>
-      </motion.div>
-
-      {/* Description */}
-      <motion.p
-        style={{ opacity: descOpacity, y: descY }}
-        className="mt-3 max-w-[480px] text-[0.8rem] leading-relaxed text-[#9CA3AF]"
-      >
-        {goal.description}
-      </motion.p>
-
-      {/* Footer chevron */}
-      <motion.div
-        style={{ opacity: footerOpacity }}
-        className="mt-12 flex w-full items-center gap-3"
       >
         <div className="h-px flex-1" style={{ background: 'linear-gradient(90deg, rgba(119,189,172,0.15), transparent)' }} />
         <motion.div

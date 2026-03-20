@@ -64,7 +64,7 @@ export default function CinematicExperience({ initialData }: CinematicExperience
       <TokenModal open={showModal} onClose={handleModalClose} onSuccess={handleTokenSuccess} />
 
       {/* DEV: botão de reset para testar fluxo */}
-      {pageState === 'unlocked' && (
+      {process.env.NODE_ENV === 'development' && pageState === 'unlocked' && (
         <button
           onClick={() => { setPageState('locked'); setClientData(null); window.scrollTo(0, 0); }}
           style={{
@@ -87,7 +87,7 @@ function UnlockedExperience({ clientData }: { clientData: ClientData | null }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const hasProposal = !!clientData;
 
-  // Scroll progress do container (sem useSpring — Lenis já suaviza)
+  // Scroll progress do container
   const { scrollYProgress } = useScroll({
     target: scrollRef,
     offset: ['start start', 'end end'],
