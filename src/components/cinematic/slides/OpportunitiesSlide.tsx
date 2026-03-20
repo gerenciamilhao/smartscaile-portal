@@ -4,7 +4,6 @@ import React from 'react';
 import { motion, useTransform, type MotionValue } from 'framer-motion';
 import { SectionBadge } from '@/components/portal/SectionBadge';
 import type { Opportunity } from '@/lib/clients';
-import { useIsMobile } from '@/lib/useIsMobile';
 
 function OpportunityCard({ opp, index, opacity, y }: {
   opp: Opportunity;
@@ -85,7 +84,6 @@ export function OpportunitiesSlide({ scrollYProgress, opportunities, range }: {
   opportunities: Opportunity[];
   range: [number, number];
 }) {
-  const isMobile = useIsMobile();
   const [s] = range;
   const span = range[1] - range[0];
   const t = (offset: number) => s + span * offset;
@@ -136,69 +134,6 @@ export function OpportunitiesSlide({ scrollYProgress, opportunities, range }: {
       />
 
       <motion.div style={{ opacity: noteOpacity, y: noteY, position: 'relative' }}>
-        {[
-          { label: 'CAPI', top: 12, right: -6, left: undefined, bottom: undefined, delay: 0, dur: 6 },
-          { label: 'server-side', top: 100, right: -10, left: undefined, bottom: undefined, delay: 1.5, dur: 7 },
-          { label: 'cookie keeper', top: undefined, right: -4, left: undefined, bottom: 60, delay: 3, dur: 5.5 },
-          { label: 'dedup', top: undefined, right: 2, left: undefined, bottom: 10, delay: 2.2, dur: 6.5 },
-          { label: 'GTM SS', top: 30, right: undefined, left: -60, bottom: undefined, delay: 0.8, dur: 6.8 },
-          { label: 'cookieper', top: undefined, right: undefined, left: -55, bottom: 80, delay: 2.5, dur: 5.8 },
-          { label: 'custom loader', top: 150, right: undefined, left: -80, bottom: undefined, delay: 1.2, dur: 7.2 },
-        ].map((pill) => (
-          <motion.span
-            key={pill.label}
-            animate={{ y: [0, -4, 0], opacity: [0.2, 0.45, 0.2] }}
-            transition={{ duration: pill.dur, repeat: Infinity, ease: 'easeInOut', delay: pill.delay }}
-            style={{
-              position: 'absolute',
-              top: pill.top, right: pill.right, left: pill.left, bottom: pill.bottom,
-              fontSize: '0.4rem', color: 'rgba(119,189,172,0.45)',
-              fontFamily: 'var(--font-mono), monospace',
-              fontWeight: 500, letterSpacing: '0.06em',
-              padding: '3px 8px', borderRadius: 10,
-              border: '1px solid rgba(119,189,172,0.06)',
-              background: 'rgba(119,189,172,0.02)',
-              pointerEvents: 'none', whiteSpace: 'nowrap',
-            }}
-          >
-            {pill.label}
-          </motion.span>
-        ))}
-
-        {[
-          { top: 20, left: -35, right: undefined, bottom: undefined, size: 4, delay: 0, dur: 8 },
-          { top: undefined, left: -25, right: undefined, bottom: 40, size: 3, delay: 2, dur: 9 },
-          { top: 8, left: undefined, right: -40, bottom: undefined, size: 3, delay: 1, dur: 7.5 },
-          { top: undefined, left: undefined, right: -25, bottom: 30, size: 4, delay: 3.5, dur: 8.5 },
-          { top: 120, left: -45, right: undefined, bottom: undefined, size: 2, delay: 4, dur: 10 },
-        ].map((orb, i) => (
-          <motion.div
-            key={i}
-            animate={{
-              y: [0, i % 2 === 0 ? -5 : 4, 0],
-              x: [0, i % 2 === 0 ? 2 : -2, 0],
-              opacity: [0.15, 0.35, 0.15],
-            }}
-            transition={{ duration: orb.dur, repeat: Infinity, ease: 'easeInOut', delay: orb.delay }}
-            style={{
-              position: 'absolute',
-              top: orb.top, left: orb.left, right: orb.right, bottom: orb.bottom,
-              width: orb.size, height: orb.size, borderRadius: '50%',
-              background: 'rgba(119,189,172,0.25)',
-              boxShadow: '0 0 6px rgba(119,189,172,0.08)',
-              pointerEvents: 'none',
-            }}
-          />
-        ))}
-
-        <div style={{
-          position: 'absolute', top: '50%', left: '30%',
-          width: 280, height: 280, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(119,189,172,0.04) 0%, transparent 70%)',
-          transform: 'translate(-50%, -50%)',
-          filter: isMobile ? 'none' : 'blur(40px)', pointerEvents: 'none',
-        }} />
-
         <div style={{
           borderRadius: 14, overflow: 'hidden', position: 'relative',
           border: '1px solid rgba(119,189,172,0.08)',

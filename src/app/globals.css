@@ -74,13 +74,13 @@ body {
     #0a0505;
 }
 
-@keyframes pulse-pain {
-  0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.08); }
-  50% { box-shadow: 0 0 40px rgba(239, 68, 68, 0.2); }
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
 }
 
-.animate-pulse-pain {
-  animation: pulse-pain 2s ease-in-out infinite;
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
 }
 
 @keyframes blocked-flash {
@@ -136,15 +136,6 @@ body {
   animation: ticker-scroll 32s linear infinite;
 }
 
-/* ─── Float ─── */
-@keyframes float-y {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-5px); }
-}
-
-.animate-float {
-  animation: float-y 3.5s ease-in-out infinite;
-}
 
 /* ─── Slide content (uniform scale — single layout, zoomed on mobile) ─── */
 .slide-content {
@@ -156,17 +147,6 @@ body {
 
 /* ─── Proposal Slide Enhancements ─── */
 
-/* Dot grid partial overlay for slides */
-.slide-dot-grid {
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(#1a1a1a 1px, transparent 1px);
-  background-size: 28px 28px;
-  opacity: 0.35;
-  pointer-events: none;
-  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 80%);
-  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 80%);
-}
 
 /* Accent line */
 .accent-line {

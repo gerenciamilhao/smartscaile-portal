@@ -8,7 +8,6 @@ import {
 } from 'lucide-react';
 import type { ClientData } from '@/lib/clients';
 import { PURCHASE_POOL } from '@/lib/purchase-pool';
-import { useIsMobile } from '@/lib/useIsMobile';
 
 // ─── Ticker ───────────────────────────────────────────────────────────────────
 const tools = [
@@ -50,7 +49,7 @@ function SourceTag({ status }: { status: RowStatus }) {
   return (
     <span style={{
       color: isServer ? 'rgba(119,189,172,0.45)' : 'rgba(96,165,250,0.45)',
-      fontSize: '0.55rem', fontFamily: 'monospace', fontWeight: 400,
+      fontSize: 'clamp(0.4rem, 1.2vw, 0.55rem)', fontFamily: 'monospace', fontWeight: 400,
       flexShrink: 0, letterSpacing: '0.02em',
     }}>
       {isServer ? 'server-side' : 'client-side'}
@@ -69,7 +68,7 @@ function StatusChip({ status }: { status: RowStatus }) {
       background: isDedup ? 'rgba(251,191,36,0.10)' : isRecovered ? 'rgba(119,189,172,0.10)' : 'rgba(74,222,128,0.12)',
       border: `1px solid ${isDedup ? 'rgba(251,191,36,0.22)' : isRecovered ? 'rgba(119,189,172,0.26)' : 'rgba(74,222,128,0.26)'}`,
       color: isDedup ? '#FCD34D' : isRecovered ? '#77BDAC' : '#4ADE80',
-      fontSize: '0.6rem', fontFamily: 'monospace', fontWeight: 700,
+      fontSize: 'clamp(0.45rem, 1.3vw, 0.6rem)', fontFamily: 'monospace', fontWeight: 700,
       flexShrink: 0,
     }}>
       {!isDedup && (
@@ -84,73 +83,6 @@ function StatusChip({ status }: { status: RowStatus }) {
   );
 }
 
-// ─── Floating Code Background ─────────────────────────────────────────────────
-const CYCLE = 30;
-const CODE_SNIPPETS: Array<{
-  text: string; x: string; y: string; peak: number;
-  rx: number; ry: number; drift: number;
-}> = [
-  { text: 'gtag("event", "conversion", {\n  send_to: "AW-CONVERSION_ID" });',              x: '18%', y: '34%', peak: 0.36, rx:  14, ry: -18, drift:  60 },
-  { text: 'analytics.track("conversion", {\n  source: "organic" });',                       x: '58%', y: '38%', peak: 0.32, rx: -10, ry:  16, drift: -50 },
-  { text: 'window.dataLayer = window.dataLayer || [];',                                     x: '14%', y: '52%', peak: 0.30, rx:   6, ry:  22, drift:  45 },
-  { text: 'const serverSideTracking =\n  fetch("/api/track", {\n    method: "POST"\n  });', x: '22%', y: '68%', peak: 0.32, rx: -16, ry: -12, drift: -70 },
-  { text: 'const ecommerce = { purchase: {\n  transaction_id: "T12345" } };',               x: '54%', y: '62%', peak: 0.34, rx:  12, ry: -14, drift:  55 },
-  { text: "fbq('track', 'Purchase', {\n  value: 249.00,\n  currency: 'BRL'\n});",           x: '60%', y: '45%', peak: 0.30, rx:  -8, ry:  20, drift: -45 },
-  { text: '{\n  "event_name": "Purchase",\n  "action_source": "website"\n}',                x: '66%', y: '74%', peak: 0.30, rx:  18, ry:  -6, drift:  65 },
-  { text: 'event_id: crypto.randomUUID()',                                                  x: '30%', y: '82%', peak: 0.30, rx: -12, ry:  14, drift: -40 },
-  { text: '{ "match_keys":\n  { "em": sha256(email) } }',                                  x: '42%', y: '32%', peak: 0.28, rx:   8, ry: -20, drift:  50 },
-  { text: 'server_event_time:\n  Math.floor(Date.now() / 1000)',                            x: '70%', y: '56%', peak: 0.30, rx:  -6, ry:  16, drift: -60 },
-];
-
-function FloatingCodeBg() {
-  return (
-    <div style={{ position: 'absolute', top: '10vh', left: '50%', transform: 'translateX(-50%)', width: '100%', maxWidth: '800px', bottom: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
-      {CODE_SNIPPETS.map((snippet, i) => {
-        const phaseDelay = -(i / CODE_SNIPPETS.length) * CYCLE;
-        const d = snippet.drift;
-        return (
-          <motion.pre
-            key={i}
-            animate={{
-              opacity: [0,            snippet.peak, snippet.peak,  snippet.peak * 0.08, 0            ],
-              scale:   [0.52,         0.80,         1.0,           1.40,                1.70          ],
-              x:       [`${d}px`,     `${d * 0.35}px`, '0px',     `${-d * 0.25}px`,   `${-d * 0.6}px`],
-              filter:  ['blur(8px)', 'blur(2px)',  'blur(0px)',   'blur(4px)',           'blur(12px)'  ],
-              rotateX: [snippet.rx,   snippet.rx * 0.45, snippet.rx * 0.15, 0,          0             ],
-              rotateY: [snippet.ry,   snippet.ry * 0.45, snippet.ry * 0.15, 0,          0             ],
-            }}
-            transition={{
-              times: [0, 0.2, 0.45, 0.78, 1],
-              duration: CYCLE,
-              delay: phaseDelay,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-            style={{
-              position: 'absolute',
-              left: snippet.x,
-              top: snippet.y,
-              color: '#FFD000',
-              fontSize: '0.68rem',
-              fontFamily: "'Fira Code', 'Cascadia Code', monospace",
-              fontWeight: 500,
-              lineHeight: 1.6,
-              letterSpacing: '0.01em',
-              whiteSpace: 'pre',
-              userSelect: 'none',
-              maxWidth: '280px',
-              transformOrigin: 'center center',
-              textShadow: '0 0 24px rgba(255,208,0,0.5)',
-            }}
-          >
-            {snippet.text}
-          </motion.pre>
-        );
-      })}
-    </div>
-  );
-}
-
 // ─── Component ────────────────────────────────────────────────────────────────
 interface HeroProps {
   clientData?: ClientData | null;
@@ -159,7 +91,6 @@ interface HeroProps {
 const DEFAULT_SUBTITLE = 'Preparamos algo especial para voc\u00ea. Role para ver sua proposta personalizada.';
 
 export default function Hero({ clientData }: HeroProps) {
-  const isMobile = useIsMobile();
   const firstName = clientData?.client?.name?.split(' ')[0];
   const heroCopy = clientData?.diagnosis?.copy?.pageHero;
   const [mounted, setMounted] = useState(false);
@@ -239,9 +170,6 @@ export default function Hero({ clientData }: HeroProps) {
       className="select-none"
       style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 20px', overflow: 'hidden' }}
     >
-      {/* Floating code snippets background */}
-      <FloatingCodeBg />
-
       <div className="bg-mesh-subtle" style={{ position: 'absolute', inset: 0, opacity: 0.45, pointerEvents: 'none' }} />
 
       <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '640px', margin: '0 auto', padding: '60px 0 40px', textAlign: 'center', zoom: zoom }}>
@@ -372,7 +300,7 @@ export default function Hero({ clientData }: HeroProps) {
         >
           {/* Card with 3D perspective */}
           <div
-            style={{ borderRadius: '16px', border: '1px solid #27272a', background: '#0a0a0a', overflow: 'hidden', textAlign: 'left', transform: 'perspective(900px) rotateY(-8deg) rotateX(5deg)', transformOrigin: 'center center', boxShadow: '28px 28px 64px rgba(0,0,0,0.6), -4px -4px 24px rgba(0,0,0,0.3), 0 0 48px rgba(119,189,172,0.04)', transition: 'transform 0.4s ease, box-shadow 0.4s ease' }}
+            style={{ borderRadius: '16px', border: '1px solid #27272a', background: '#0a0a0a', overflow: 'hidden', textAlign: 'left', transform: 'perspective(900px) rotateY(-8deg) rotateX(5deg)', transformOrigin: 'center center', boxShadow: '0 16px 48px rgba(0,0,0,0.5)', transition: 'transform 0.4s ease, box-shadow 0.4s ease' }}
             onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = 'perspective(900px) rotateY(-4deg) rotateX(2deg) scale(1.01)'; }}
             onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = 'perspective(900px) rotateY(-8deg) rotateX(5deg)'; }}
           >
@@ -389,7 +317,7 @@ export default function Hero({ clientData }: HeroProps) {
 
             {/* Stream header */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', borderBottom: '1px solid #111' }}>
-              <span style={{ color: '#9CA3AF', fontSize: '0.72rem', fontFamily: 'monospace' }}>Live event stream</span>
+              <span style={{ color: '#9CA3AF', fontSize: 'clamp(0.5rem, 1.4vw, 0.72rem)', fontFamily: 'monospace' }}>Live event stream</span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                 <span className="live-dot" />
                 <span style={{ color: '#77BDAC', fontSize: '0.6rem', fontWeight: 600, letterSpacing: '0.05em' }}>CONNECTED</span>
@@ -417,8 +345,8 @@ export default function Hero({ clientData }: HeroProps) {
                       style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '10px',
-                        padding: '7px 10px',
+                        gap: 'clamp(4px, 1.5vw, 10px)',
+                        padding: '7px clamp(6px, 1.5vw, 10px)',
                         borderRadius: '8px',
                         marginBottom: '5px',
                         position: 'relative',
@@ -441,12 +369,12 @@ export default function Hero({ clientData }: HeroProps) {
                       )}
 
                       {/* Platform badge */}
-                      <div style={{ width: '28px', height: '28px', borderRadius: '7px', background: row.platform.bg, border: `1px solid ${row.platform.color}44`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: row.platform.color, fontSize: '0.55rem', fontWeight: 700, fontFamily: 'monospace' }}>
+                      <div style={{ width: 'clamp(22px, 5vw, 28px)', height: 'clamp(22px, 5vw, 28px)', borderRadius: '7px', background: row.platform.bg, border: `1px solid ${row.platform.color}44`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: row.platform.color, fontSize: 'clamp(0.4rem, 1.2vw, 0.55rem)', fontWeight: 700, fontFamily: 'monospace' }}>
                         {row.platform.initial}
                       </div>
 
                       {/* Event name */}
-                      <span style={{ color: '#9CA3AF', fontSize: '0.72rem', fontFamily: 'monospace', flex: 1 }}>
+                      <span style={{ color: '#9CA3AF', fontSize: 'clamp(0.5rem, 1.4vw, 0.72rem)', fontFamily: 'monospace', flex: 1 }}>
                         {row.name}
                       </span>
 
@@ -455,7 +383,7 @@ export default function Hero({ clientData }: HeroProps) {
                       <StatusChip status={row.status} />
 
                       {/* Value */}
-                      <span style={{ color: '#77BDAC', fontWeight: 700, fontSize: '0.72rem', fontVariantNumeric: 'tabular-nums' }}>
+                      <span style={{ color: '#77BDAC', fontWeight: 700, fontSize: 'clamp(0.5rem, 1.4vw, 0.72rem)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
                         {row.value}
                       </span>
                     </motion.div>
@@ -486,23 +414,16 @@ export default function Hero({ clientData }: HeroProps) {
           >
             {/* EMQ badge */}
             <motion.div
-              className="animate-float"
               style={{
                 display: 'flex', alignItems: 'center', gap: '8px',
                 padding: '8px 12px', borderRadius: '12px',
                 background: 'rgba(255,255,255,0.04)',
-                backdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
-                WebkitBackdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
                 border: '1px solid rgba(255,255,255,0.07)',
                 boxShadow: '0 4px 24px rgba(0,0,0,0.2)',
               }}
             >
               <div style={{ position: 'relative', flexShrink: 0 }}>
-                <motion.div
-                  animate={{ scale: [1, 1.7], opacity: [0.2, 0] }}
-                  transition={{ duration: 2.2, repeat: Infinity, ease: 'easeOut' }}
-                  style={{ position: 'absolute', inset: '-5px', borderRadius: '11px', background: 'rgba(119,189,172,0.12)' }}
-                />
+                <div className="animate-pulse-subtle" style={{ position: 'absolute', inset: '-5px', borderRadius: '11px', background: 'rgba(119,189,172,0.08)' }} />
                 <div style={{ width: '24px', height: '24px', borderRadius: '7px', background: 'rgba(119,189,172,0.09)', border: '1px solid rgba(119,189,172,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Award size={12} color="#77BDAC" strokeWidth={2} />
                 </div>
@@ -523,24 +444,17 @@ export default function Hero({ clientData }: HeroProps) {
             <motion.div
               animate={{ scale: recoveryPulse ? [1, 1.15, 1] : 1 }}
               transition={{ duration: 0.3 }}
-              className="animate-float"
               style={{
                 display: 'flex', alignItems: 'center', gap: '8px',
                 padding: '8px 10px', borderRadius: '12px',
                 background: recoveryPulse ? 'rgba(119,189,172,0.12)' : 'rgba(255,255,255,0.04)',
-                backdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
-                WebkitBackdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
                 border: '1px solid rgba(119,189,172,0.15)',
                 boxShadow: '0 4px 24px rgba(0,0,0,0.2)',
                 transition: 'background 0.3s ease',
               }}
             >
               <div style={{ position: 'relative', flexShrink: 0 }}>
-                <motion.div
-                  animate={{ scale: [1, 1.7], opacity: [0.2, 0] }}
-                  transition={{ duration: 2.2, repeat: Infinity, ease: 'easeOut', delay: 0.6 }}
-                  style={{ position: 'absolute', inset: '-4px', borderRadius: '9px', background: 'rgba(119,189,172,0.12)' }}
-                />
+                <div className="animate-pulse-subtle" style={{ position: 'absolute', inset: '-5px', borderRadius: '11px', background: 'rgba(119,189,172,0.08)' }} />
                 <div style={{ width: '26px', height: '26px', borderRadius: '8px', background: 'rgba(119,189,172,0.09)', border: '1px solid rgba(119,189,172,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Activity size={12} color="#77BDAC" strokeWidth={2} />
                 </div>

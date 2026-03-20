@@ -4,7 +4,6 @@ import React from 'react';
 import { motion, useTransform, type MotionValue } from 'framer-motion';
 import { SectionBadge } from '@/components/portal/SectionBadge';
 import type { ClientData } from '@/lib/clients';
-import { useIsMobile } from '@/lib/useIsMobile';
 import { scoreColor } from '@/lib/animation-helpers';
 import { tokens } from '@/lib/tokens';
 import { BarChart2, Target, Cookie, Zap, Activity, ExternalLink } from 'lucide-react';
@@ -82,9 +81,8 @@ export function ResultsSlideContent({ scrollYProgress, diagnosis }: {
   scrollYProgress: MotionValue<number>;
   diagnosis: ClientData['diagnosis'];
 }) {
-  const isMobile = useIsMobile();
-  const s = 0.19;
-  const span = 0.14;
+  const s = 0.125;
+  const span = 0.125;
   const t = (offset: number) => s + span * offset;
 
   const topBarOpacity    = useTransform(scrollYProgress, [t(0.05), t(0.15)], [0, 1]);
@@ -167,52 +165,7 @@ export function ResultsSlideContent({ scrollYProgress, diagnosis }: {
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12,
           position: 'relative', flexShrink: 0,
         }}>
-          <motion.div
-            animate={{ y: [0, -6, 0], opacity: [0.3, 0.6, 0.3] }}
-            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-            style={{
-              position: 'absolute', top: -10, right: -24, width: 5, height: 5,
-              borderRadius: '50%', background: `${scoreColor(overallScore)}80`,
-              boxShadow: `0 0 8px ${scoreColor(overallScore)}30`, pointerEvents: 'none', zIndex: 3,
-            }}
-          />
-          <motion.div
-            animate={{ y: [0, 5, 0], x: [0, -3, 0] }}
-            transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
-            style={{
-              position: 'absolute', bottom: 28, left: -18, width: 3, height: 3,
-              borderRadius: '50%', background: `${scoreColor(overallScore)}60`,
-              pointerEvents: 'none', zIndex: 3,
-            }}
-          />
-          <motion.div
-            animate={{ y: [0, -4, 0], x: [0, 2, 0] }}
-            transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
-            style={{
-              position: 'absolute', top: '45%', left: -26, width: 4, height: 4,
-              borderRadius: '50%', background: `${scoreColor(overallScore)}40`,
-              pointerEvents: 'none', zIndex: 3,
-            }}
-          />
-
           <div style={{ position: 'relative', width: ringSize, height: ringSize }}>
-            <motion.div
-              animate={{
-                opacity: [0.3, 1, 1, 0.3],
-                scale: [0.9, 1.08, 1.08, 0.9],
-              }}
-              transition={{
-                duration: LOOP_S,
-                repeat: Infinity,
-                ease: 'easeInOut',
-                times: LOOP_TIMES,
-              }}
-              style={{
-                position: 'absolute', inset: -32, borderRadius: '50%',
-                background: `radial-gradient(circle, ${scoreColor(overallScore)}18 0%, transparent 65%)`,
-                filter: isMobile ? 'none' : 'blur(28px)', pointerEvents: 'none',
-              }}
-            />
             <svg width={ringSize} height={ringSize} style={{ transform: 'rotate(-90deg)', position: 'relative', zIndex: 1 }}>
               <circle cx={ringSize / 2} cy={ringSize / 2} r={r}
                 fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth={ringStroke}
@@ -230,7 +183,6 @@ export function ResultsSlideContent({ scrollYProgress, diagnosis }: {
                   ease: [0.16, 1, 0.3, 1],
                   times: LOOP_TIMES,
                 }}
-                filter={`drop-shadow(0 0 8px ${scoreColor(overallScore)}50)`}
               />
             </svg>
             <div style={{

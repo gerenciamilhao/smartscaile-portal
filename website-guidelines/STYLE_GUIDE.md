@@ -61,15 +61,14 @@
 | Subtitle | `0.875rem` | 400 | Inter | `leading-relaxed` (1.625), cor `#9CA3AF` |
 | Body | `0.875rem` – `1rem` | 400 | Inter | |
 | Caption | `0.75rem` | 400-500 | Inter | |
-| Badge (padrão) | `0.7rem` | 500 | Inter | uppercase, `letterSpacing: 0.1em` |
-| Badge (slide 8) | `0.58rem` | 500 | Inter | uppercase, `letterSpacing: 0.1em` |
+| Badge (SectionBadge) | `0.61rem` | 500 | Fira Code | uppercase, `letterSpacing: 0.14em`, dot + glassmorphism |
 | Mono small | `0.65rem` – `0.72rem` | 400-700 | Fira Code | |
 
 ### Headline Accent Pattern
-Palavras-chave dentro de headlines usam Playfair italic com glow animado na cor temática:
-- **Teal** (positivo): `color: #77BDAC`, `textShadow` pulse `rgba(119,189,172,0.15→0.55)`
-- **Red** (pain): `color: #EF4444`, `textShadow` pulse `rgba(239,68,68,0.15→0.5)`
-- Animação: `duration: 3s`, `repeat: Infinity`, `ease: easeInOut`
+Palavras-chave dentro de headlines usam Playfair italic com textShadow estático:
+- **Teal** (positivo): `color: #77BDAC`, `textShadow: 0 0 12px rgba(119,189,172,0.25)`
+- **Red** (pain): `color: #EF4444`, `textShadow: 0 0 12px rgba(239,68,68,0.25)`
+- Sem animação infinita (removido para performance)
 - Palavras em Inter (sans) = contexto. Palavras em Playfair (serif) = destaque emocional.
 
 ### Slide Spacing Pattern
@@ -145,15 +144,17 @@ Palavras-chave dentro de headlines usam Playfair italic com glow animado na cor 
 
 ## Section Badge Pattern
 ```html
-<div class="badge">LABEL</div>
+<span class="section-badge">● LABEL</span>
 ```
-- Display: `inline-flex`
-- Padding: `4px 12px`
+- Display: `inline-flex`, align center, `gap: 6px`
+- Padding: `6px 14px`
 - Border-radius: `9999px` (pill)
-- Background: `rgba(119,189,172,0.06)`
+- Background: `rgba(119,189,172,0.05)`
 - Border: `1px solid rgba(119,189,172,0.12)`
-- Color: `#77BDAC`
-- Font: `0.7rem`, weight 500, `letter-spacing: 0.1em`, `text-transform: uppercase`
+- Shadow: `0 0 12px rgba(119,189,172,0.04)` + `backdrop-blur-sm`
+- Color: `rgba(119,189,172,0.85)`
+- Font: mono `0.61rem`, weight 500, `letter-spacing: 0.14em`, `text-transform: uppercase`
+- Dot: `4px` circle, `#77BDAC`, opacity 0.6, `shadow: 0 0 6px rgba(119,189,172,0.5)`
 
 ---
 
@@ -189,11 +190,10 @@ transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
 | `border-pulse` | 3s infinite | Animated card borders |
 | `glow-pulse` | 3s infinite | Pulsing box shadows |
 | `live-pulse` | 1.5s infinite | Live indicator dots |
-| `float-y` | 3.5s infinite | Floating elements |
 | `shimmer` | 4s infinite | Gradient text shimmer |
 | `ticker-scroll` | 32s linear | Horizontal ticker |
-| `pulse-pain` | 2s infinite | **NEW** Pain hero pulsing |
-| `blocked-flash` | 1.5s infinite | **NEW** Blocked event flash |
+| `pulse-subtle` | 2s infinite | Subtle opacity pulse (replacement for ping rings) |
+| `blocked-flash` | 1.5s infinite | Blocked event flash |
 
 ---
 
@@ -216,9 +216,9 @@ transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
 }
 ```
 
-### Ambient Glows
-- Teal: `rgba(119,189,172,0.05)`, blur `60px`, 256-384px circles
-- Pain Red: `rgba(239,68,68,0.06)`, blur `80px`
+### Ambient Glows (REMOVED for performance)
+- Ambient glow layers, floating orbs, and blur effects were removed globally
+- Background mesh gradients (`bg-hero-mesh`, `bg-pain-mesh`) remain as the only background effects
 
 ---
 

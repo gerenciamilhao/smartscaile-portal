@@ -7,8 +7,8 @@ import { useIsMobile } from '@/lib/useIsMobile';
 import { useLoopProgress } from '@/lib/useLoopProgress';
 import { renderAccentText } from '@/lib/animation-helpers';
 
-function CPATrackingRing({ trackingValue, trackingColor, normalizedValue, isMobile = false }: {
-  trackingValue: number; trackingColor: string; normalizedValue: number; isMobile?: boolean;
+function CPATrackingRing({ trackingValue, trackingColor, normalizedValue }: {
+  trackingValue: number; trackingColor: string; normalizedValue: number;
 }) {
   const size = 120;
   const stroke = 6;
@@ -21,35 +21,7 @@ function CPATrackingRing({ trackingValue, trackingColor, normalizedValue, isMobi
       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
       position: 'relative', flexShrink: 0,
     }}>
-      <motion.div
-        animate={{ y: [0, -5, 0], opacity: [0.3, 0.6, 0.3] }}
-        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-        style={{
-          position: 'absolute', top: -6, right: -14, width: 4, height: 4,
-          borderRadius: '50%', background: `${trackingColor}80`,
-          boxShadow: `0 0 6px ${trackingColor}30`, pointerEvents: 'none', zIndex: 3,
-        }}
-      />
-      <motion.div
-        animate={{ y: [0, 4, 0], x: [0, -2, 0] }}
-        transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
-        style={{
-          position: 'absolute', bottom: 20, left: -10, width: 3, height: 3,
-          borderRadius: '50%', background: `${trackingColor}60`,
-          pointerEvents: 'none', zIndex: 3,
-        }}
-      />
-
       <div style={{ position: 'relative', width: size, height: size }}>
-        <div
-          style={{
-            position: 'absolute', inset: -20, borderRadius: '50%',
-            background: `radial-gradient(circle, ${trackingColor}${normalizedValue > 0.5 ? '18' : '08'} 0%, transparent 65%)`,
-            filter: isMobile ? 'none' : 'blur(20px)', pointerEvents: 'none',
-            transition: 'background 200ms ease',
-          }}
-        />
-
         <svg width={size} height={size} style={{ transform: 'rotate(-90deg)', position: 'relative', zIndex: 1 }}>
           <circle cx={size / 2} cy={size / 2} r={r}
             fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth={stroke}
@@ -60,7 +32,6 @@ function CPATrackingRing({ trackingValue, trackingColor, normalizedValue, isMobi
             strokeDasharray={circ}
             strokeDashoffset={filledOffset}
             style={{ transition: 'stroke-dashoffset 50ms linear, stroke 100ms linear' }}
-            filter={`drop-shadow(0 0 6px ${trackingColor}40)`}
           />
         </svg>
 
@@ -159,7 +130,7 @@ export function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
 
       <motion.div style={{ opacity: labelOpacity, y: labelY }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
-          <CPATrackingRing trackingValue={trackingValue} trackingColor={trackingColor} normalizedValue={normalizedValue} isMobile={isMobile} />
+          <CPATrackingRing trackingValue={trackingValue} trackingColor={trackingColor} normalizedValue={normalizedValue} />
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div>

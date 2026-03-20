@@ -8,6 +8,8 @@ interface ScrollSlideProps {
   range: [number, number];
   scrollYProgress: MotionValue<number>;
   zIndex?: number;
+  /** Primeiro slide não faz fade-in — já começa visível */
+  isFirst?: boolean;
   /** Último slide não faz fade-out — permanece visível até o footer */
   isLast?: boolean;
 }
@@ -28,6 +30,7 @@ export function ScrollSlide({
   range,
   scrollYProgress,
   zIndex = 2,
+  isFirst = false,
   isLast = false,
 }: ScrollSlideProps) {
   const [zoom, setZoom] = useState(1);
@@ -41,17 +44,25 @@ export function ScrollSlide({
   const outStart = isLast ? end : end - span * 0.30; // início da saída (30% — mais overlap)
 
   // Keypoints: [entrar, visível, começar-sair, terminar-sair]
-  const opacityKeys = isLast
-    ? [start, inEnd,  inEnd, end]   // último slide: fica opaco até o fim
+  const opacityKeys = isFirst
+    ? [start, start + 0.001, outStart, end]   // primeiro slide: começa opaco, sem fade-in
+    : isLast
+    ? [start, inEnd,  inEnd, end]     // último slide: fica opaco até o fim
     : [start, inEnd, outStart, end];
-  const opacityVals = isLast
+  const opacityVals = isFirst
+    ? [1, 1, 1, 0]
+    : isLast
     ? [0, 1, 1, 1]
     : [0, 1, 1,  0];
 
-  const yKeys = isLast
+  const yKeys = isFirst
+    ? [start, start + 0.001, outStart, end]
+    : isLast
     ? [start, inEnd,  inEnd, end]
     : [start, inEnd, outStart, end];
-  const yVals = isLast
+  const yVals = isFirst
+    ? [0, 0, 0, -20]
+    : isLast
     ? [30, 0, 0, 0]
     : [30, 0, 0, -20];
 
@@ -91,6 +102,15 @@ export function ScrollSlide({
 function LazyContent({ isVisible, children }: { isVisible: MotionValue<boolean>; children: ReactNode }) {
   const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
+
+  // Checar valor inicial no mount (isFirst já começa visível)
+  useEffect(() => {
+    const v = isVisible.get();
+    if (v) {
+      setMounted(true);
+      setVisible(true);
+    }
+  }, [isVisible]);
 
   useMotionValueEvent(isVisible, 'change', (v) => {
     setVisible(v);

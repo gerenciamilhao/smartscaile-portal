@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 
 /**
  * Parse *word* into serif+glow accent spans.
@@ -11,13 +10,10 @@ export function renderAccentText(text: string, color: string = '#77BDAC', delay:
   return parts.map((part, i) => {
     if (part.startsWith('*') && part.endsWith('*')) {
       const word = part.slice(1, -1);
-      const d = delay + accentIndex * 1.6;
       accentIndex++;
-      return React.createElement(motion.span, {
+      return React.createElement('span', {
         key: i,
-        animate: { textShadow: [`0 0 8px ${color}20`, `0 0 20px ${color}60`, `0 0 8px ${color}20`] },
-        transition: { duration: 3.2, repeat: Infinity, ease: 'easeInOut', delay: d },
-        style: { fontFamily: 'var(--font-serif)', fontStyle: 'italic', color },
+        style: { fontFamily: 'var(--font-serif)', fontStyle: 'italic', color, textShadow: `0 0 12px ${color}40` },
       }, word);
     }
     return React.createElement('span', { key: i, style: { whiteSpace: 'pre-line' } }, part);

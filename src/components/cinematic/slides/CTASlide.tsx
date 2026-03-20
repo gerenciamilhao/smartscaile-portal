@@ -60,7 +60,6 @@ export function CTASlideContent({ diagnosis, scrollYProgress, range }: {
   const lockColor = lockOpen ? '#22C55E' : '#EF4444';
   const accentColor = lockOpen ? '#77BDAC' : '#EF4444';
   const accentRgba = (a: number) => lockOpen ? `rgba(119,189,172,${a})` : `rgba(239,68,68,${a})`;
-  const orbColor = lockOpen ? 'rgba(119,189,172,' : 'rgba(239,68,68,';
 
   const resetAndLoop = useCallback(() => {
     setVisibleChars(CTA_LINES.map(() => 0));
@@ -91,35 +90,6 @@ export function CTASlideContent({ diagnosis, scrollYProgress, range }: {
 
   return (
     <>
-      <div style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: -1,
-        transition: 'background 1s ease',
-        background: lockOpen
-          ? 'radial-gradient(ellipse 60% 50% at 50% 40%, rgba(119,189,172,0.06) 0%, transparent 70%)'
-          : 'radial-gradient(ellipse 60% 50% at 50% 40%, rgba(239,68,68,0.06) 0%, transparent 70%)',
-      }} />
-
-      {[
-        { top: '12%', left: '4%', size: 4, dur: 7, delay: 0 },
-        { top: '20%', right: '5%', size: 3, dur: 9, delay: 2 },
-        { top: '75%', left: '6%', size: 5, dur: 11, delay: 3.5 },
-      ].map((orb, i) => (
-        <motion.div
-          key={`orb-${i}`}
-          animate={{ y: [0, -(orb.size + 2), 0], opacity: [0.2, 0.4, 0.2] }}
-          transition={{ duration: orb.dur, repeat: Infinity, ease: 'easeInOut', delay: orb.delay }}
-          style={{
-            position: 'absolute', top: orb.top,
-            ...(orb.left ? { left: orb.left } : { right: orb.right }),
-            width: orb.size, height: orb.size, borderRadius: '50%',
-            background: `${orbColor}0.3)`,
-            boxShadow: `0 0 10px ${orbColor}0.12)`,
-            pointerEvents: 'none',
-            transition: 'background 1s ease, box-shadow 1s ease',
-          }}
-        />
-      ))}
-
       <div
         style={{
           width: 56, height: 56, borderRadius: '50%',

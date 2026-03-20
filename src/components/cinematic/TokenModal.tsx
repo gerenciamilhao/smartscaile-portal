@@ -54,8 +54,8 @@ export default function TokenModal({ open, onClose, onSuccess }: TokenModalProps
             position: 'fixed', inset: 0, zIndex: 200,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             background: 'rgba(3,3,3,0.90)',
-            backdropFilter: 'blur(32px) saturate(1.2)',
-            WebkitBackdropFilter: 'blur(32px) saturate(1.2)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
           }}
           onClick={onClose}
         >
@@ -76,14 +76,6 @@ export default function TokenModal({ open, onClose, onSuccess }: TokenModalProps
               boxShadow: '0 32px 100px rgba(0,0,0,0.8), 0 0 1px rgba(119,189,172,0.15), inset 0 1px 0 rgba(255,255,255,0.03)',
             }}
           >
-            {/* Ambient glow — top center */}
-            <div style={{
-              position: 'absolute', top: '-80px', left: '50%', transform: 'translateX(-50%)',
-              width: '320px', height: '200px',
-              background: 'radial-gradient(circle, rgba(119,189,172,0.06) 0%, transparent 65%)',
-              filter: 'blur(50px)', pointerEvents: 'none',
-            }} />
-
             {/* Close button */}
             <button
               onClick={onClose}
@@ -125,22 +117,13 @@ export default function TokenModal({ open, onClose, onSuccess }: TokenModalProps
                     width: 52, height: 52,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}>
-                    {/* Outer breathing ring */}
-                    <motion.div
-                      animate={{
-                        boxShadow: [
-                          '0 0 0 1px rgba(119,189,172,0.08), 0 0 20px rgba(119,189,172,0.04)',
-                          '0 0 0 1px rgba(119,189,172,0.18), 0 0 30px rgba(119,189,172,0.08)',
-                          '0 0 0 1px rgba(119,189,172,0.08), 0 0 20px rgba(119,189,172,0.04)',
-                        ],
-                      }}
-                      transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                      style={{
-                        position: 'absolute', inset: 0,
-                        borderRadius: '14px',
-                        background: 'rgba(119,189,172,0.06)',
-                      }}
-                    />
+                    {/* Static ring */}
+                    <div style={{
+                      position: 'absolute', inset: 0,
+                      borderRadius: '14px',
+                      background: 'rgba(119,189,172,0.06)',
+                      border: '1px solid rgba(119,189,172,0.10)',
+                    }} />
                     <Lock size={20} color="#77BDAC" strokeWidth={1.5} style={{ position: 'relative', zIndex: 1 }} />
                   </div>
                 </motion.div>

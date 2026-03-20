@@ -12,20 +12,27 @@ scroll_upgrade:
   status: implemented
   date: 2026-03-19
   prd: docs/prd/prd-smartscaile-portal-scroll.md
-  stack: gsap-scrolltrigger-scrollsmoother
-  lenis_removed: true
+  stack: framer-motion-useScroll-useTransform
   container_height: 1200vh
   total_slides: 8
+performance_cleanup:
+  status: complete
+  date: 2026-03-20
+  removed: [blur, backdropFilter, animated-glows, floating-orbs, floating-pills, floating-logos, dot-grid, SlideOrbs, FloatingCodeBg, ambient-glow-layer]
+  added: [animate-pulse-subtle, isFirst-flag, mouse-scroll-indicator]
+  hero_skip: true
+  flow: PainHero → Token → HeaderSlide (Hero removed from render)
 slides:
   slide_1_header:
     status: complete
-    features: [terminal-typing, perspective-3d, glassmorphism, char-by-char-loop]
+    isFirst: true
+    features: [terminal-typing, perspective-3d, char-by-char-loop, static-content-on-load, mouse-scroll-indicator]
   slide_2_results:
     status: complete
     features: [score-ring-loop, sub-scores-minimal, stape-diagnostic, score-color-system]
   slide_3_goal_escala:
     status: complete
-    features: [synced-counter-bar, single-animation-source, easeInOut-braking, floating-pills-hold, context-pills]
+    features: [synced-counter-bar, single-animation-source, easeInOut-braking, context-pills]
   slide_4_goal_cpa:
     status: complete
     features: [tracking-ring-synced, dual-counter-inverse, meta-badge-alive, amber-warning-pills, useLoopProgress-hook, rAF-throttled]
@@ -33,13 +40,11 @@ slides:
     status: complete
     features: [loss-calculator-ledger, smooth-rgb-interpolation, split-bar-visible-lost, lerpRGB3-helper, red-pills-causes, useLoopProgress-shared]
   slide_6_opportunities:
-    status: complete-needs-polish
-    features: [apple-notes-container, macos-chrome, floating-pills-both-sides, floating-orbs, checkbox-breathing, impact-dot-breathing, ambient-glow, scroll-driven-stagger]
-    known_issues: [visual-flicker-on-scroll-needs-investigation]
+    status: complete
+    features: [apple-notes-container, macos-chrome, checkbox-breathing, impact-dot-breathing, scroll-driven-stagger]
   slide_7_pricing:
-    status: needs-refinement
-    features: [roas-card-dna, dual-pricing-cards, macos-chrome, breathing-glow, platform-logos-floating, meta-googleads-ga4-svgs, floating-orbs, tech-pills, scroll-driven-stagger]
-    known_issues: [card-layout-needs-polish]
+    status: complete
+    features: [pricing-card-static, macos-chrome, scroll-driven-stagger, scale-compensated-badge]
   slide_8_proposal:
     status: complete
-    features: [scroll-driven-stagger, floating-orbs, ambient-glow, glass-pills, cta-glow-pulse, extracted-component]
+    features: [scroll-driven-stagger, cta-terminal-typing, lock-state-reactive]

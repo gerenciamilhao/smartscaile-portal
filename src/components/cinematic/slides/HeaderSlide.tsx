@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { motion, useTransform, type MotionValue } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { SectionBadge } from '@/components/portal/SectionBadge';
 import type { ClientData } from '@/lib/clients';
 import { useIsMobile } from '@/lib/useIsMobile';
@@ -12,25 +12,17 @@ function TerminalTyping({ lines, isMobile = false, fontSize }: { lines: Terminal
 
   return (
     <div style={{ position: 'relative' }}>
-      {!isMobile && (
-        <div style={{
-          position: 'absolute', inset: -16, borderRadius: 20,
-          background: 'radial-gradient(ellipse at 30% 20%, rgba(119,189,172,0.06) 0%, transparent 60%)',
-          filter: 'blur(20px)', pointerEvents: 'none',
-        }} />
-      )}
-
       <div style={{
         position: 'relative',
         borderRadius: 14,
         background: 'linear-gradient(180deg, rgba(12,12,12,0.92) 0%, rgba(5,5,5,0.88) 100%)',
         border: '1px solid rgba(119,189,172,0.08)',
-        backdropFilter: isMobile ? 'none' : 'blur(16px)',
+
         overflow: 'hidden',
         fontFamily: 'var(--font-mono), monospace',
         fontSize: fontSize ?? '0.7rem',
         lineHeight: 1.8,
-        boxShadow: '0 12px 40px rgba(0,0,0,0.4), 0 0 1px rgba(119,189,172,0.12), inset 0 1px 0 rgba(255,255,255,0.03)',
+        boxShadow: '0 16px 48px rgba(0,0,0,0.5)',
       }}>
         {/* Window chrome */}
         <div style={{
@@ -119,26 +111,12 @@ function TerminalTyping({ lines, isMobile = false, fontSize }: { lines: Terminal
   );
 }
 
-export function HeaderSlideContent({ scrollYProgress, firstName, formattedDate, diagnosis }: {
-  scrollYProgress: MotionValue<number>;
+export function HeaderSlideContent({ firstName, formattedDate, diagnosis }: {
   firstName: string;
   formattedDate: string;
   diagnosis: ClientData['diagnosis'];
 }) {
   const isMobile = useIsMobile();
-  const s = 0.06;
-  const span = 0.13;
-  const t = (offset: number) => s + span * offset;
-
-  const topBarOpacity    = useTransform(scrollYProgress, [t(0.05), t(0.20)], [0, 1]);
-  const accentScaleX     = useTransform(scrollYProgress, [t(0.08), t(0.25)], [0, 1]);
-  const headlineOpacity  = useTransform(scrollYProgress, [t(0.10), t(0.28)], [0, 1]);
-  const headlineY        = useTransform(scrollYProgress, [t(0.10), t(0.28)], [20, 0]);
-  const subtitleOpacity  = useTransform(scrollYProgress, [t(0.16), t(0.34)], [0, 1]);
-  const subtitleY        = useTransform(scrollYProgress, [t(0.16), t(0.34)], [16, 0]);
-  const terminalOpacity  = useTransform(scrollYProgress, [t(0.22), t(0.40)], [0, 1]);
-  const terminalY        = useTransform(scrollYProgress, [t(0.22), t(0.40)], [16, 0]);
-  const footerOpacity    = useTransform(scrollYProgress, [t(0.38), t(0.52)], [0, 1]);
 
   const scores = diagnosis.stapeChecker?.scores;
   const terminalLines = useMemo<TerminalLine[]>(() => [
@@ -156,10 +134,7 @@ export function HeaderSlideContent({ scrollYProgress, firstName, formattedDate, 
 
   return (
     <div className="slide-content">
-      <motion.div
-        style={{ opacity: topBarOpacity }}
-        className="mb-6 flex items-center justify-between"
-      >
+      <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="live-dot" />
           <span className="text-[0.6rem] font-medium tracking-wide text-[#6B7280]" style={{ fontFamily: 'var(--font-mono), monospace' }}>
@@ -167,35 +142,20 @@ export function HeaderSlideContent({ scrollYProgress, firstName, formattedDate, 
           </span>
         </div>
         <SectionBadge label={diagnosis.copy?.hero?.badge ?? 'Proposta Exclusiva'} />
-      </motion.div>
+      </div>
 
-      <motion.div
-        style={{ scaleX: accentScaleX, transformOrigin: 'left' }}
-        className="accent-line mb-5"
-      />
+      <div className="accent-line mb-5" />
 
-      <motion.h2
-        style={{ opacity: headlineOpacity, y: headlineY, fontFamily: 'var(--font-sans)', fontWeight: 600, lineHeight: 1.15, color: '#F3F4F6', fontSize: 'clamp(1.75rem, 7vw, 3rem)', letterSpacing: '-0.02em' }}
-      >
+      <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 600, lineHeight: 1.15, color: '#F3F4F6', fontSize: 'clamp(1.75rem, 7vw, 3rem)', letterSpacing: '-0.02em' }}>
         {diagnosis.copy?.hero?.headline ?? 'Destrave a'}{' '}
         <span className="text-glow" style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', color: '#77BDAC' }}>{diagnosis.copy?.hero?.accentWord ?? 'escala.'}</span>
-      </motion.h2>
+      </h2>
 
-      <motion.p
-        style={{ opacity: subtitleOpacity, y: subtitleY }}
-        className="mt-4 max-w-[480px] text-[0.875rem] leading-relaxed text-[#9CA3AF]"
-      >
+      <p className="mt-4 max-w-[480px] text-[0.875rem] leading-relaxed text-[#9CA3AF]">
         {(diagnosis.copy?.hero?.subtitle ?? '{firstName}, sua operação sustenta R$100k/dia. O tracking é o que está segurando. Montamos o plano para liberar esse potencial.').replace('{firstName}', firstName).replace('{formattedDate}', formattedDate)}
-      </motion.p>
+      </p>
 
-      <motion.div
-        style={{
-          opacity: terminalOpacity,
-          y: terminalY,
-          perspective: 800,
-        }}
-        className="mt-6"
-      >
+      <div className="mt-6" style={{ perspective: 800 }}>
         <div style={{
           transform: 'rotateY(8deg) rotateX(1deg)',
           transformOrigin: 'left center',
@@ -203,12 +163,9 @@ export function HeaderSlideContent({ scrollYProgress, firstName, formattedDate, 
         }}>
           <TerminalTyping lines={terminalLines} isMobile={isMobile} fontSize="clamp(0.45rem, 1.3vw, 0.65rem)" />
         </div>
-      </motion.div>
+      </div>
 
-      <motion.div
-        style={{ opacity: footerOpacity }}
-        className="mt-6 flex items-center gap-3"
-      >
+      <div className="mt-6 flex items-center gap-3">
         <div className="h-px flex-1" style={{ background: 'linear-gradient(90deg, rgba(119,189,172,0.15), transparent)' }} />
         <motion.div
           animate={{ y: [0, 4, 0], opacity: [0.4, 0.8, 0.4] }}
@@ -223,7 +180,18 @@ export function HeaderSlideContent({ scrollYProgress, firstName, formattedDate, 
           </svg>
         </motion.div>
         <div className="h-px flex-1" style={{ background: 'linear-gradient(270deg, rgba(119,189,172,0.15), transparent)' }} />
-      </motion.div>
+      </div>
+
+      {/* Mouse scroll indicator */}
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
+        <div style={{ position: 'relative', width: 18, height: 28, border: '1px solid rgba(119,189,172,0.25)', borderRadius: 9 }}>
+          <motion.div
+            animate={{ y: [2, 10, 2], opacity: [1, 0, 1] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', top: 4, width: 3, height: 5, borderRadius: 2, background: '#77BDAC' }}
+          />
+        </div>
+      </div>
     </div>
   );
 }

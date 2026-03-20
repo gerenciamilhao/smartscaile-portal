@@ -370,8 +370,6 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
         overflow: 'hidden',
       }}
     >
-      {/* Ambient red glow — central top only */}
-      <div style={{ position: 'absolute', top: '20%', left: '50%', transform: 'translateX(-50%)', width: '400px', height: '300px', background: 'rgba(239,68,68,0.06)', borderRadius: '50%', filter: 'blur(80px)', pointerEvents: 'none' }} />
       <div className="bg-mesh-subtle" style={{ position: 'absolute', inset: 0, opacity: 0.45, pointerEvents: 'none' }} />
 
 
@@ -407,7 +405,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <div className="animate-pulse-pain" style={{
+            <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '6px',
               padding: '5px 14px', borderRadius: '9999px',
               border: '1px solid rgba(239,68,68,0.3)', background: 'rgba(239,68,68,0.08)',
@@ -546,7 +544,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
               textAlign: 'left',
               transform: 'perspective(900px) rotateY(-8deg) rotateX(5deg)',
               transformOrigin: 'center center',
-              boxShadow: '28px 28px 64px rgba(0,0,0,0.6), -4px -4px 24px rgba(0,0,0,0.3), 0 0 48px rgba(239,68,68,0.04)',
+              boxShadow: '0 16px 48px rgba(0,0,0,0.5)',
               transition: 'transform 0.4s ease, box-shadow 0.4s ease',
             }}
             onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = 'perspective(900px) rotateY(-4deg) rotateX(2deg) scale(1.01)'; }}
@@ -669,23 +667,16 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
           >
             {/* EMQ badge */}
             <motion.div
-              className="animate-float"
               style={{
                 display: 'flex', alignItems: 'center', gap: '8px',
                 padding: '8px 12px', borderRadius: '12px',
                 background: 'rgba(255,255,255,0.04)',
-                backdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
-                WebkitBackdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
                 border: '1px solid rgba(239,68,68,0.15)',
                 boxShadow: '0 4px 24px rgba(0,0,0,0.2)',
               }}
             >
               <div style={{ position: 'relative', flexShrink: 0 }}>
-                <motion.div
-                  animate={{ scale: [1, 1.7], opacity: [0.2, 0] }}
-                  transition={{ duration: 2.2, repeat: Infinity, ease: 'easeOut', delay: 0.8 }}
-                  style={{ position: 'absolute', inset: '-5px', borderRadius: '11px', background: 'rgba(239,68,68,0.12)' }}
-                />
+                <div className="animate-pulse-subtle" style={{ position: 'absolute', inset: '-5px', borderRadius: '11px', background: 'rgba(239,68,68,0.08)' }} />
                 <div style={{ width: '24px', height: '24px', borderRadius: '7px', background: 'rgba(239,68,68,0.09)', border: '1px solid rgba(239,68,68,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Target size={12} color="#EF4444" strokeWidth={2} />
                 </div>
@@ -706,24 +697,17 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
             <motion.div
               animate={{ scale: counterPulse ? [1, 1.15, 1] : 1 }}
               transition={{ duration: 0.3 }}
-              className="animate-float"
               style={{
                 display: 'flex', alignItems: 'center', gap: '8px',
                 padding: '8px 10px', borderRadius: '12px',
                 background: counterPulse ? 'rgba(239,68,68,0.12)' : 'rgba(255,255,255,0.04)',
-                backdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
-                WebkitBackdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
                 border: '1px solid rgba(239,68,68,0.15)',
                 boxShadow: '0 4px 24px rgba(0,0,0,0.2)',
                 transition: 'background 0.3s ease',
               }}
             >
               <div style={{ position: 'relative', flexShrink: 0 }}>
-                <motion.div
-                  animate={{ scale: [1, 1.7], opacity: [0.2, 0] }}
-                  transition={{ duration: 2.2, repeat: Infinity, ease: 'easeOut' }}
-                  style={{ position: 'absolute', inset: '-4px', borderRadius: '9px', background: 'rgba(239,68,68,0.12)' }}
-                />
+                <div className="animate-pulse-subtle" style={{ position: 'absolute', inset: '-5px', borderRadius: '11px', background: 'rgba(239,68,68,0.08)' }} />
                 <div style={{ width: '26px', height: '26px', borderRadius: '8px', background: 'rgba(239,68,68,0.09)', border: '1px solid rgba(239,68,68,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <TrendingUp size={12} color="#EF4444" strokeWidth={2} />
                 </div>

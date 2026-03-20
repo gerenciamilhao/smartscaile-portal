@@ -1,10 +1,9 @@
 'use client';
 
 import { useState, useCallback, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { useIsMobile } from '@/lib/useIsMobile';
+import { motion, AnimatePresence, useScroll, useTransform, type MotionValue } from 'framer-motion';
+import { ArrowUp } from 'lucide-react';
 import PainHero, { type PainHeroHandle } from './PainHero';
-import Hero from './Hero';
 import TokenModal from './TokenModal';
 import ProposalScroll from './ProposalScroll';
 import { ProgressIndicator } from './ProgressIndicator';
@@ -87,7 +86,6 @@ export default function CinematicExperience({ initialData }: CinematicExperience
 function UnlockedExperience({ clientData }: { clientData: ClientData | null }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const hasProposal = !!clientData;
-  const isMobile = useIsMobile();
 
   // Scroll progress do container
   const { scrollYProgress } = useScroll({
@@ -95,17 +93,9 @@ function UnlockedExperience({ clientData }: { clientData: ClientData | null }) {
     offset: ['start start', 'end end'],
   });
 
-  // Hero sai: fade + drift up — desativa completamente ao terminar
-  const heroOpacity    = useTransform(scrollYProgress, [0, 0.02, 0.06], [1, 1, 0]);
-  const heroY          = useTransform(scrollYProgress, [0, 0.02, 0.06], [0, 0, -40]);
-  const heroPointer    = useTransform(scrollYProgress, (v) => v > 0.06 ? 'none' : 'auto');
-  const heroVisibility = useTransform(scrollYProgress, (v) =>
-    v > 0.06 ? ('hidden' as const) : ('visible' as const)
-  );
-
   return (
     <>
-      {/* Container tall — 1200vh dá respiração entre os 8 slides */}
+      {/* Container tall — 1200vh → 150vh por slide (8 slides) */}
       <div
         ref={scrollRef}
         style={{ height: hasProposal ? '1200vh' : 'auto', position: 'relative' }}
@@ -120,62 +110,7 @@ function UnlockedExperience({ clientData }: { clientData: ClientData | null }) {
             overflow: 'hidden',
           }}
         >
-          {/* Persistent ambient glow — always visible, disguises slide transitions */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              zIndex: 0,
-              pointerEvents: 'none',
-            }}
-          >
-            {/* Top-center teal glow — hidden on mobile for performance */}
-            {!isMobile && (
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '-15%',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  width: '80%',
-                  height: '50%',
-                  background: 'radial-gradient(ellipse at center, rgba(119,189,172,0.07) 0%, transparent 70%)',
-                  filter: 'blur(60px)',
-                }}
-              />
-            )}
-            {/* Bottom-right subtle glow — hidden on mobile for performance */}
-            {!isMobile && (
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: '-10%',
-                  right: '-5%',
-                  width: '40%',
-                  height: '40%',
-                  background: 'radial-gradient(ellipse at center, rgba(119,189,172,0.04) 0%, transparent 70%)',
-                  filter: 'blur(80px)',
-                }}
-              />
-            )}
-          </div>
-
-          {/* Hero — fades e sobe ao scrollar */}
-          <motion.div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              zIndex: 1,
-              opacity:    hasProposal ? heroOpacity    : 1,
-              y:          hasProposal ? heroY          : 0,
-              pointerEvents: hasProposal ? heroPointer    : 'auto',
-              visibility: hasProposal ? heroVisibility : 'visible',
-            }}
-          >
-            <Hero clientData={clientData} />
-          </motion.div>
-
-          {/* Slides da proposta — cada um aparece por cima do Hero */}
+          {/* Slides da proposta */}
           {hasProposal && (
             <ProposalScroll scrollYProgress={scrollYProgress} clientData={clientData} />
           )}
@@ -187,6 +122,51 @@ function UnlockedExperience({ clientData }: { clientData: ClientData | null }) {
       {hasProposal && (
         <ProgressIndicator scrollYProgress={scrollYProgress} sections={SECTION_LABELS} />
       )}
+
+      {/* Back to top button */}
+      {hasProposal && (
+        <BackToHeroButton scrollYProgress={scrollYProgress} />
+      )}
     </>
+  );
+}
+
+// ─── Back to Hero button ──────────────────────────────────────────────────────
+function BackToHeroButton({ scrollYProgress }: { scrollYProgress: MotionValue<number> }) {
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.08, 0.14, 0.96, 1.0],
+    [0, 0, 1, 1, 0],
+  );
+
+  return (
+    <motion.button
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      style={{
+        position: 'fixed',
+        top: 20,
+        left: 20,
+        zIndex: 50,
+        opacity,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 6,
+        padding: '6px 12px',
+        borderRadius: 99,
+        background: 'rgba(255,255,255,0.04)',
+        border: '1px solid rgba(255,255,255,0.08)',
+        color: 'rgba(255,255,255,0.4)',
+        fontSize: '0.6rem',
+        fontFamily: 'var(--font-mono), monospace',
+        fontWeight: 500,
+        letterSpacing: '0.04em',
+        cursor: 'pointer',
+        transition: 'color 0.2s ease, border-color 0.2s ease',
+      }}
+      whileHover={{ color: 'rgba(119,189,172,0.8)', borderColor: 'rgba(119,189,172,0.2)' }}
+    >
+      <ArrowUp size={12} strokeWidth={1.5} />
+      Início
+    </motion.button>
   );
 }
