@@ -58,44 +58,24 @@ export default function CinematicExperience({ initialData, clienteSlug }: Cinema
             exit={{ opacity: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <UnlockedExperience clientData={clientData} />
+            <UnlockedExperience clientData={clientData} onExit={() => {
+              document.cookie = 'smartscaile-token=; path=/; max-age=0';
+              setPageState('locked');
+              setClientData(null);
+              window.scrollTo(0, 0);
+            }} />
           </motion.div>
         )}
       </AnimatePresence>
 
       <TokenModal open={showModal} onClose={handleModalClose} onSuccess={handleTokenSuccess} />
 
-      {/* Botão sair — volta para PainHero */}
-      {pageState === 'unlocked' && (
-        <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.5 }}
-          onClick={() => {
-            document.cookie = 'smartscaile-token=; path=/; max-age=0';
-            setPageState('locked');
-            setClientData(null);
-            window.scrollTo(0, 0);
-          }}
-          style={{
-            position: 'fixed', top: 20, right: 20, zIndex: 50,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            width: 32, height: 32, borderRadius: '50%',
-            background: 'transparent', border: 'none',
-            color: 'rgba(255,255,255,0.15)',
-            cursor: 'pointer', transition: 'color 0.2s ease',
-          }}
-          whileHover={{ color: 'rgba(255,255,255,0.4)' }}
-        >
-          <LogOut size={13} strokeWidth={1.5} />
-        </motion.button>
-      )}
     </>
   );
 }
 
 // ─── Unlocked Experience ──────────────────────────────────────────────────────
-function UnlockedExperience({ clientData }: { clientData: ClientData | null }) {
+function UnlockedExperience({ clientData, onExit }: { clientData: ClientData | null; onExit: () => void }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const hasProposal = !!clientData;
 
@@ -139,6 +119,11 @@ function UnlockedExperience({ clientData }: { clientData: ClientData | null }) {
       {hasProposal && (
         <BackToHeroButton scrollYProgress={scrollYProgress} />
       )}
+
+      {/* Exit button */}
+      {hasProposal && (
+        <ExitButton scrollYProgress={scrollYProgress} onExit={onExit} />
+      )}
     </>
   );
 }
@@ -175,6 +160,42 @@ function BackToHeroButton({ scrollYProgress }: { scrollYProgress: MotionValue<nu
       whileHover={{ color: 'rgba(255,255,255,0.5)' }}
     >
       <ArrowUp size={14} strokeWidth={1.5} />
+    </motion.button>
+  );
+}
+
+// ─── Exit button ─────────────────────────────────────────────────────────────
+function ExitButton({ scrollYProgress, onExit }: { scrollYProgress: MotionValue<number>; onExit: () => void }) {
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.08, 0.14, 0.96, 1.0],
+    [0, 0, 1, 1, 0],
+  );
+
+  return (
+    <motion.button
+      onClick={onExit}
+      style={{
+        position: 'fixed',
+        top: 20,
+        right: 20,
+        zIndex: 50,
+        opacity,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 32,
+        height: 32,
+        borderRadius: '50%',
+        background: 'transparent',
+        border: 'none',
+        color: 'rgba(255,255,255,0.15)',
+        cursor: 'pointer',
+        transition: 'color 0.2s ease',
+      }}
+      whileHover={{ color: 'rgba(255,255,255,0.4)' }}
+    >
+      <LogOut size={13} strokeWidth={1.5} />
     </motion.button>
   );
 }
