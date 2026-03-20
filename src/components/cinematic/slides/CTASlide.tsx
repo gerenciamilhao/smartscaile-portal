@@ -16,7 +16,7 @@ const CTA_LINES: TerminalLine[] = [
   { text: 'configurando server-side...', prefix: ' ', color: '#4B5563', delay: 400 },
   { text: 'GTM first-party domain', prefix: '  →', color: '#77BDAC', delay: 100 },
   { text: 'Custom Loader (antiblock)', prefix: '  →', color: '#77BDAC', delay: 100 },
-  { text: 'Cookie Keeper (restaura cookies apagados)', prefix: '  →', color: '#77BDAC', delay: 100 },
+  { text: 'Cookie Keeper', prefix: '  →', color: '#77BDAC', delay: 100 },
   { text: 'Dedup browser x server', prefix: '  →', color: '#77BDAC', delay: 100 },
   { text: 'Purchase via Webhook', prefix: '  →', color: '#77BDAC', delay: 100 },
   { text: 'UTM tracking & backup', prefix: '  →', color: '#77BDAC', delay: 100 },
@@ -186,6 +186,7 @@ export function CTASlideContent({ diagnosis, scrollYProgress, range }: {
                   height: '1.55em',
                   visibility: notYet ? 'hidden' : 'visible',
                   display: 'flex', alignItems: 'center',
+                  whiteSpace: 'nowrap', overflow: 'hidden',
                 }}>
                   <span style={{
                     width: 20, flexShrink: 0, textAlign: 'right', marginRight: 12,
