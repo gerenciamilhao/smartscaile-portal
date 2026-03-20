@@ -45,7 +45,7 @@ export default function CinematicExperience({ initialData, clienteSlug }: Cinema
 
   return (
     <>
-      <AnimatePresence mode="sync">
+      <AnimatePresence mode="wait">
         {pageState === 'locked' && (
           <PainHero key="pain" ref={painRef} onUnlock={handleUnlock} clientData={clientData} />
         )}
@@ -56,7 +56,7 @@ export default function CinematicExperience({ initialData, clienteSlug }: Cinema
             initial={initialData ? { opacity: 1 } : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
           >
             <UnlockedExperience clientData={clientData} onExit={() => {
               document.cookie = 'smartscaile-token=; path=/; max-age=0';
