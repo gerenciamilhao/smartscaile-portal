@@ -40,6 +40,29 @@ const oppIcons = [
   <Rocket key="4" size={13} strokeWidth={1.5} />,
 ];
 
+// ─── Accent text helper — parses *word* into serif+glow spans ────────────────
+// Usage: renderAccentText("Esse *teto* não é do mercado.", "#77BDAC")
+function renderAccentText(text: string, color: string = '#77BDAC', delay: number = 0) {
+  const parts = text.split(/(\*[^*]+\*)/g);
+  let accentIndex = 0;
+  return parts.map((part, i) => {
+    if (part.startsWith('*') && part.endsWith('*')) {
+      const word = part.slice(1, -1);
+      const d = delay + accentIndex * 1.6;
+      accentIndex++;
+      return (
+        <motion.span
+          key={i}
+          animate={{ textShadow: [`0 0 8px ${color}20`, `0 0 20px ${color}60`, `0 0 8px ${color}20`] }}
+          transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut', delay: d }}
+          style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', color }}
+        >{word}</motion.span>
+      );
+    }
+    return <span key={i}>{part}</span>;
+  });
+}
+
 // ─── Shared helpers ──────────────────────────────────────────────────────────
 // Smooth RGB interpolation through 3 stops: a (t=0) → b (t=0.5) → c (t=1)
 // Returns [r, g, b] for flexible rgba usage
@@ -265,272 +288,7 @@ export default function ProposalScroll({ scrollYProgress, clientData }: Proposal
         <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse 50% 40% at 50% 50%, rgba(119,189,172,0.04) 0%, transparent 70%)' }} />
 
         <div className="slide-content text-center">
-
-          {/* Lock icon */}
-          <motion.div
-            animate={{ boxShadow: ['0 0 0 0px rgba(239,68,68,0)', '0 0 14px 3px rgba(239,68,68,0.12)', '0 0 0 0px rgba(239,68,68,0)'] }}
-            transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-            style={{ width: 40, height: 40, borderRadius: '50%', border: '1px solid rgba(239,68,68,0.3)', background: 'rgba(239,68,68,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 10px' }}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
-          </motion.div>
-
-          {/* Badge — menor que o padrão */}
-          <span style={{ display: 'inline-flex', alignItems: 'center', borderRadius: 9999, border: '1px solid rgba(119,189,172,0.12)', padding: '3px 10px', fontSize: '0.58rem', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#77BDAC', background: 'rgba(119,189,172,0.06)', marginBottom: 12 }}>
-            Proposta smartscaile.
-          </span>
-
-          {/* Headline */}
-          <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 'clamp(1.45rem, 4.5vw, 1.9rem)', color: '#F3F4F6', lineHeight: 1.3, letterSpacing: '-0.02em', maxWidth: 400, margin: '0 auto 8px' }}>
-            Desbloqueie o{' '}
-            <motion.span
-              animate={{ textShadow: ['0 0 10px rgba(119,189,172,0.15)', '0 0 28px rgba(119,189,172,0.55)', '0 0 10px rgba(119,189,172,0.15)'] }}
-              transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
-              style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', color: '#77BDAC' }}
-            >potencial</motion.span>{' '}
-            das suas{' '}
-            <motion.span
-              animate={{ textShadow: ['0 0 10px rgba(119,189,172,0.15)', '0 0 28px rgba(119,189,172,0.55)', '0 0 10px rgba(119,189,172,0.15)'] }}
-              transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut', delay: 1.6 }}
-              style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', color: '#77BDAC' }}
-            >campanhas.</motion.span>
-          </h2>
-          <p style={{ fontSize: '0.875rem', color: '#9CA3AF', lineHeight: 1.55, maxWidth: 360, margin: '0 auto 14px' }}>
-            Implementação em 40 dias com resultados mensuráveis desde a semana 1.
-          </p>
-
-          {/* ── ROI — dois valores sem container ── */}
-          <div style={{ maxWidth: 420, margin: '0 auto 16px', display: 'flex' }}>
-
-              {/* Metade esquerda — 36k de 120k */}
-              <div style={{ flex: 1, padding: '4px 16px 4px 0', position: 'relative' }}>
-                <div style={{ fontSize: '0.5rem', color: '#4B5563', fontFamily: 'var(--font-mono), monospace', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>não chega à Meta / mês</div>
-
-                {/* Fração hero: 36.000 de 120k */}
-                <div style={{ marginBottom: 11, display: 'flex', alignItems: 'baseline', gap: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 2 }}>
-                    <span style={{ fontSize: '0.6rem', color: '#4B5563', fontFamily: 'var(--font-mono), monospace', marginRight: 1 }}>R$</span>
-                    <span style={{ fontSize: '1.9rem', fontWeight: 700, color: '#F3F4F6', fontFamily: 'var(--font-mono), monospace', lineHeight: 1, letterSpacing: '-0.02em' }}>36.000</span>
-                  </div>
-                  <span style={{ fontSize: '0.65rem', color: '#3B3B3B', fontFamily: 'var(--font-mono), monospace', marginLeft: 5, alignSelf: 'flex-end', paddingBottom: '0.15em' }}>/ 120k</span>
-                </div>
-
-                {/* Barra proporcional: 70% capturado (teal dim) + 30% perdido (red, pulse) */}
-                <div style={{ height: 3, borderRadius: 99, background: '#111', position: 'relative', overflow: 'hidden', marginBottom: 10 }}>
-                  {/* Capturado — 70% teal dim, estático */}
-                  <div style={{ position: 'absolute', left: 0, top: 0, width: '70%', height: '100%', background: 'rgba(119,189,172,0.12)', borderRadius: '99px 0 0 99px' }} />
-                  {/* Perdido — 30% red, pulsando */}
-                  <motion.div
-                    animate={{ opacity: [0.5, 1, 0.5] }}
-                    transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
-                    style={{ position: 'absolute', right: 0, top: 0, width: '30%', height: '100%', background: 'linear-gradient(90deg, rgba(239,68,68,0.3), rgba(239,68,68,0.8))', borderRadius: '0 99px 99px 0' }}
-                  />
-                </div>
-
-                {/* Labels da barra */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                  <span style={{ fontSize: '0.48rem', color: 'rgba(119,189,172,0.35)', fontFamily: 'var(--font-mono), monospace' }}>70% capturado</span>
-                  <span style={{ fontSize: '0.48rem', color: 'rgba(239,68,68,0.5)', fontFamily: 'var(--font-mono), monospace' }}>30% perdido</span>
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                  <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.8, repeat: Infinity }} style={{ width: 4, height: 4, borderRadius: '50%', background: '#EF4444', flexShrink: 0 }} />
-                  <span style={{ fontSize: '0.62rem', color: '#6B7280' }}>de inteligência perdida</span>
-                </div>
-              </div>
-
-              {/* Divider vertical */}
-              <div style={{ width: 1, background: 'linear-gradient(to bottom, transparent, #222 30%, #222 70%, transparent)', alignSelf: 'stretch', flexShrink: 0 }} />
-
-              {/* Metade direita — 2 semanas */}
-              <div style={{ flex: 1, padding: '4px 0 4px 16px', position: 'relative' }}>
-                <div style={{ fontSize: '0.5rem', color: '#4B5563', fontFamily: 'var(--font-mono), monospace', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>setup se paga em</div>
-
-                <div style={{ fontSize: '1.9rem', fontWeight: 700, color: '#77BDAC', fontFamily: 'var(--font-mono), monospace', lineHeight: 1, letterSpacing: '-0.02em', marginBottom: 10 }}>2 sem.</div>
-
-                {/* Payback track */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 3, marginBottom: 10 }}>
-                  {[1, 2].map((w) => (
-                    <motion.div key={w} animate={{ opacity: [0.35, 0.65, 0.35] }} transition={{ duration: 2.2, repeat: Infinity, delay: w * 0.3 }}
-                      style={{ width: 16, height: 2, borderRadius: 99, background: 'rgba(239,68,68,0.45)', flexShrink: 0 }}
-                    />
-                  ))}
-                  <motion.div animate={{ opacity: [0.3, 0.6, 0.3] }} transition={{ duration: 1.5, repeat: Infinity }} style={{ fontSize: '0.5rem', color: 'rgba(119,189,172,0.35)', fontFamily: 'var(--font-mono), monospace', lineHeight: 1, flexShrink: 0 }}>→</motion.div>
-                  <motion.div animate={{ opacity: [0.55, 1, 0.55] }} transition={{ duration: 2.8, repeat: Infinity }}
-                    style={{ flex: 1, height: 2, borderRadius: 99, background: 'linear-gradient(90deg, rgba(119,189,172,0.3), rgba(119,189,172,0.7))' }}
-                  />
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                  <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 2.2, repeat: Infinity }} style={{ width: 4, height: 4, borderRadius: '50%', background: '#77BDAC', flexShrink: 0 }} />
-                  <span style={{ fontSize: '0.62rem', color: '#6B7280' }}>a partir da S3, lucro puro</span>
-                </div>
-              </div>
-
-          </div>
-
-          {/* ── Terminal Roadmap Card — outer wrapper para pills em volta ── */}
-          <div style={{ maxWidth: 600, margin: '0 auto 16px', position: 'relative', paddingBottom: 26 }}>
-
-            {/* Pill esquerda — setup completo */}
-            <motion.div
-              animate={{ opacity: [0.35, 0.35, 0.9, 0.9, 0.35, 0.35], y: [0, 0, -3, -3, 0, 0] }}
-              transition={{ duration: 5, times: [0, 0.15, 0.3, 0.55, 0.7, 1], delay: 0, repeat: Infinity, ease: 'easeInOut' }}
-              style={{ position: 'absolute', left: 0, top: '22%', display: 'inline-flex', alignItems: 'center', gap: 5, padding: '5px 11px', borderRadius: 9999, border: '1px solid rgba(119,189,172,0.14)', background: 'rgba(119,189,172,0.05)', pointerEvents: 'none', zIndex: 2 }}
-            >
-              <motion.div animate={{ scale: [1, 1, 1.4, 1.4, 1, 1], opacity: [0.4, 0.4, 1, 1, 0.4, 0.4] }} transition={{ duration: 5, times: [0, 0.15, 0.3, 0.55, 0.7, 1], delay: 0, repeat: Infinity }} style={{ width: 4, height: 4, borderRadius: '50%', background: '#77BDAC', flexShrink: 0 }} />
-              <span style={{ fontFamily: 'var(--font-mono), monospace', fontSize: '0.55rem', color: '#77BDAC', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>setup completo</span>
-            </motion.div>
-
-            {/* Pill direita — tracking ativo */}
-            <motion.div
-              animate={{ opacity: [0.35, 0.35, 0.9, 0.9, 0.35, 0.35], y: [0, 0, -3, -3, 0, 0] }}
-              transition={{ duration: 5.8, times: [0, 0.15, 0.3, 0.55, 0.7, 1], delay: 2.2, repeat: Infinity, ease: 'easeInOut' }}
-              style={{ position: 'absolute', right: 0, top: '54%', display: 'inline-flex', alignItems: 'center', gap: 5, padding: '5px 11px', borderRadius: 9999, border: '1px solid rgba(119,189,172,0.14)', background: 'rgba(119,189,172,0.05)', pointerEvents: 'none', zIndex: 2 }}
-            >
-              <motion.div animate={{ scale: [1, 1, 1.4, 1.4, 1, 1], opacity: [0.4, 0.4, 1, 1, 0.4, 0.4] }} transition={{ duration: 5.8, times: [0, 0.15, 0.3, 0.55, 0.7, 1], delay: 2.2, repeat: Infinity }} style={{ width: 4, height: 4, borderRadius: '50%', background: '#77BDAC', flexShrink: 0 }} />
-              <span style={{ fontFamily: 'var(--font-mono), monospace', fontSize: '0.55rem', color: '#77BDAC', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>tracking ativo</span>
-            </motion.div>
-
-            {/* Pill baixo — suporte direto */}
-            <motion.div
-              animate={{ opacity: [0.35, 0.35, 0.9, 0.9, 0.35, 0.35], y: [0, 0, -3, -3, 0, 0] }}
-              transition={{ duration: 6.5, times: [0, 0.15, 0.3, 0.55, 0.7, 1], delay: 4, repeat: Infinity, ease: 'easeInOut' }}
-              style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', bottom: 0, display: 'inline-flex', alignItems: 'center', gap: 5, padding: '5px 11px', borderRadius: 9999, border: '1px solid rgba(119,189,172,0.14)', background: 'rgba(119,189,172,0.05)', pointerEvents: 'none', zIndex: 2 }}
-            >
-              <motion.div animate={{ scale: [1, 1, 1.4, 1.4, 1, 1], opacity: [0.4, 0.4, 1, 1, 0.4, 0.4] }} transition={{ duration: 6.5, times: [0, 0.15, 0.3, 0.55, 0.7, 1], delay: 4, repeat: Infinity }} style={{ width: 4, height: 4, borderRadius: '50%', background: '#77BDAC', flexShrink: 0 }} />
-              <span style={{ fontFamily: 'var(--font-mono), monospace', fontSize: '0.55rem', color: '#77BDAC', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>suporte direto</span>
-            </motion.div>
-
-            {/* Card — centralizado dentro do wrapper maior */}
-            <div style={{ maxWidth: 420, margin: '0 auto' }}>
-            <div style={{ borderRadius: 14, border: '1px solid #27272a', background: '#0a0a0a', overflow: 'hidden' }}>
-
-              {/* macOS chrome */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '11px 16px', borderBottom: '1px solid #1a1a1a', background: '#080808' }}>
-                <div style={{ display: 'flex', gap: 5 }}>
-                  <div style={{ width: 9, height: 9, borderRadius: '50%', background: 'rgba(239,68,68,0.6)' }} />
-                  <div style={{ width: 9, height: 9, borderRadius: '50%', background: 'rgba(245,158,11,0.6)' }} />
-                  <div style={{ width: 9, height: 9, borderRadius: '50%', background: 'rgba(34,197,94,0.6)' }} />
-                </div>
-                <span style={{ flex: 1, textAlign: 'center', fontFamily: 'var(--font-mono), monospace', fontSize: '0.65rem', color: '#6B7280', letterSpacing: '0.05em' }}>roadmap.pagamento</span>
-                <span style={{ fontFamily: 'var(--font-mono), monospace', fontSize: '0.58rem', color: 'rgba(119,189,172,0.5)' }}>3 etapas</span>
-              </div>
-
-              {/* Steps */}
-              <div style={{ padding: '4px 20px 0', position: 'relative' }}>
-
-                {/* Linha vertical conectando os 3 dots */}
-                <div style={{ position: 'absolute', left: 37, top: 30, bottom: 30, width: 1, background: 'linear-gradient(to bottom, rgba(119,189,172,0.1), rgba(119,189,172,0.25) 50%, rgba(119,189,172,0.45))' }} />
-
-                {/* Step 01 — Kick-off */}
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '18px 0' }}>
-                  <span style={{ fontFamily: 'var(--font-mono), monospace', fontSize: '0.6rem', color: 'rgba(119,189,172,0.55)', fontWeight: 700, flexShrink: 0, width: 14, paddingTop: 3 }}>01</span>
-                  <div style={{ width: 9, height: 9, borderRadius: '50%', border: '1.5px solid rgba(119,189,172,0.4)', background: '#0a0a0a', flexShrink: 0, marginTop: 4, position: 'relative', zIndex: 1 }} />
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5 }}>
-                      <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#F3F4F6', lineHeight: 1.2 }}>Kick-off</span>
-                      <span style={{ fontSize: '0.62rem', color: 'rgba(119,189,172,0.7)', fontFamily: 'var(--font-mono), monospace', letterSpacing: '0.04em' }}>→ imediato</span>
-                    </div>
-                    <div style={{ fontSize: '0.7rem', color: '#9CA3AF', lineHeight: 1.5 }}>Alinhamento estratégico + setup inicial</div>
-                  </div>
-                  <span style={{ padding: '4px 10px', borderRadius: 99, border: '1px solid rgba(119,189,172,0.18)', background: 'rgba(119,189,172,0.05)', fontSize: '0.6rem', color: '#9CA3AF', fontFamily: 'var(--font-mono), monospace', whiteSpace: 'nowrap', marginTop: 2 }}>1ª parcela</span>
-                </div>
-
-                {/* Divider */}
-                <div style={{ borderTop: '1px solid #1a1a1a', marginLeft: 33 }} />
-
-                {/* Step 02 — Go Live */}
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '18px 0' }}>
-                  <span style={{ fontFamily: 'var(--font-mono), monospace', fontSize: '0.6rem', color: 'rgba(119,189,172,0.55)', fontWeight: 700, flexShrink: 0, width: 14, paddingTop: 3 }}>02</span>
-                  <div style={{ width: 9, height: 9, borderRadius: '50%', border: '1.5px solid rgba(119,189,172,0.4)', background: '#0a0a0a', flexShrink: 0, marginTop: 4, position: 'relative', zIndex: 1 }} />
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5 }}>
-                      <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#F3F4F6', lineHeight: 1.2 }}>Go Live</span>
-                      <span style={{ padding: '2px 7px', borderRadius: 4, background: 'rgba(119,189,172,0.1)', border: '1px solid rgba(119,189,172,0.22)', fontSize: '0.5rem', color: '#77BDAC', fontFamily: 'var(--font-mono), monospace', letterSpacing: '0.08em' }}>LIVE</span>
-                      <span style={{ fontSize: '0.62rem', color: 'rgba(119,189,172,0.7)', fontFamily: 'var(--font-mono), monospace', letterSpacing: '0.04em' }}>→ 20 dias</span>
-                    </div>
-                    <div style={{ fontSize: '0.7rem', color: '#9CA3AF', lineHeight: 1.5 }}>Entrega do projeto — tracking + ads configurados</div>
-                  </div>
-                  <span style={{ padding: '4px 10px', borderRadius: 99, border: '1px solid rgba(119,189,172,0.18)', background: 'rgba(119,189,172,0.05)', fontSize: '0.6rem', color: '#9CA3AF', fontFamily: 'var(--font-mono), monospace', whiteSpace: 'nowrap', marginTop: 2 }}>2ª parcela</span>
-                </div>
-
-                {/* Divider 2→3 teal */}
-                <div style={{ borderTop: '1px solid rgba(119,189,172,0.12)', marginLeft: 33 }} />
-
-                {/* Step 03 — 40 dias de acompanhamento */}
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '18px 0' }}>
-                  <span style={{ fontFamily: 'var(--font-mono), monospace', fontSize: '0.6rem', color: '#77BDAC', fontWeight: 700, flexShrink: 0, width: 14, paddingTop: 3 }}>03</span>
-                  <motion.div
-                    animate={{ boxShadow: ['0 0 0 0px rgba(119,189,172,0)', '0 0 10px 4px rgba(119,189,172,0.3)', '0 0 0 0px rgba(119,189,172,0)'] }}
-                    transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-                    style={{ width: 9, height: 9, borderRadius: '50%', border: '1.5px solid rgba(119,189,172,0.7)', background: 'rgba(119,189,172,0.18)', flexShrink: 0, marginTop: 4, position: 'relative', zIndex: 1 }}
-                  />
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5 }}>
-                      {/* Laurel */}
-                      <svg width="15" height="13" viewBox="0 0 26 22" fill="none">
-                        <path d="M13 21 Q9 17 7 13 Q5 8 7 4" stroke="rgba(119,189,172,0.8)" strokeWidth="1.6" strokeLinecap="round"/>
-                        <path d="M10 17 Q7 17 6 14" stroke="rgba(119,189,172,0.6)" strokeWidth="1.2" strokeLinecap="round"/>
-                        <path d="M9 12 Q6 12 6 9" stroke="rgba(119,189,172,0.6)" strokeWidth="1.2" strokeLinecap="round"/>
-                        <path d="M13 21 Q17 17 19 13 Q21 8 19 4" stroke="rgba(119,189,172,0.8)" strokeWidth="1.6" strokeLinecap="round"/>
-                        <path d="M16 17 Q19 17 20 14" stroke="rgba(119,189,172,0.6)" strokeWidth="1.2" strokeLinecap="round"/>
-                        <path d="M17 12 Q20 12 20 9" stroke="rgba(119,189,172,0.6)" strokeWidth="1.2" strokeLinecap="round"/>
-                        <line x1="7" y1="21" x2="19" y2="21" stroke="rgba(119,189,172,0.55)" strokeWidth="1.4" strokeLinecap="round"/>
-                      </svg>
-                      <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#77BDAC', lineHeight: 1.2 }}>40 dias</span>
-                      <span style={{ fontSize: '0.62rem', color: 'rgba(119,189,172,0.7)', fontFamily: 'var(--font-mono), monospace', letterSpacing: '0.04em' }}>→ após go live</span>
-                    </div>
-                    <div style={{ fontSize: '0.7rem', color: '#9CA3AF', lineHeight: 1.5 }}>Acompanhamento contínuo + suporte direto</div>
-                  </div>
-                  <span style={{ padding: '4px 10px', borderRadius: 99, border: '1px solid rgba(119,189,172,0.3)', background: 'rgba(119,189,172,0.07)', fontSize: '0.6rem', color: '#77BDAC', fontFamily: 'var(--font-mono), monospace', whiteSpace: 'nowrap', marginTop: 2 }}>3ª parcela</span>
-                </div>
-
-              </div>
-
-              {/* Card footer */}
-              <div style={{ borderTop: '1px solid #1a1a1a', padding: '10px 18px', background: '#080808', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
-                <span style={{ fontSize: '0.63rem', color: '#6B7280' }}>Setup habitual</span>
-                <span style={{ color: '#2a2a2a', fontSize: '0.8rem' }}>|</span>
-                <span style={{ fontSize: '0.63rem', fontWeight: 600, color: '#4B5563', textDecoration: 'line-through' }}>3–4 semanas</span>
-                <span style={{ color: 'rgba(119,189,172,0.4)', fontSize: '0.75rem' }}>→</span>
-                <span style={{ fontSize: '0.63rem', fontWeight: 700, color: '#77BDAC', fontFamily: 'var(--font-mono), monospace' }}>40 dias smartscaile.</span>
-              </div>
-
-            </div>
-            </div>{/* /inner 420px card wrapper */}
-          </div>{/* /outer 600px pills wrapper */}
-
-          {/* CTAs */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
-            <a
-              href="https://wa.me/5511999999999"
-              target="_blank" rel="noopener noreferrer"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: '0.75rem', color: '#77BDAC', border: '1px solid rgba(119,189,172,0.2)', borderRadius: 10, padding: '9px 20px', textDecoration: 'none' }}
-            >
-              <MessageCircle size={14} strokeWidth={1.5} />
-              Falar no WhatsApp
-            </a>
-          </div>
-
-          {/* Footer logo */}
-          <div style={{ marginTop: 18, display: 'flex', justifyContent: 'center' }}>
-            <img
-              src="/avatar-sm.png"
-              alt="smartscaile."
-              width={60}
-              height={60}
-              style={{
-                opacity: 0.18,
-                filter: 'brightness(1.8) contrast(0.85)',
-                mixBlendMode: 'screen',
-              }}
-            />
-          </div>
-
+          <CTASlideContent diagnosis={diagnosis} />
         </div>
       </ScrollSlide>
     </>
@@ -745,7 +503,7 @@ function HeaderSlideContent({ scrollYProgress, firstName, formattedDate, diagnos
             smartscaile.
           </span>
         </div>
-        <SectionBadge label="Proposta Exclusiva" />
+        <SectionBadge label={diagnosis.copy?.hero?.badge ?? 'Proposta Exclusiva'} />
       </motion.div>
 
       <motion.div
@@ -756,16 +514,15 @@ function HeaderSlideContent({ scrollYProgress, firstName, formattedDate, diagnos
       <motion.h2
         style={{ opacity: headlineOpacity, y: headlineY, fontFamily: 'var(--font-sans)', fontWeight: 600, lineHeight: 1.15, color: '#F3F4F6', fontSize: 'clamp(1.75rem, 7vw, 3rem)', letterSpacing: '-0.02em' }}
       >
-        Escale com{' '}
-        <span className="text-glow" style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', color: '#77BDAC' }}>inteligência.</span>
+        {diagnosis.copy?.hero?.headline ?? 'Destrave a'}{' '}
+        <span className="text-glow" style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', color: '#77BDAC' }}>{diagnosis.copy?.hero?.accentWord ?? 'escala.'}</span>
       </motion.h2>
 
       <motion.p
         style={{ opacity: subtitleOpacity, y: subtitleY }}
         className="mt-4 max-w-[480px] text-[0.875rem] leading-relaxed text-[#9CA3AF]"
       >
-        {firstName}, com base na nossa conversa de{' '}
-        <span className="text-[#F3F4F6]">{formattedDate}</span>, preparamos um plano sob medida para destravar seus resultados.
+        {(diagnosis.copy?.hero?.subtitle ?? '{firstName}, sua operação sustenta R$100k/dia. O tracking é o que está segurando. Montamos o plano para liberar esse potencial.').replace('{firstName}', firstName).replace('{formattedDate}', formattedDate)}
       </motion.p>
 
       {/* Terminal — perspective tilt from right */}
@@ -806,6 +563,209 @@ function HeaderSlideContent({ scrollYProgress, firstName, formattedDate, diagnos
         <div className="h-px flex-1" style={{ background: 'linear-gradient(270deg, rgba(119,189,172,0.15), transparent)' }} />
       </motion.div>
     </div>
+  );
+}
+
+// ─── CTA Slide — terminal typing + synced lock ──────────────────────────────
+const CTA_LINES: TerminalLine[] = [
+  { text: 'smartscaile deploy --client atom-traders', prefix: '$', color: '#6B7280' },
+  { text: '1ª parcela confirmada', prefix: '>', color: '#9CA3AF', delay: 400 },
+  { text: 'kick-off liberado', prefix: '✓', color: '#22C55E', delay: 200 },
+  { text: 'configurando server-side...', prefix: ' ', color: '#4B5563', delay: 300 },
+  { text: 'GTM first-party domain', prefix: '  →', color: '#77BDAC', delay: 80 },
+  { text: 'Custom Loader (antiblock)', prefix: '  →', color: '#77BDAC', delay: 80 },
+  { text: 'Cookie Keeper 90 dias', prefix: '  →', color: '#77BDAC', delay: 80 },
+  { text: 'Dedup browser x server', prefix: '  →', color: '#77BDAC', delay: 80 },
+  { text: 'Purchase via Webhook', prefix: '  →', color: '#77BDAC', delay: 80 },
+  { text: 'UTM tracking & backup', prefix: '  →', color: '#77BDAC', delay: 80 },
+  { text: 'First Touch + Last Touch', prefix: '  →', color: '#77BDAC', delay: 80 },
+  { text: 'go live → tracking ativo', prefix: '>', color: '#F3F4F6', delay: 300 },
+  { text: 'teste A/B pixel antigo vs novo (30 dias)', prefix: '>', color: '#F59E0B', delay: 200 },
+  { text: '40 dias de acompanhamento', prefix: '>', color: '#77BDAC', delay: 200 },
+  { text: 'ciclo completo', prefix: '!', color: '#22C55E', delay: 500 },
+];
+
+// Line index where lock opens (kick-off liberado)
+const LOCK_OPEN_LINE = 2;
+
+function CTASlideContent({ diagnosis }: { diagnosis: ClientData['diagnosis'] }) {
+  const [visibleChars, setVisibleChars] = useState<number[]>(CTA_LINES.map(() => 0));
+  const [activeLine, setActiveLine] = useState(0);
+  const [loopKey, setLoopKey] = useState(0);
+
+  const lockOpen = activeLine >= LOCK_OPEN_LINE && activeLine < CTA_LINES.length;
+  const lockColor = lockOpen ? '#22C55E' : '#EF4444';
+
+  const resetAndLoop = useCallback(() => {
+    setVisibleChars(CTA_LINES.map(() => 0));
+    setActiveLine(0);
+    setLoopKey((k) => k + 1);
+  }, []);
+
+  useEffect(() => {
+    if (activeLine >= CTA_LINES.length) {
+      const holdTimer = setTimeout(resetAndLoop, 3000);
+      return () => clearTimeout(holdTimer);
+    }
+    const line = CTA_LINES[activeLine];
+    const fullText = `${line.prefix ?? '>'} ${line.text}`;
+    const charCount = visibleChars[activeLine];
+    if (charCount >= fullText.length) {
+      const nextTimer = setTimeout(() => setActiveLine((a) => a + 1), line.delay ?? 120);
+      return () => clearTimeout(nextTimer);
+    }
+    const speed = 22 + Math.random() * 18;
+    const charTimer = setTimeout(() => {
+      setVisibleChars((prev) => { const next = [...prev]; next[activeLine] = charCount + 1; return next; });
+    }, speed);
+    return () => clearTimeout(charTimer);
+  }, [activeLine, visibleChars, loopKey, resetAndLoop]);
+
+  return (
+    <>
+      {/* Lock icon — synced with terminal */}
+      <div
+        style={{
+          width: 36, height: 36, borderRadius: '50%',
+          border: `1px solid ${lockColor}40`,
+          background: `${lockColor}08`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          margin: '0 auto 10px',
+          transition: 'border-color 0.6s ease, background 0.6s ease',
+          boxShadow: lockOpen ? `0 0 12px ${lockColor}20` : 'none',
+        }}
+      >
+        {lockOpen ? (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={lockColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'stroke 0.6s ease' }}>
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+          </svg>
+        ) : (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={lockColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'stroke 0.6s ease' }}>
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        )}
+      </div>
+
+      {/* Badge */}
+      <span style={{ display: 'inline-flex', alignItems: 'center', borderRadius: 9999, border: '1px solid rgba(119,189,172,0.12)', padding: '3px 10px', fontSize: '0.58rem', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#77BDAC', background: 'rgba(119,189,172,0.06)', marginBottom: 12 }}>
+        {diagnosis.copy?.cta?.badge ?? 'Proposta smartscaile.'}
+      </span>
+
+      {/* Headline */}
+      <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 'clamp(1.45rem, 4.5vw, 1.9rem)', color: '#F3F4F6', lineHeight: 1.3, letterSpacing: '-0.02em', maxWidth: 400, margin: '0 auto 8px' }}>
+        {renderAccentText(diagnosis.copy?.cta?.headline ?? 'O *resultado* é a garantia.', '#77BDAC')}
+      </h2>
+      <p style={{ fontSize: '0.875rem', color: '#9CA3AF', lineHeight: 1.55, maxWidth: 380, margin: '0 auto 16px' }}>
+        {diagnosis.copy?.cta?.subtitle ?? 'Teste A/B por 30 dias. Pixel antigo vs. novo. O resultado decide. Setup se paga em 2 semanas.'}
+      </p>
+
+      {/* Terminal — same style as slide 1 */}
+      <div style={{ maxWidth: 480, margin: '0 auto 20px', textAlign: 'left' }}>
+        <div style={{
+          borderRadius: 14,
+          background: 'linear-gradient(180deg, rgba(12,12,12,0.92) 0%, rgba(5,5,5,0.88) 100%)',
+          border: '1px solid rgba(119,189,172,0.08)',
+          overflow: 'hidden',
+          fontFamily: 'var(--font-mono), monospace',
+          fontSize: '0.65rem',
+          lineHeight: 1.7,
+          boxShadow: '0 12px 40px rgba(0,0,0,0.4), 0 0 1px rgba(119,189,172,0.12), inset 0 1px 0 rgba(255,255,255,0.03)',
+        }}>
+          {/* Window chrome */}
+          <div style={{
+            padding: '8px 14px',
+            display: 'flex', alignItems: 'center', gap: 7,
+            background: 'rgba(255,255,255,0.015)',
+            borderBottom: '1px solid rgba(255,255,255,0.04)',
+          }}>
+            <div style={{ display: 'flex', gap: 5 }}>
+              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#EF4444', opacity: 0.65 }} />
+              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#F59E0B', opacity: 0.65 }} />
+              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#22C55E', opacity: 0.65 }} />
+            </div>
+            <span style={{ flex: 1, textAlign: 'center', fontSize: '0.45rem', color: '#374151', letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 500 }}>
+              smartscaile — deploy
+            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <motion.div
+                animate={{ opacity: [0.4, 1, 0.4] }}
+                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                style={{ width: 4, height: 4, borderRadius: '50%', background: lockOpen ? '#22C55E' : '#EF4444', transition: 'background 0.6s ease' }}
+              />
+              <span style={{ fontSize: '0.4rem', color: '#374151', letterSpacing: '0.05em' }}>
+                {lockOpen ? 'active' : 'idle'}
+              </span>
+            </div>
+          </div>
+
+          {/* Terminal body */}
+          <div style={{ padding: '12px 16px', minHeight: 200 }}>
+            {CTA_LINES.map((line, i) => {
+              const fullText = `${line.prefix ?? '>'} ${line.text}`;
+              const chars = visibleChars[i];
+              const notYet = i > activeLine && chars === 0;
+              const displayed = fullText.slice(0, chars);
+              const showCursor = i === activeLine && activeLine < CTA_LINES.length;
+
+              return (
+                <div key={`${loopKey}-${i}`} style={{
+                  color: line.color ?? '#77BDAC',
+                  height: '1.45em',
+                  visibility: notYet ? 'hidden' : 'visible',
+                  display: 'flex', alignItems: 'center',
+                }}>
+                  <span style={{
+                    width: 18, flexShrink: 0, textAlign: 'right', marginRight: 10,
+                    color: '#27272a', fontSize: '0.5rem', userSelect: 'none',
+                  }}>
+                    {i + 1}
+                  </span>
+                  <span>
+                    {notYet ? '\u00A0' : displayed}
+                    {showCursor && (
+                      <motion.span
+                        animate={{ opacity: [1, 0, 1] }}
+                        transition={{ duration: 0.8, repeat: Infinity }}
+                        style={{ color: '#77BDAC', marginLeft: 1 }}
+                      >
+                        ▌
+                      </motion.span>
+                    )}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* CTA */}
+      <a
+        href="https://wa.me/5511999999999"
+        target="_blank" rel="noopener noreferrer"
+        style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: '0.75rem', color: '#77BDAC', border: '1px solid rgba(119,189,172,0.2)', borderRadius: 10, padding: '9px 20px', textDecoration: 'none' }}
+      >
+        <MessageCircle size={14} strokeWidth={1.5} />
+        Falar no WhatsApp
+      </a>
+
+      {/* Footer logo */}
+      <div style={{ marginTop: 16, display: 'flex', justifyContent: 'center' }}>
+        <img
+          src="/avatar-sm.png"
+          alt="smartscaile."
+          width={50}
+          height={50}
+          style={{
+            opacity: 0.15,
+            filter: 'brightness(1.8) contrast(0.85)',
+            mixBlendMode: 'screen',
+          }}
+        />
+      </div>
+    </>
   );
 }
 
@@ -945,7 +905,7 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
             02 / 05
           </span>
         </div>
-        <SectionBadge label="Auditoria Técnica" />
+        <SectionBadge label={diagnosis.copy?.audit?.badge ?? 'Auditoria Técnica'} />
       </motion.div>
 
       {/* Accent line */}
@@ -958,23 +918,20 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
       <motion.h2
         style={{ opacity: headlineOpacity, y: headlineY, fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 'clamp(1.35rem,5vw,2rem)', color: '#F3F4F6', letterSpacing: '-0.02em', lineHeight: 1.15 }}
       >
-        {diagnosis.headline.includes('travando') ? (
-          <>
-            {diagnosis.headline.split('travando')[0]}
-            <motion.span
-              animate={{ textShadow: ['0 0 10px rgba(239,68,68,0.15)', '0 0 24px rgba(239,68,68,0.5)', '0 0 10px rgba(239,68,68,0.15)'] }}
-              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-              style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', color: '#EF4444' }}
-            >travando</motion.span>
-            {diagnosis.headline.split('travando')[1]}
-          </>
-        ) : diagnosis.headline}
+        {diagnosis.copy?.audit?.headline ?? diagnosis.headline}{' '}
+        {diagnosis.copy?.audit?.accentWord && (
+          <motion.span
+            animate={{ textShadow: [`0 0 10px ${diagnosis.copy.audit.accentColor ?? '#EF4444'}25`, `0 0 24px ${diagnosis.copy.audit.accentColor ?? '#EF4444'}80`, `0 0 10px ${diagnosis.copy.audit.accentColor ?? '#EF4444'}25`] }}
+            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', color: diagnosis.copy.audit.accentColor ?? '#EF4444' }}
+          >{diagnosis.copy.audit.accentWord}</motion.span>
+        )}
       </motion.h2>
       <motion.p
         style={{ opacity: headlineOpacity, y: headlineY }}
         className="mt-2 mb-10 max-w-[480px] text-[0.875rem] leading-relaxed text-[#9CA3AF]"
       >
-        Analisamos a estrutura de tracking atual. O resultado fala por si.
+        {diagnosis.copy?.audit?.subtitle ?? 'Analisamos a estrutura de tracking atual. O resultado fala por si.'}
       </motion.p>
 
       {/* ── Diagnostic panel: ring left + sub-scores right ── */}
@@ -1225,8 +1182,21 @@ function ScaleGoalSlide({ scrollYProgress, goal, range }: {
         className="accent-line mb-5"
       />
 
+      {/* Headline */}
+      <motion.h2
+        style={{ opacity: metricOpacity, y: metricY, fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 'clamp(1.35rem,5vw,2rem)', color: '#F3F4F6', letterSpacing: '-0.02em', lineHeight: 1.15 }}
+      >
+        {goal.label.includes('*') ? renderAccentText(goal.label, '#77BDAC') : goal.label}
+      </motion.h2>
+      <motion.p
+        style={{ opacity: metricOpacity, y: metricY }}
+        className="mt-2 mb-8 max-w-[480px] text-[0.875rem] leading-relaxed text-[#9CA3AF]"
+      >
+        {goal.description}
+      </motion.p>
+
       {/* Counter — clean, minimal */}
-      <motion.div style={{ opacity: metricOpacity, y: metricY }}>
+      <motion.div style={{ opacity: barOpacity, y: barY }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
           <span style={{
             fontSize: '0.75rem', color: '#4B5563',
@@ -1278,24 +1248,6 @@ function ScaleGoalSlide({ scrollYProgress, goal, range }: {
           </span>
         </div>
       </motion.div>
-
-      {/* Label */}
-      <motion.div style={{ opacity: labelOpacity, y: labelY }} className="mt-8">
-        <h3 style={{
-          fontFamily: 'var(--font-sans)', fontSize: 'clamp(1.15rem, 4vw, 1.6rem)', fontWeight: 600, color: '#F3F4F6',
-          lineHeight: 1.2, letterSpacing: '-0.02em',
-        }}>
-          {goal.label}
-        </h3>
-      </motion.div>
-
-      {/* Description */}
-      <motion.p
-        style={{ opacity: descOpacity, y: descY }}
-        className="mt-3 max-w-[520px] text-[0.875rem] leading-relaxed text-[#9CA3AF]"
-      >
-        {goal.description}
-      </motion.p>
 
       {/* Context pills — floating with staggered movement */}
       <motion.div
@@ -1514,8 +1466,21 @@ function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
         className="accent-line mb-5"
       />
 
+      {/* Headline */}
+      <motion.h2
+        style={{ opacity: metricOpacity, y: metricY, fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 'clamp(1.35rem,5vw,2rem)', color: '#F3F4F6', letterSpacing: '-0.02em', lineHeight: 1.15 }}
+      >
+        {goal.label.includes('*') ? renderAccentText(goal.label, '#77BDAC') : goal.label}
+      </motion.h2>
+      <motion.p
+        style={{ opacity: metricOpacity, y: metricY }}
+        className="mt-2 mb-8 max-w-[480px] text-[0.875rem] leading-relaxed text-[#9CA3AF]"
+      >
+        {goal.description}
+      </motion.p>
+
       {/* Ring + CPA counter layout */}
-      <motion.div style={{ opacity: metricOpacity, y: metricY }}>
+      <motion.div style={{ opacity: labelOpacity, y: labelY }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
           {/* Tracking Score Ring — synced with normalizedValue */}
           <CPATrackingRing trackingValue={trackingValue} trackingColor={trackingColor} normalizedValue={normalizedValue} trackingStart={TRACKING_START} />
@@ -1529,7 +1494,7 @@ function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
                 fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase' as const,
                 display: 'block', marginBottom: 6,
               }}>
-                CPA média
+                CPA médio
               </span>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
                 <span style={{ fontSize: '0.7rem', color: '#4B5563', fontFamily: 'var(--font-mono), monospace', fontWeight: 500 }}>R$</span>
@@ -1579,24 +1544,6 @@ function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
           </div>
         </div>
       </motion.div>
-
-      {/* Label */}
-      <motion.div style={{ opacity: labelOpacity, y: labelY }} className="mt-8">
-        <h3 style={{
-          fontFamily: 'var(--font-sans)', fontSize: 'clamp(1.15rem, 4vw, 1.6rem)', fontWeight: 600, color: '#F3F4F6',
-          lineHeight: 1.2, letterSpacing: '-0.02em',
-        }}>
-          {goal.label}
-        </h3>
-      </motion.div>
-
-      {/* Description */}
-      <motion.p
-        style={{ opacity: descOpacity, y: descY }}
-        className="mt-3 max-w-[520px] text-[0.875rem] leading-relaxed text-[#9CA3AF]"
-      >
-        {goal.description}
-      </motion.p>
 
       {/* Context pills — same hold-release pattern */}
       <motion.div
@@ -2124,8 +2071,21 @@ function DataLossSlide({ scrollYProgress, goal, range }: {
         className="accent-line mb-5"
       />
 
+      {/* Headline */}
+      <motion.h2
+        style={{ opacity: metricOpacity, y: metricY, fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 'clamp(1.35rem,5vw,2rem)', color: '#F3F4F6', letterSpacing: '-0.02em', lineHeight: 1.15 }}
+      >
+        {goal.label.includes('*') ? renderAccentText(goal.label, '#EF4444') : goal.label}
+      </motion.h2>
+      <motion.p
+        style={{ opacity: metricOpacity, y: metricY }}
+        className="mt-2 mb-8 max-w-[480px] text-[0.875rem] leading-relaxed text-[#9CA3AF]"
+      >
+        {goal.description}
+      </motion.p>
+
       {/* Loss calculator — quiet ledger with smooth color */}
-      <motion.div style={{ opacity: metricOpacity, y: metricY }} className="max-w-[300px]">
+      <motion.div style={{ opacity: labelOpacity, y: labelY }} className="max-w-[300px]">
         <div style={{ fontFamily: 'var(--font-mono), monospace', fontVariantNumeric: 'tabular-nums' }}>
           {/* Row 1 — investment (context, very quiet) */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '6px 0' }}>
@@ -2196,24 +2156,6 @@ function DataLossSlide({ scrollYProgress, goal, range }: {
           </div>
         </div>
       </motion.div>
-
-      {/* Label */}
-      <motion.div style={{ opacity: labelOpacity, y: labelY }} className="mt-8">
-        <h3 style={{
-          fontFamily: 'var(--font-sans)', fontSize: 'clamp(1.15rem, 4vw, 1.6rem)', fontWeight: 600, color: '#F3F4F6',
-          lineHeight: 1.2, letterSpacing: '-0.02em',
-        }}>
-          {goal.label}
-        </h3>
-      </motion.div>
-
-      {/* Description */}
-      <motion.p
-        style={{ opacity: descOpacity, y: descY }}
-        className="mt-3 max-w-[520px] text-[0.875rem] leading-relaxed text-[#9CA3AF]"
-      >
-        {goal.description}
-      </motion.p>
 
       {/* Red pills — technical causes */}
       <motion.div
@@ -2296,12 +2238,12 @@ function OpportunityCard({ opp, index, opacity, y }: {
   return (
     <motion.div style={{ opacity, y }}>
       <div style={{
-        padding: '10px 18px',
+        padding: '12px 18px',
         borderBottom: '1px solid rgba(255,255,255,0.03)',
         transition: 'background 0.3s ease',
       }}>
         {/* Title row: checkbox + title + impact dot */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           {/* Checkbox — fills in with staggered delay */}
           <motion.div
             animate={{
@@ -2309,7 +2251,7 @@ function OpportunityCard({ opp, index, opacity, y }: {
             }}
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: index * 0.8 }}
             style={{
-              width: 14, height: 14, borderRadius: 3, flexShrink: 0,
+              width: 15, height: 15, borderRadius: 3, flexShrink: 0,
               border: '1.5px solid rgba(119,189,172,0.15)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}
@@ -2321,13 +2263,13 @@ function OpportunityCard({ opp, index, opacity, y }: {
               }}
               transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: index * 0.8 }}
               style={{
-                width: 6, height: 6, borderRadius: 1.5,
+                width: 7, height: 7, borderRadius: 1.5,
                 background: '#77BDAC',
               }}
             />
           </motion.div>
           <span style={{
-            fontSize: '0.8rem', fontWeight: 500, color: '#E5E7EB',
+            fontSize: '0.85rem', fontWeight: 500, color: '#E5E7EB',
             lineHeight: 1.4, flex: 1,
           }}>
             {opp.title}
@@ -2353,8 +2295,8 @@ function OpportunityCard({ opp, index, opacity, y }: {
 
         {/* Description — indented to align with title */}
         <p style={{
-          fontSize: '0.65rem', lineHeight: 1.7, color: '#6B7280',
-          marginTop: 4, marginLeft: 22,
+          fontSize: '0.75rem', lineHeight: 1.65, color: '#9CA3AF',
+          marginTop: 5, marginLeft: 25,
         }}>
           {opp.description}
         </p>
@@ -2535,7 +2477,7 @@ function OpportunitiesSlide({ scrollYProgress, opportunities, range }: {
           {/* Note heading */}
           <div style={{ padding: '16px 18px 6px' }}>
             <h3 style={{
-              fontSize: '1rem', fontWeight: 600, color: '#F3F4F6',
+              fontSize: '1.1rem', fontWeight: 600, color: '#F3F4F6',
               lineHeight: 1.3,
             }}>
               O que vamos implementar
@@ -2683,7 +2625,7 @@ function SingleGoalSlide({ scrollYProgress, goal, range, slideNum, totalSlides, 
           fontSize: '0.9rem', fontWeight: 600, color: '#F3F4F6',
           lineHeight: 1.4,
         }}>
-          {goal.label}
+          {goal.label.includes('*') ? renderAccentText(goal.label, '#77BDAC') : goal.label}
         </span>
       </motion.div>
 

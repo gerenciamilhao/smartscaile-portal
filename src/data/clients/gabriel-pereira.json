@@ -141,18 +141,18 @@
     "goals": [
       {
         "metric": "R$100-200k/dia",
-        "label": "Sair dos R$3-4k e parar de bater na trave",
-        "description": "A Atom Educacional tem fôlego, tem o nicho amplo, tem 117 mil seguidores e um funil que converte. Só que o algoritmo do Meta trabalha parcialmente cego. Ele não enxerga todas as vendas, então trava a escala. Com 100% dos dados chegando, ele para de frear e começa a otimizar de verdade."
+        "label": "Esse *teto* não é do mercado. É do *tracking.*",
+        "description": "A operação tem audiência, ticket e funil para escalar. O que trava é a leitura parcial dos dados. O algoritmo não consegue otimizar o que não enxerga. Corrigir a atribuição é destravar a escala sem mudar a oferta."
       },
       {
         "metric": "CPA R$100",
-        "label": "Quem acerta o tracking primeiro, escala primeiro",
-        "description": "Os melhores criativos entregam R$191 e R$140 de CPA. Tem R$91 por lead sobrando nessa conta. É só destravar. A diferença entre o CPA atual e os R$100 está nos 30-40% de conversões que se perdem antes de chegar ao pixel. A base de tracking não acompanhou o que mudou nos últimos anos. Quando o Meta enxerga tudo, o número reportado cai porque reflete a realidade."
+        "label": "Sua meta de *R$100* não é *utopia.*",
+        "description": "Server-side recupera os dados que as plataformas precisam pra otimizar de verdade. Mais sinais, melhor leilão, CPA menor."
       },
       {
         "metric": "30-40%",
-        "label": "Dados que a operação perde todo dia",
-        "description": "A cada R$4.000 investidos por dia, pelo menos R$1.200 rodam sem dados de volta para o algoritmo. Ele não otimiza o que não vê. São R$36.000 por mês em investimento que o Meta simplesmente ignora na hora de decidir onde alocar o próximo real."
+        "label": "Enquanto você lê isso, *R$50* já rodaram sem *dados.*",
+        "description": "R$1.200 por dia do seu investimento não geram sinal de volta. O algoritmo não aprende, não otimiza, não melhora. Isso são R$36.000/mês. E o contador não para."
       }
     ],
     "opportunities": [
@@ -160,25 +160,25 @@
         "title": "Recuperar 30-40% dos dados que se perdem hoje",
         "impact": "high",
         "effort": "medium",
-        "description": "Hoje a cada R$4.000 investidos, pelo menos R$1.200 rodam sem dados de volta. Com server-side tracking, os dados trafegam direto do servidor para o Meta sem depender do navegador. O algoritmo recebe todas as conversões e sabe exatamente onde alocar o próximo real. Isso é o que separa R$3k/dia de R$100k/dia."
+        "description": "Os dados trafegam direto do servidor para o Meta, sem depender do navegador. O algoritmo recebe o mapa completo e sabe onde colocar cada real."
       },
       {
         "title": "Estender a janela de atribuição de 1 dia para 90 dias",
         "impact": "high",
         "effort": "low",
-        "description": "O cookie do FBC expira em 1 dia. O lead que clicou no anúncio e comprou 3 dias depois aparece como orgânico. Com persistência de 90 dias, cada venda volta pro anúncio certo. No ticket médio de R$450-570, basta recuperar 2 vendas por dia para a operação se pagar."
+        "description": "Cada venda volta pro anúncio certo, mesmo semanas depois do clique. Atribuição real significa escalar com confiança, não com achismo."
       },
       {
         "title": "Blindar o pixel contra bloqueadores",
         "impact": "medium",
         "effort": "low",
-        "description": "As tags carregam pelo servidor do Google e são visíveis para qualquer bloqueador. Com custom loader, o pixel se torna invisível. São 10-15% a mais de dados que hoje simplesmente somem do painel e que o Meta nunca usa para otimizar."
+        "description": "O tracking passa a ser invisível para ad blockers e restrições de browser. Dados que hoje somem do painel voltam a alimentar o algoritmo."
       },
       {
         "title": "Dar ao Meta dados limpos para derrubar o CPA",
         "impact": "high",
         "effort": "medium",
-        "description": "Hoje o Meta recebe dados parciais e duplicados. O gerenciador mostra CPA de R$700 quando o real é R$140. Com CAPI server-side e dedup nativa, cada venda é contada uma vez, no lugar certo. Dados limpos = algoritmo que otimiza de verdade."
+        "description": "Cada conversão é contada uma vez, no lugar certo. Dados limpos significam um algoritmo que otimiza de verdade."
       }
     ],
     "pricing": {
@@ -219,6 +219,26 @@
           "discount": "R$16.500 à vista (8% off)"
         }
       ]
+    },
+    "copy": {
+      "hero": {
+        "badge": "Proposta Exclusiva",
+        "headline": "Destrave a",
+        "accentWord": "escala.",
+        "subtitle": "{firstName}, sua operação sustenta R$100k/dia. O tracking é o que está segurando. Montamos o plano para liberar esse potencial."
+      },
+      "audit": {
+        "badge": "Auditoria Técnica",
+        "headline": "Boa parte dos seus dados está",
+        "accentWord": "invisível.",
+        "accentColor": "#EF4444",
+        "subtitle": "Com tracking 100% client-side e FBC de apenas 1 dia, a Atom perde entre 30 e 40% de atribuição. O algoritmo não aprende, o CPA não desce."
+      },
+      "cta": {
+        "badge": "Proposta smartscaile.",
+        "headline": "O *resultado* é a garantia.",
+        "subtitle": "Teste A/B por 30 dias. Pixel antigo vs. novo. O resultado decide. Setup se paga em 2 semanas."
+      }
     },
     "proposal": {
       "headline": "Cada dia com a estrutura atual é dinheiro que não volta",

@@ -87,6 +87,33 @@ export interface Pricing {
   plans: PricingPlan[];
 }
 
+export interface SlideHeroCopy {
+  badge: string;
+  headline: string;
+  accentWord: string;
+  subtitle: string;
+}
+
+export interface SlideAuditCopy {
+  badge: string;
+  headline: string;
+  accentWord: string;
+  accentColor?: string;
+  subtitle: string;
+}
+
+export interface SlideCtaCopy {
+  badge: string;
+  headline: string;
+  subtitle: string;
+}
+
+export interface SlideCopy {
+  hero: SlideHeroCopy;
+  audit: SlideAuditCopy;
+  cta?: SlideCtaCopy;
+}
+
 export interface ClientDiagnosis {
   headline: string;
   stapeChecker?: StapeChecker;
@@ -95,6 +122,7 @@ export interface ClientDiagnosis {
   opportunities: Opportunity[];
   pricing?: Pricing;
   proposal: Proposal;
+  copy?: SlideCopy;
 }
 
 export interface ClientData {
