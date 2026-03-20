@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${inter.variable} ${playfair.variable} ${firaCode.variable} h-full antialiased dark`}
+      className={`${inter.variable} ${playfair.variable} ${firaCode.variable} h-full antialiased dark overflow-x-hidden`}
     >
       <body className="min-h-full bg-[#050505] text-[#F3F4F6] overflow-x-hidden" suppressHydrationWarning>
         <GSAPProvider>{children}</GSAPProvider>
