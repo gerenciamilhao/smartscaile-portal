@@ -202,8 +202,8 @@ export function PricingSlide({ scrollYProgress, pricing, range }: {
   const card2Y = useTransform(scrollYProgress, [start + span * 0.20, start + span * 0.38], [20, 0]);
 
   return (
-    <div className="slide-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', paddingBottom: 60, transform: 'scale(0.82)', transformOrigin: 'center center' }}>
-      <motion.div style={{ opacity: badgeOpacity, y: badgeY, transform: 'scale(1.22)', transformOrigin: 'center center' }}>
+    <div className="slide-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', paddingBottom: 60 }}>
+      <motion.div style={{ opacity: badgeOpacity, y: badgeY }}>
         <SectionBadge label="Investimento" />
       </motion.div>
 
