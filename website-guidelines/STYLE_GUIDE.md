@@ -47,20 +47,38 @@
 ## Typography
 
 ### Font Families
-- **Sans:** Inter (--font-inter) — Body, UI elements, badges
-- **Serif:** Playfair Display (--font-playfair) — Headings (h1, h2), stat values
-- **Mono:** Fira Code / Cascadia Code — Code blocks, event names, terminal UI
+- **Sans:** Inter (--font-sans) — Headlines, body, UI elements, badges
+- **Serif:** Playfair Display (--font-serif) — Accent words dentro de headlines (italic + glow)
+- **Mono:** Fira Code / Cascadia Code — Code blocks, event names, terminal UI, data labels
 
-### Scale
-| Element | Size | Weight | Font |
-|---------|------|--------|------|
-| H1 (Hero) | `clamp(2.4rem, 9vw, 3.75rem)` | 700 | Playfair |
-| H2 (Section) | `clamp(1.75rem, 6vw, 2.5rem)` | 700 | Playfair |
-| H3 (Card title) | `1.25rem` / `0.875rem` | 600-700 | Inter |
-| Body | `0.875rem` – `1rem` | 400 | Inter |
-| Caption | `0.75rem` | 400-500 | Inter |
-| Badge | `0.7rem` | 500 | Inter |
-| Mono small | `0.65rem` – `0.72rem` | 400-700 | Fira Code |
+### Scale (Proposal Slides)
+| Element | Size | Weight | Font | Extra |
+|---------|------|--------|------|-------|
+| H2 (Slide 1 hero) | `clamp(1.75rem, 7vw, 3rem)` | 600 | Inter | `letterSpacing: -0.02em`, `lineHeight: 1.15` |
+| H2 (Slides internos) | `clamp(1.15rem, 4vw, 1.6rem)` | 600 | Inter | `letterSpacing: -0.02em`, `lineHeight: 1.2` |
+| H2 (Slide 8 CTA) | `clamp(1.45rem, 4.5vw, 1.9rem)` | 600 | Inter | `letterSpacing: -0.02em`, `lineHeight: 1.3` |
+| Accent word | inherit | inherit | Playfair | `fontStyle: italic`, cor temática + `textShadow` glow animado |
+| Subtitle | `0.875rem` | 400 | Inter | `leading-relaxed` (1.625), cor `#9CA3AF` |
+| Body | `0.875rem` – `1rem` | 400 | Inter | |
+| Caption | `0.75rem` | 400-500 | Inter | |
+| Badge (padrão) | `0.7rem` | 500 | Inter | uppercase, `letterSpacing: 0.1em` |
+| Badge (slide 8) | `0.58rem` | 500 | Inter | uppercase, `letterSpacing: 0.1em` |
+| Mono small | `0.65rem` – `0.72rem` | 400-700 | Fira Code | |
+
+### Headline Accent Pattern
+Palavras-chave dentro de headlines usam Playfair italic com glow animado na cor temática:
+- **Teal** (positivo): `color: #77BDAC`, `textShadow` pulse `rgba(119,189,172,0.15→0.55)`
+- **Red** (pain): `color: #EF4444`, `textShadow` pulse `rgba(239,68,68,0.15→0.5)`
+- Animação: `duration: 3s`, `repeat: Infinity`, `ease: easeInOut`
+- Palavras em Inter (sans) = contexto. Palavras em Playfair (serif) = destaque emocional.
+
+### Slide Spacing Pattern
+| Element | Margin |
+|---------|--------|
+| Top bar (numeração + badge) | `mb-6` |
+| Accent line | `mb-5` |
+| Headline → subtitle | `mt-2` |
+| Subtitle → content | `mb-10` |
 
 ---
 

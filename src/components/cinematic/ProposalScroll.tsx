@@ -298,7 +298,7 @@ export default function ProposalScroll({ scrollYProgress, clientData }: Proposal
               style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', color: '#77BDAC' }}
             >campanhas.</motion.span>
           </h2>
-          <p style={{ fontSize: '0.8rem', color: '#9CA3AF', lineHeight: 1.55, maxWidth: 340, margin: '0 auto 14px' }}>
+          <p style={{ fontSize: '0.875rem', color: '#9CA3AF', lineHeight: 1.55, maxWidth: 360, margin: '0 auto 14px' }}>
             Implementação em 40 dias com resultados mensuráveis desde a semana 1.
           </p>
 
@@ -307,7 +307,7 @@ export default function ProposalScroll({ scrollYProgress, clientData }: Proposal
 
               {/* Metade esquerda — 36k de 120k */}
               <div style={{ flex: 1, padding: '4px 16px 4px 0', position: 'relative' }}>
-                <div style={{ fontSize: '0.46rem', color: '#4B5563', fontFamily: 'var(--font-mono), monospace', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 10 }}>não chega à Meta / mês</div>
+                <div style={{ fontSize: '0.5rem', color: '#4B5563', fontFamily: 'var(--font-mono), monospace', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>não chega à Meta / mês</div>
 
                 {/* Fração hero: 36.000 de 120k */}
                 <div style={{ marginBottom: 11, display: 'flex', alignItems: 'baseline', gap: 0 }}>
@@ -315,7 +315,7 @@ export default function ProposalScroll({ scrollYProgress, clientData }: Proposal
                     <span style={{ fontSize: '0.6rem', color: '#4B5563', fontFamily: 'var(--font-mono), monospace', marginRight: 1 }}>R$</span>
                     <span style={{ fontSize: '1.9rem', fontWeight: 700, color: '#F3F4F6', fontFamily: 'var(--font-mono), monospace', lineHeight: 1, letterSpacing: '-0.02em' }}>36.000</span>
                   </div>
-                  <span style={{ fontSize: '0.65rem', color: '#2d2d2d', fontFamily: 'var(--font-mono), monospace', marginLeft: 5, alignSelf: 'flex-end', paddingBottom: '0.15em' }}>/ 120k</span>
+                  <span style={{ fontSize: '0.65rem', color: '#3B3B3B', fontFamily: 'var(--font-mono), monospace', marginLeft: 5, alignSelf: 'flex-end', paddingBottom: '0.15em' }}>/ 120k</span>
                 </div>
 
                 {/* Barra proporcional: 70% capturado (teal dim) + 30% perdido (red, pulse) */}
@@ -332,13 +332,13 @@ export default function ProposalScroll({ scrollYProgress, clientData }: Proposal
 
                 {/* Labels da barra */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                  <span style={{ fontSize: '0.42rem', color: 'rgba(119,189,172,0.3)', fontFamily: 'var(--font-mono), monospace' }}>70% capturado</span>
-                  <span style={{ fontSize: '0.42rem', color: 'rgba(239,68,68,0.45)', fontFamily: 'var(--font-mono), monospace' }}>30% perdido</span>
+                  <span style={{ fontSize: '0.48rem', color: 'rgba(119,189,172,0.35)', fontFamily: 'var(--font-mono), monospace' }}>70% capturado</span>
+                  <span style={{ fontSize: '0.48rem', color: 'rgba(239,68,68,0.5)', fontFamily: 'var(--font-mono), monospace' }}>30% perdido</span>
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                   <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.8, repeat: Infinity }} style={{ width: 4, height: 4, borderRadius: '50%', background: '#EF4444', flexShrink: 0 }} />
-                  <span style={{ fontSize: '0.58rem', color: '#6B7280' }}>de inteligência perdida</span>
+                  <span style={{ fontSize: '0.62rem', color: '#6B7280' }}>de inteligência perdida</span>
                 </div>
               </div>
 
@@ -347,7 +347,7 @@ export default function ProposalScroll({ scrollYProgress, clientData }: Proposal
 
               {/* Metade direita — 2 semanas */}
               <div style={{ flex: 1, padding: '4px 0 4px 16px', position: 'relative' }}>
-                <div style={{ fontSize: '0.46rem', color: '#4B5563', fontFamily: 'var(--font-mono), monospace', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 10 }}>setup se paga em</div>
+                <div style={{ fontSize: '0.5rem', color: '#4B5563', fontFamily: 'var(--font-mono), monospace', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>setup se paga em</div>
 
                 <div style={{ fontSize: '1.9rem', fontWeight: 700, color: '#77BDAC', fontFamily: 'var(--font-mono), monospace', lineHeight: 1, letterSpacing: '-0.02em', marginBottom: 10 }}>2 sem.</div>
 
@@ -366,7 +366,7 @@ export default function ProposalScroll({ scrollYProgress, clientData }: Proposal
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                   <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 2.2, repeat: Infinity }} style={{ width: 4, height: 4, borderRadius: '50%', background: '#77BDAC', flexShrink: 0 }} />
-                  <span style={{ fontSize: '0.58rem', color: '#6B7280' }}>a partir da S3, lucro puro</span>
+                  <span style={{ fontSize: '0.62rem', color: '#6B7280' }}>a partir da S3, lucro puro</span>
                 </div>
               </div>
 
@@ -754,11 +754,10 @@ function HeaderSlideContent({ scrollYProgress, firstName, formattedDate, diagnos
       />
 
       <motion.h2
-        className="font-serif"
-        style={{ opacity: headlineOpacity, y: headlineY, fontWeight: 700, lineHeight: 1.12, color: '#F3F4F6', fontSize: 'clamp(1.75rem, 7vw, 3rem)' }}
+        style={{ opacity: headlineOpacity, y: headlineY, fontFamily: 'var(--font-sans)', fontWeight: 600, lineHeight: 1.15, color: '#F3F4F6', fontSize: 'clamp(1.75rem, 7vw, 3rem)', letterSpacing: '-0.02em' }}
       >
         Escale com{' '}
-        <span className="text-glow" style={{ color: '#77BDAC' }}>inteligência.</span>
+        <span className="text-glow" style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', color: '#77BDAC' }}>inteligência.</span>
       </motion.h2>
 
       <motion.p
@@ -938,7 +937,7 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
       {/* Top bar */}
       <motion.div
         style={{ opacity: topBarOpacity }}
-        className="mb-4 flex items-center justify-between"
+        className="mb-6 flex items-center justify-between"
       >
         <div className="flex items-center gap-2">
           <span className="live-dot" />
@@ -952,19 +951,28 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
       {/* Accent line */}
       <motion.div
         style={{ scaleX: useTransform(scrollYProgress, [t(0.06), t(0.20)], [0, 1]), transformOrigin: 'left' }}
-        className="accent-line mb-4"
+        className="accent-line mb-5"
       />
 
       {/* Headline */}
       <motion.h2
-        style={{ opacity: headlineOpacity, y: headlineY }}
-        className="font-serif text-[clamp(1.25rem,4vw,1.75rem)] font-bold text-[#F3F4F6]"
+        style={{ opacity: headlineOpacity, y: headlineY, fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 'clamp(1.35rem,5vw,2rem)', color: '#F3F4F6', letterSpacing: '-0.02em', lineHeight: 1.15 }}
       >
-        {diagnosis.headline}
+        {diagnosis.headline.includes('travando') ? (
+          <>
+            {diagnosis.headline.split('travando')[0]}
+            <motion.span
+              animate={{ textShadow: ['0 0 10px rgba(239,68,68,0.15)', '0 0 24px rgba(239,68,68,0.5)', '0 0 10px rgba(239,68,68,0.15)'] }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+              style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', color: '#EF4444' }}
+            >travando</motion.span>
+            {diagnosis.headline.split('travando')[1]}
+          </>
+        ) : diagnosis.headline}
       </motion.h2>
       <motion.p
         style={{ opacity: headlineOpacity, y: headlineY }}
-        className="mt-2 mb-10 max-w-[480px] text-[0.8rem] leading-relaxed text-[#9CA3AF]"
+        className="mt-2 mb-10 max-w-[480px] text-[0.875rem] leading-relaxed text-[#9CA3AF]"
       >
         Analisamos a estrutura de tracking atual. O resultado fala por si.
       </motion.p>
@@ -1214,7 +1222,7 @@ function ScaleGoalSlide({ scrollYProgress, goal, range }: {
       {/* Accent line */}
       <motion.div
         style={{ scaleX: useTransform(scrollYProgress, [t(0.08), t(0.24)], [0, 1]), transformOrigin: 'left' }}
-        className="accent-line mb-8"
+        className="accent-line mb-5"
       />
 
       {/* Counter — clean, minimal */}
@@ -1274,8 +1282,8 @@ function ScaleGoalSlide({ scrollYProgress, goal, range }: {
       {/* Label */}
       <motion.div style={{ opacity: labelOpacity, y: labelY }} className="mt-8">
         <h3 style={{
-          fontSize: 'clamp(1rem, 3vw, 1.25rem)', fontWeight: 700, color: '#F3F4F6',
-          lineHeight: 1.3,
+          fontFamily: 'var(--font-sans)', fontSize: 'clamp(1.15rem, 4vw, 1.6rem)', fontWeight: 600, color: '#F3F4F6',
+          lineHeight: 1.2, letterSpacing: '-0.02em',
         }}>
           {goal.label}
         </h3>
@@ -1284,7 +1292,7 @@ function ScaleGoalSlide({ scrollYProgress, goal, range }: {
       {/* Description */}
       <motion.p
         style={{ opacity: descOpacity, y: descY }}
-        className="mt-3 max-w-[520px] text-[0.8rem] leading-[1.8] text-[#9CA3AF]"
+        className="mt-3 max-w-[520px] text-[0.875rem] leading-relaxed text-[#9CA3AF]"
       >
         {goal.description}
       </motion.p>
@@ -1503,7 +1511,7 @@ function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
       {/* Accent line */}
       <motion.div
         style={{ scaleX: useTransform(scrollYProgress, [t(0.08), t(0.24)], [0, 1]), transformOrigin: 'left' }}
-        className="accent-line mb-8"
+        className="accent-line mb-5"
       />
 
       {/* Ring + CPA counter layout */}
@@ -1575,8 +1583,8 @@ function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
       {/* Label */}
       <motion.div style={{ opacity: labelOpacity, y: labelY }} className="mt-8">
         <h3 style={{
-          fontSize: 'clamp(1rem, 3vw, 1.25rem)', fontWeight: 700, color: '#F3F4F6',
-          lineHeight: 1.3,
+          fontFamily: 'var(--font-sans)', fontSize: 'clamp(1.15rem, 4vw, 1.6rem)', fontWeight: 600, color: '#F3F4F6',
+          lineHeight: 1.2, letterSpacing: '-0.02em',
         }}>
           {goal.label}
         </h3>
@@ -1585,7 +1593,7 @@ function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
       {/* Description */}
       <motion.p
         style={{ opacity: descOpacity, y: descY }}
-        className="mt-3 max-w-[520px] text-[0.8rem] leading-[1.8] text-[#9CA3AF]"
+        className="mt-3 max-w-[520px] text-[0.875rem] leading-relaxed text-[#9CA3AF]"
       >
         {goal.description}
       </motion.p>
@@ -1666,47 +1674,43 @@ function PricingCard({ plan, index, opacity, y }: {
   y: MotionValue<number>;
 }) {
   const formattedAmount = plan.amount.toLocaleString('pt-BR');
-  const isRight = index === 1;
 
-  // Colors — ROAS card DNA
-  const cardBg    = isRight ? 'rgba(8, 14, 12, 0.97)' : 'rgba(10, 10, 10, 0.95)';
-  const headerBg  = isRight ? 'rgba(8, 16, 13, 0.95)' : 'rgba(12, 12, 12, 0.95)';
-  const borderCol = isRight ? 'rgba(119,189,172,0.18)' : 'rgba(255,255,255,0.08)';
-  const accentCol = isRight ? 'rgba(119,189,172,' : 'rgba(255,255,255,';
-  const fnameCol  = isRight ? 'rgba(119,189,172,0.7)' : 'rgba(156,163,175,0.5)';
-  const statusTxt = isRight ? 'COMPLETO' : 'ESSENCIAL';
-  const statusBg  = isRight ? 'rgba(34,197,94,0.10)' : 'rgba(255,255,255,0.04)';
-  const statusBrd = isRight ? 'rgba(34,197,94,0.30)' : 'rgba(255,255,255,0.08)';
-  const statusCol = isRight ? '#22c55e' : '#9CA3AF';
-  const numCol    = isRight ? '#77BDAC' : '#e5e7eb';
+  // Colors — solo hero card (teal DNA)
+  const cardBg    = 'rgba(8, 14, 12, 0.97)';
+  const headerBg  = 'rgba(8, 16, 13, 0.95)';
+  const borderCol = 'rgba(119,189,172,0.20)';
+  const accentCol = 'rgba(119,189,172,';
+  const fnameCol  = 'rgba(119,189,172,0.7)';
+  const numCol    = '#77BDAC';
+
+  // Split services: last item (acompanhamento) gets special treatment
+  const coreServices = plan.services.slice(0, -1);
+  const highlightService = plan.services[plan.services.length - 1];
 
   return (
-    <motion.div style={{ opacity, y, flex: 1, maxWidth: 370 }}>
-      {/* Card with breathing glow on right */}
+    <motion.div style={{ opacity, y, width: '100%', maxWidth: 380 }}>
+      {/* Card with breathing glow — hero solo */}
       <motion.div
-        animate={isRight ? {
+        animate={{
           boxShadow: [
-            '0 30px 70px rgba(0,0,0,0.7), 0 12px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(119,189,172,0.10), 0 0 30px rgba(119,189,172,0.03)',
-            '0 30px 70px rgba(0,0,0,0.7), 0 12px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(119,189,172,0.16), 0 0 50px rgba(119,189,172,0.07)',
-            '0 30px 70px rgba(0,0,0,0.7), 0 12px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(119,189,172,0.10), 0 0 30px rgba(119,189,172,0.03)',
+            '0 24px 50px rgba(0,0,0,0.6), 0 8px 20px rgba(0,0,0,0.35), 0 0 0 1px rgba(119,189,172,0.10), 0 0 30px rgba(119,189,172,0.03)',
+            '0 24px 50px rgba(0,0,0,0.6), 0 8px 20px rgba(0,0,0,0.35), 0 0 0 1px rgba(119,189,172,0.18), 0 0 45px rgba(119,189,172,0.07)',
+            '0 24px 50px rgba(0,0,0,0.6), 0 8px 20px rgba(0,0,0,0.35), 0 0 0 1px rgba(119,189,172,0.10), 0 0 30px rgba(119,189,172,0.03)',
           ],
-        } : undefined}
-        transition={isRight ? { duration: 4, repeat: Infinity, ease: 'easeInOut' } : undefined}
+        }}
+        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
         style={{
-          borderRadius: 16,
+          borderRadius: 14,
           border: `1px solid ${borderCol}`,
           background: cardBg,
-          ...(!isRight ? {
-            boxShadow: '0 25px 60px rgba(0,0,0,0.7), 0 10px 20px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04)',
-          } : {}),
           overflow: 'hidden',
         }}
       >
 
         {/* ── Chrome header ── */}
         <div style={{
-          padding: '10px 20px',
-          borderBottom: `1px solid ${isRight ? 'rgba(119,189,172,0.12)' : 'rgba(255,255,255,0.05)'}`,
+          padding: '9px 16px',
+          borderBottom: '1px solid rgba(119,189,172,0.10)',
           background: headerBg,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         }}>
@@ -1718,112 +1722,167 @@ function PricingCard({ plan, index, opacity, y }: {
               marginLeft: 8,
               fontFamily: 'var(--font-mono), monospace', fontSize: '0.55rem', color: fnameCol,
             }}>
-              {isRight ? 'proposta-completa.md' : 'proposta-meta.md'}
+              proposta-final.md
             </span>
           </div>
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: 4,
-            padding: '3px 9px', borderRadius: 99,
-            background: statusBg, border: `1px solid ${statusBrd}`,
-            fontFamily: 'var(--font-mono), monospace', fontSize: '0.5rem',
-            fontWeight: 700, color: statusCol, letterSpacing: '0.05em',
+            padding: '2px 8px', borderRadius: 99,
+            background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.25)',
+            fontFamily: 'var(--font-mono), monospace', fontSize: '0.48rem',
+            fontWeight: 700, color: '#22c55e', letterSpacing: '0.05em',
           }}>
-            {isRight && (
-              <motion.span
-                animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }}
-                transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
-                style={{ width: 5, height: 5, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }}
-              />
-            )}
-            {statusTxt}
+            <motion.span
+              animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+              style={{ width: 4, height: 4, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }}
+            />
+            APROVADO
+          </span>
+        </div>
+
+        {/* ── Plan name ── */}
+        <div style={{
+          padding: '14px 18px 0', textAlign: 'center',
+        }}>
+          <span style={{
+            fontFamily: 'var(--font-mono), monospace',
+            fontSize: '0.5rem', fontWeight: 600,
+            color: 'rgba(119,189,172,0.45)',
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+          }}>
+            {plan.name}
           </span>
         </div>
 
         {/* ── Hero investment number ── */}
-        <div style={{ padding: '24px 22px 8px', textAlign: 'center' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'baseline', gap: 4 }}>
+        <div style={{ padding: '12px 18px 0', textAlign: 'center' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'baseline', gap: 6 }}>
             <span style={{
-              fontFamily: 'var(--font-mono), monospace', fontWeight: 600,
-              fontSize: '1rem', lineHeight: 1, color: numCol,
-              opacity: 0.5,
+              fontFamily: 'var(--font-mono), monospace', fontWeight: 500,
+              fontSize: '0.8rem', lineHeight: 1, color: numCol,
+              opacity: 0.4,
             }}>
               {plan.installments}x
             </span>
             <span style={{
               fontFamily: 'var(--font-mono), monospace', fontWeight: 700,
-              fontSize: 'clamp(1.8rem, 4vw, 2.4rem)', lineHeight: 1, color: numCol,
-              letterSpacing: '-0.02em',
+              fontSize: 'clamp(1.85rem, 5vw, 2.5rem)', lineHeight: 1, color: numCol,
+              letterSpacing: '-0.03em',
               fontVariantNumeric: 'tabular-nums',
             }}>
               R${formattedAmount}
             </span>
           </div>
-          <div style={{ marginTop: 8 }}>
+          {/* SEM JUROS — inline badge under the price */}
+          <div style={{ marginTop: 6, display: 'flex', justifyContent: 'center' }}>
             <span style={{
-              fontFamily: 'var(--font-mono), monospace', fontSize: '0.55rem', fontWeight: 600,
-              color: isRight ? 'rgba(119,189,172,0.6)' : 'rgba(156,163,175,0.5)', letterSpacing: '0.1em',
+              display: 'inline-flex', alignItems: 'center', gap: 4,
+              padding: '2px 8px', borderRadius: 99,
+              background: 'rgba(119,189,172,0.04)',
+              border: '1px solid rgba(119,189,172,0.10)',
+              fontFamily: 'var(--font-mono), monospace', fontSize: '0.45rem', fontWeight: 600,
+              color: 'rgba(119,189,172,0.5)', letterSpacing: '0.08em',
             }}>
+              <span style={{ width: 3, height: 3, borderRadius: '50%', background: numCol, opacity: 0.4 }} />
               SEM JUROS
             </span>
           </div>
         </div>
 
-        {/* ── Discount ── */}
-        <div style={{ padding: '6px 22px 18px', display: 'flex', justifyContent: 'center' }}>
+        {/* ── Discount à vista — positive treatment ── */}
+        <div style={{ padding: '10px 18px 16px', display: 'flex', justifyContent: 'center' }}>
           <span style={{
             padding: '4px 12px', borderRadius: 6,
-            background: 'rgba(239,68,68,0.08)',
-            border: '1px solid rgba(239,68,68,0.14)',
-            fontSize: '0.55rem', fontWeight: 600, color: '#f87171',
+            background: 'rgba(119,189,172,0.06)',
+            border: '1px solid rgba(119,189,172,0.15)',
+            fontSize: '0.52rem', fontWeight: 600, color: 'rgba(119,189,172,0.7)',
+            letterSpacing: '0.02em',
           }}>
             {plan.discount}
           </span>
         </div>
 
-        {/* ── Divider ── */}
+        {/* ── Section label ── */}
         <div style={{
-          padding: '8px 22px',
-          fontSize: '0.55rem', fontWeight: 500,
-          color: isRight ? 'rgba(119,189,172,0.6)' : 'rgba(156,163,175,0.45)',
-          letterSpacing: '0.04em', textAlign: 'center',
-          borderTop: `1px solid ${isRight ? 'rgba(119,189,172,0.10)' : 'rgba(255,255,255,0.05)'}`,
+          padding: '8px 18px',
+          fontSize: '0.48rem', fontWeight: 600,
+          color: 'rgba(119,189,172,0.4)',
+          letterSpacing: '0.1em', textTransform: 'uppercase', textAlign: 'center',
+          borderTop: '1px solid rgba(119,189,172,0.08)',
         }}>
-          Serviços inclusos
+          O que está incluso
         </div>
 
-        {/* ── Service rows — sans-serif for readability ── */}
-        <div style={{ padding: '4px 16px 20px' }}>
-          {plan.services.map((service, i) => {
-            const isLast = i === plan.services.length - 1;
-            return (
-              <div key={i} style={{
-                marginBottom: isLast ? 0 : 7,
-                padding: '9px 14px', borderRadius: 8,
-                background: isLast
-                  ? `${accentCol}0.07)`
-                  : 'rgba(255,255,255,0.025)',
-                borderLeft: isLast
-                  ? `3px solid ${accentCol}0.45)`
-                  : '2px solid rgba(255,255,255,0.06)',
+        {/* ── Core service rows ── */}
+        <div style={{ padding: '4px 14px 0' }}>
+          {coreServices.map((service, i) => (
+            <div key={i} style={{
+              marginBottom: 5,
+              padding: '7px 12px', borderRadius: 7,
+              background: 'rgba(255,255,255,0.02)',
+              borderLeft: '2px solid rgba(255,255,255,0.05)',
+            }}>
+              <div style={{
+                fontSize: '0.7rem', color: '#E5E7EB',
+                lineHeight: 1.45, fontWeight: 500,
               }}>
-                <div style={{
-                  fontSize: '0.75rem', color: '#E5E7EB',
-                  lineHeight: 1.5, fontWeight: 500,
-                }}>
-                  {service.title}
-                </div>
-                {service.detail && (
-                  <div style={{
-                    fontSize: '0.62rem', color: isRight ? 'rgba(119,189,172,0.6)' : '#9CA3AF',
-                    marginTop: 3, lineHeight: 1.4,
-                  }}>
-                    {service.detail}
-                  </div>
-                )}
+                {service.title}
               </div>
-            );
-          })}
+              {service.detail && (
+                <div style={{
+                  fontSize: '0.58rem', color: 'rgba(119,189,172,0.5)',
+                  marginTop: 2, lineHeight: 1.4,
+                }}>
+                  {service.detail}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
+
+        {/* ── Highlight service (acompanhamento) — visually distinct ── */}
+        {highlightService && (
+          <div style={{ padding: '4px 14px 16px' }}>
+            <div style={{
+              marginTop: 4,
+              padding: '10px 12px', borderRadius: 8,
+              background: `${accentCol}0.07)`,
+              borderLeft: `2px solid ${accentCol}0.45)`,
+              border: `1px solid ${accentCol}0.12)`,
+              borderLeftWidth: 2,
+              borderLeftColor: `rgba(119,189,172,0.45)`,
+            }}>
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3,
+              }}>
+                <span style={{
+                  fontFamily: 'var(--font-mono), monospace',
+                  fontSize: '0.42rem', fontWeight: 600,
+                  color: numCol, opacity: 0.7,
+                  letterSpacing: '0.08em', textTransform: 'uppercase',
+                }}>
+                  Diferencial
+                </span>
+              </div>
+              <div style={{
+                fontSize: '0.72rem', color: '#E5E7EB',
+                lineHeight: 1.45, fontWeight: 600,
+              }}>
+                {highlightService.title}
+              </div>
+              {highlightService.detail && (
+                <div style={{
+                  fontSize: '0.58rem', color: 'rgba(119,189,172,0.55)',
+                  marginTop: 2, lineHeight: 1.4,
+                }}>
+                  {highlightService.detail}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </motion.div>
 
     </motion.div>
@@ -1922,14 +1981,14 @@ function PricingSlide({ scrollYProgress, pricing, range }: {
       {/* Two cards + floating logos wrapper */}
       <div style={{ position: 'relative', marginTop: 14, overflow: 'visible' }}>
 
-        {/* ── Floating platform logos ── */}
+        {/* ── Floating platform logos — ao redor do card único ── */}
         <motion.div style={{ opacity: elemOpacity, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none', zIndex: 2 }}>
-          {/* Card 1 — Meta (left side, spread out) */}
+          {/* Meta (left top) */}
           <motion.div
             animate={{ y: [0, -6, 0], rotate: [0, 3, 0] }}
             transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
             style={{
-              position: 'absolute', top: '18%', left: -90,
+              position: 'absolute', top: '12%', left: -90,
               padding: 8, borderRadius: 12,
               background: 'rgba(0,129,251,0.06)',
               border: '1px solid rgba(0,129,251,0.15)',
@@ -1939,44 +1998,12 @@ function PricingSlide({ scrollYProgress, pricing, range }: {
             <MetaLogo size={22} opacity={0.8} />
           </motion.div>
 
-          {/* Card 1 — CAPI pill */}
-          <motion.div
-            animate={{ y: [0, -3, 0], opacity: [0.3, 0.5, 0.3] }}
-            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
-            style={{
-              position: 'absolute', top: '60%', left: -80,
-              padding: '3px 10px', borderRadius: 6,
-              background: 'rgba(119,189,172,0.06)',
-              border: '1px solid rgba(119,189,172,0.10)',
-              fontFamily: 'var(--font-mono), monospace',
-              fontSize: '0.45rem', fontWeight: 500, color: 'rgba(119,189,172,0.45)',
-              letterSpacing: '0.04em', whiteSpace: 'nowrap',
-            }}
-          >
-            CAPI
-          </motion.div>
-
-          {/* Card 2 — Meta (right top) */}
-          <motion.div
-            animate={{ y: [0, -5, 0], rotate: [0, -2, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-            style={{
-              position: 'absolute', top: '8%', right: -95,
-              padding: 8, borderRadius: 12,
-              background: 'rgba(0,129,251,0.06)',
-              border: '1px solid rgba(0,129,251,0.15)',
-              boxShadow: '0 4px 20px rgba(0,129,251,0.08)',
-            }}
-          >
-            <MetaLogo size={20} opacity={0.7} />
-          </motion.div>
-
-          {/* Card 2 — Google Ads (right middle) */}
+          {/* Google Ads (right top) */}
           <motion.div
             animate={{ y: [0, -7, 0], rotate: [0, 4, 0] }}
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1.2 }}
             style={{
-              position: 'absolute', top: '38%', right: -100,
+              position: 'absolute', top: '20%', right: -95,
               padding: 8, borderRadius: 12,
               background: 'rgba(66,133,244,0.06)',
               border: '1px solid rgba(66,133,244,0.15)',
@@ -1986,12 +2013,12 @@ function PricingSlide({ scrollYProgress, pricing, range }: {
             <GoogleAdsLogo size={22} opacity={0.8} />
           </motion.div>
 
-          {/* Card 2 — GA4 (right bottom) */}
+          {/* GA4 (left bottom) */}
           <motion.div
             animate={{ y: [0, -4, 0], rotate: [0, -3, 0] }}
             transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
             style={{
-              position: 'absolute', top: '68%', right: -85,
+              position: 'absolute', top: '60%', left: -85,
               padding: 8, borderRadius: 12,
               background: 'rgba(227,116,0,0.06)',
               border: '1px solid rgba(227,116,0,0.15)',
@@ -2001,54 +2028,25 @@ function PricingSlide({ scrollYProgress, pricing, range }: {
             <GA4Logo size={20} opacity={0.7} />
           </motion.div>
 
-          {/* Tech pills — well spaced */}
-          <motion.div
-            animate={{ y: [0, -3, 0], opacity: [0.25, 0.45, 0.25] }}
-            transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
-            style={{
-              position: 'absolute', top: '85%', left: -70,
-              padding: '3px 10px', borderRadius: 6,
-              background: 'rgba(119,189,172,0.06)',
-              border: '1px solid rgba(119,189,172,0.10)',
-              fontFamily: 'var(--font-mono), monospace',
-              fontSize: '0.45rem', fontWeight: 500, color: 'rgba(119,189,172,0.4)',
-              letterSpacing: '0.04em', whiteSpace: 'nowrap',
-            }}
-          >
-            sGTM
-          </motion.div>
-
-          <motion.div
-            animate={{ y: [0, -4, 0], opacity: [0.2, 0.4, 0.2] }}
-            transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut', delay: 1.8 }}
-            style={{
-              position: 'absolute', top: '90%', right: -70,
-              padding: '3px 10px', borderRadius: 6,
-              background: 'rgba(119,189,172,0.06)',
-              border: '1px solid rgba(119,189,172,0.10)',
-              fontFamily: 'var(--font-mono), monospace',
-              fontSize: '0.45rem', fontWeight: 500, color: 'rgba(119,189,172,0.4)',
-              letterSpacing: '0.04em', whiteSpace: 'nowrap',
-            }}
-          >
-            dedup
-          </motion.div>
         </motion.div>
 
-        {/* ── Cards ── */}
-        <div style={{
-          display: 'flex', gap: 24,
-          maxWidth: 780, width: '100%', justifyContent: 'center',
-        }}>
-          {pricing.plans.map((plan, i) => (
+        {/* ── Card único (plano completo) ── */}
+        <div style={{ display: 'flex', justifyContent: 'center', maxWidth: 420, width: '100%', margin: '0 auto' }}>
+          {pricing.plans.length > 1 ? (
             <PricingCard
-              key={i}
-              plan={plan}
-              index={i}
-              opacity={cardOpacities[i]}
-              y={cardYs[i]}
+              plan={pricing.plans[1]}
+              index={1}
+              opacity={card2Opacity}
+              y={card2Y}
             />
-          ))}
+          ) : (
+            <PricingCard
+              plan={pricing.plans[0]}
+              index={1}
+              opacity={card1Opacity}
+              y={card1Y}
+            />
+          )}
         </div>
       </div>
 
@@ -2123,7 +2121,7 @@ function DataLossSlide({ scrollYProgress, goal, range }: {
       {/* Accent line */}
       <motion.div
         style={{ scaleX: useTransform(scrollYProgress, [t(0.08), t(0.24)], [0, 1]), transformOrigin: 'left' }}
-        className="accent-line mb-8"
+        className="accent-line mb-5"
       />
 
       {/* Loss calculator — quiet ledger with smooth color */}
@@ -2202,8 +2200,8 @@ function DataLossSlide({ scrollYProgress, goal, range }: {
       {/* Label */}
       <motion.div style={{ opacity: labelOpacity, y: labelY }} className="mt-8">
         <h3 style={{
-          fontSize: 'clamp(1rem, 3vw, 1.25rem)', fontWeight: 700, color: '#F3F4F6',
-          lineHeight: 1.3,
+          fontFamily: 'var(--font-sans)', fontSize: 'clamp(1.15rem, 4vw, 1.6rem)', fontWeight: 600, color: '#F3F4F6',
+          lineHeight: 1.2, letterSpacing: '-0.02em',
         }}>
           {goal.label}
         </h3>
@@ -2212,7 +2210,7 @@ function DataLossSlide({ scrollYProgress, goal, range }: {
       {/* Description */}
       <motion.p
         style={{ opacity: descOpacity, y: descY }}
-        className="mt-3 max-w-[520px] text-[0.8rem] leading-[1.8] text-[#9CA3AF]"
+        className="mt-3 max-w-[520px] text-[0.875rem] leading-relaxed text-[#9CA3AF]"
       >
         {goal.description}
       </motion.p>
@@ -2421,7 +2419,7 @@ function OpportunitiesSlide({ scrollYProgress, opportunities, range }: {
       {/* Accent line */}
       <motion.div
         style={{ scaleX: useTransform(scrollYProgress, [t(0.08), t(0.24)], [0, 1]), transformOrigin: 'left' }}
-        className="accent-line mb-6"
+        className="accent-line mb-5"
       />
 
       {/* Apple Notes container + floating elements */}
@@ -2664,7 +2662,7 @@ function SingleGoalSlide({ scrollYProgress, goal, range, slideNum, totalSlides, 
       {/* Accent line */}
       <motion.div
         style={{ scaleX: useTransform(scrollYProgress, [t(0.08), t(0.24)], [0, 1]), transformOrigin: 'left' }}
-        className="accent-line mb-8"
+        className="accent-line mb-5"
       />
 
       {/* Metric — hero element */}

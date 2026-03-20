@@ -72,6 +72,22 @@ export default function CinematicExperience({ initialData }: CinematicExperience
       </AnimatePresence>
 
       <TokenModal open={showModal} onClose={handleModalClose} onSuccess={handleTokenSuccess} />
+
+      {/* DEV: botão de reset para testar fluxo */}
+      {pageState === 'unlocked' && (
+        <button
+          onClick={() => { setPageState('locked'); setClientData(null); window.scrollTo(0, 0); }}
+          style={{
+            position: 'fixed', top: 12, right: 12, zIndex: 9999,
+            padding: '4px 10px', borderRadius: 6,
+            background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)',
+            color: '#EF4444', fontSize: '0.6rem', fontFamily: 'monospace',
+            cursor: 'pointer', opacity: 0.6,
+          }}
+        >
+          ← PainHero
+        </button>
+      )}
     </>
   );
 }
