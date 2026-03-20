@@ -72,16 +72,16 @@ function PricingCard({ plan, opacity, y }: {
       <div
         style={{
           borderRadius: 14,
-          border: '1px solid rgba(119,189,172,0.20)',
-          background: 'rgba(8, 14, 12, 0.97)',
+          border: '1px solid rgba(119,189,172,0.15)',
+          background: 'linear-gradient(180deg, rgba(12,20,17,0.98) 0%, rgba(6,10,8,0.99) 100%)',
           overflow: 'hidden',
-          boxShadow: '0 24px 50px rgba(0,0,0,0.6), 0 8px 20px rgba(0,0,0,0.35), 0 0 0 1px rgba(119,189,172,0.12)',
+          boxShadow: '0 24px 50px rgba(0,0,0,0.55), 0 8px 20px rgba(0,0,0,0.3)',
         }}
       >
         <div style={{
           padding: '10px 18px',
-          borderBottom: '1px solid rgba(119,189,172,0.12)',
-          background: 'rgba(8, 16, 13, 0.95)',
+          borderBottom: '1px solid rgba(119,189,172,0.10)',
+          background: 'rgba(10,18,15,0.95)',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -168,15 +168,15 @@ function PricingCard({ plan, opacity, y }: {
             return (
               <div key={i} style={{
                 marginBottom: 5, padding: '10px 14px', borderRadius: 10,
-                background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)',
+                background: 'rgba(119,189,172,0.03)', border: '1px solid rgba(119,189,172,0.06)',
                 display: 'flex', alignItems: 'flex-start', gap: 12,
               }}>
                 <div style={{
                   flexShrink: 0, marginTop: 2, width: 28, height: 28, borderRadius: 8,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: 'rgba(119,189,172,0.06)', border: '1px solid rgba(119,189,172,0.10)',
+                  background: 'rgba(119,189,172,0.08)', border: '1px solid rgba(119,189,172,0.14)',
                 }}>
-                  <Icon size={14} color="rgba(119,189,172,0.55)" strokeWidth={1.5} />
+                  <Icon size={14} color="rgba(119,189,172,0.7)" strokeWidth={1.5} />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: '0.78rem', color: '#E5E7EB', lineHeight: 1.5, fontWeight: 500 }}>
@@ -197,9 +197,9 @@ function PricingCard({ plan, opacity, y }: {
           <div style={{ padding: '6px 16px 18px' }}>
             <div style={{
               marginTop: 4, padding: '12px 14px', borderRadius: 8,
-              background: 'rgba(119,189,172,0.08)',
-              border: '1px solid rgba(119,189,172,0.15)',
-              borderLeftWidth: 2, borderLeftColor: 'rgba(119,189,172,0.50)',
+              background: 'rgba(119,189,172,0.06)',
+              border: '1px solid rgba(119,189,172,0.18)',
+              borderLeftWidth: 3, borderLeftColor: '#77BDAC',
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
                 <span style={{
