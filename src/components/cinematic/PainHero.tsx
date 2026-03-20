@@ -191,7 +191,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
       className="bg-pain-mesh select-none"
       style={{
         position: 'relative',
-        minHeight: '100vh',
+        height: '100dvh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
