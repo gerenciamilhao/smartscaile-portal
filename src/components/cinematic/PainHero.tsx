@@ -7,7 +7,6 @@ import {
 } from 'lucide-react';
 import SlideToUnlock, { type SlideToUnlockHandle } from '@/components/ui/SlideToUnlock';
 import type { ClientData } from '@/lib/clients';
-import { useIsMobile } from '@/lib/useIsMobile';
 import { PURCHASE_POOL_EXTENDED as PURCHASE_POOL } from '@/lib/purchase-pool';
 
 export interface PainHeroHandle {
@@ -106,7 +105,6 @@ function StatusChip({ status, failLabel }: { status: PainRowStatus; failLabel?: 
 
 // ─── Component ──────────────────────────────────────────────────────────────
 const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ onUnlock, clientData }, ref) {
-  const isMobile = useIsMobile();
   const painCopy = clientData?.diagnosis?.copy?.painHero;
   const sliderRef = useRef<SlideToUnlockHandle>(null);
 
@@ -500,21 +498,19 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
               style={{
                 display: 'flex', alignItems: 'center', gap: '8px',
                 padding: '8px 12px', borderRadius: '12px',
-                background: isMobile ? 'rgba(10,10,10,0.85)' : 'rgba(255,255,255,0.04)',
-                ...(!isMobile && {
-                  backdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
-                  WebkitBackdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
-                }),
+                background: 'rgba(255,255,255,0.04)',
+                backdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
+                WebkitBackdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
                 border: '1px solid rgba(239,68,68,0.15)',
                 boxShadow: '0 4px 24px rgba(0,0,0,0.2)',
               }}
             >
               <div style={{ position: 'relative', flexShrink: 0 }}>
-                {!isMobile && <motion.div
+                <motion.div
                   animate={{ scale: [1, 1.7], opacity: [0.2, 0] }}
                   transition={{ duration: 2.2, repeat: Infinity, ease: 'easeOut', delay: 0.8 }}
                   style={{ position: 'absolute', inset: '-5px', borderRadius: '11px', background: 'rgba(239,68,68,0.12)' }}
-                />}
+                />
                 <div style={{ width: '24px', height: '24px', borderRadius: '7px', background: 'rgba(239,68,68,0.09)', border: '1px solid rgba(239,68,68,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Target size={12} color="#EF4444" strokeWidth={2} />
                 </div>
@@ -539,24 +535,20 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
               style={{
                 display: 'flex', alignItems: 'center', gap: '8px',
                 padding: '8px 10px', borderRadius: '12px',
-                background: isMobile
-                  ? (counterPulse ? 'rgba(239,68,68,0.12)' : 'rgba(10,10,10,0.85)')
-                  : (counterPulse ? 'rgba(239,68,68,0.12)' : 'rgba(255,255,255,0.04)'),
-                ...(!isMobile && {
-                  backdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
-                  WebkitBackdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
-                }),
+                background: counterPulse ? 'rgba(239,68,68,0.12)' : 'rgba(255,255,255,0.04)',
+                backdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
+                WebkitBackdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
                 border: '1px solid rgba(239,68,68,0.15)',
                 boxShadow: '0 4px 24px rgba(0,0,0,0.2)',
                 transition: 'background 0.3s ease',
               }}
             >
               <div style={{ position: 'relative', flexShrink: 0 }}>
-                {!isMobile && <motion.div
+                <motion.div
                   animate={{ scale: [1, 1.7], opacity: [0.2, 0] }}
                   transition={{ duration: 2.2, repeat: Infinity, ease: 'easeOut' }}
                   style={{ position: 'absolute', inset: '-4px', borderRadius: '9px', background: 'rgba(239,68,68,0.12)' }}
-                />}
+                />
                 <div style={{ width: '26px', height: '26px', borderRadius: '8px', background: 'rgba(239,68,68,0.09)', border: '1px solid rgba(239,68,68,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <TrendingUp size={12} color="#EF4444" strokeWidth={2} />
                 </div>
