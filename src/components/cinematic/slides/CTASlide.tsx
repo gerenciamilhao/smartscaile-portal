@@ -213,12 +213,12 @@ export function CTASlideContent({ diagnosis, scrollYProgress, range }: {
       </div>
 
       <a
-        href="https://wa.me/5511999999999"
+        href="https://wa.me/351934157309"
         target="_blank" rel="noopener noreferrer"
         style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: '0.75rem', color: accentColor, border: `1px solid ${accentRgba(0.25)}`, borderRadius: 10, padding: '9px 20px', textDecoration: 'none', transition: 'all 0.6s ease' }}
       >
         <MessageCircle size={14} strokeWidth={1.5} />
-        Falar no WhatsApp
+        Fechar proposta
       </a>
     </>
   );

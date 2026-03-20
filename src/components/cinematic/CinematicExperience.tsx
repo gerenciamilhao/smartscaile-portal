@@ -152,23 +152,19 @@ function BackToHeroButton({ scrollYProgress }: { scrollYProgress: MotionValue<nu
         opacity,
         display: 'flex',
         alignItems: 'center',
-        gap: 6,
-        padding: '6px 12px',
-        borderRadius: 99,
-        background: 'rgba(255,255,255,0.04)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        color: 'rgba(255,255,255,0.4)',
-        fontSize: '0.6rem',
-        fontFamily: 'var(--font-mono), monospace',
-        fontWeight: 500,
-        letterSpacing: '0.04em',
+        justifyContent: 'center',
+        width: 32,
+        height: 32,
+        borderRadius: '50%',
+        background: 'transparent',
+        border: 'none',
+        color: 'rgba(255,255,255,0.2)',
         cursor: 'pointer',
-        transition: 'color 0.2s ease, border-color 0.2s ease',
+        transition: 'color 0.2s ease',
       }}
-      whileHover={{ color: 'rgba(119,189,172,0.8)', borderColor: 'rgba(119,189,172,0.2)' }}
+      whileHover={{ color: 'rgba(255,255,255,0.5)' }}
     >
-      <ArrowUp size={12} strokeWidth={1.5} />
-      Início
+      <ArrowUp size={14} strokeWidth={1.5} />
     </motion.button>
   );
 }
