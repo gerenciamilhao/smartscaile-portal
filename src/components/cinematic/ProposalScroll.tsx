@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { type MotionValue } from 'framer-motion';
 import { motion } from 'framer-motion';
 import { ScrollSlide } from './ScrollSlide';
@@ -59,7 +59,7 @@ function renderAccentText(text: string, color: string = '#77BDAC', delay: number
         >{word}</motion.span>
       );
     }
-    return <span key={i}>{part}</span>;
+    return <span key={i} style={{ whiteSpace: 'pre-line' }}>{part}</span>;
   });
 }
 
@@ -276,19 +276,8 @@ export default function ProposalScroll({ scrollYProgress, clientData }: Proposal
       <ScrollSlide range={R.proposal} scrollYProgress={scrollYProgress} zIndex={9} isLast>
         <div className="slide-dot-grid" />
 
-        {/* Floating orbs */}
-        <motion.div animate={{ y: [0, -5, 0], opacity: [0.2, 0.4, 0.2] }} transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 0 }}
-          style={{ position: 'absolute', top: '12%', left: '4%', width: 4, height: 4, borderRadius: '50%', background: 'rgba(119,189,172,0.3)', pointerEvents: 'none' }} />
-        <motion.div animate={{ y: [0, 6, 0], opacity: [0.15, 0.3, 0.15] }} transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-          style={{ position: 'absolute', top: '20%', right: '5%', width: 3, height: 3, borderRadius: '50%', background: 'rgba(119,189,172,0.25)', pointerEvents: 'none' }} />
-        <motion.div animate={{ y: [0, -4, 0], opacity: [0.1, 0.25, 0.1] }} transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 3.5 }}
-          style={{ position: 'absolute', bottom: '18%', left: '6%', width: 5, height: 5, borderRadius: '50%', background: 'rgba(119,189,172,0.2)', pointerEvents: 'none' }} />
-
-        {/* Ambient glow */}
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse 50% 40% at 50% 50%, rgba(119,189,172,0.04) 0%, transparent 70%)' }} />
-
         <div className="slide-content text-center">
-          <CTASlideContent diagnosis={diagnosis} />
+          <CTASlideContent diagnosis={diagnosis} scrollYProgress={scrollYProgress} range={R.proposal} />
         </div>
       </ScrollSlide>
     </>
@@ -599,16 +588,31 @@ const CTA_LINES: TerminalLine[] = [
 // Line index where lock opens (kick-off liberado)
 const LOCK_OPEN_LINE = 3;
 
-function CTASlideContent({ diagnosis }: { diagnosis: ClientData['diagnosis'] }) {
+function CTASlideContent({ diagnosis, scrollYProgress, range }: {
+  diagnosis: ClientData['diagnosis'];
+  scrollYProgress: MotionValue<number>;
+  range: [number, number];
+}) {
   const [visibleChars, setVisibleChars] = useState<number[]>(CTA_LINES.map(() => 0));
   const [activeLine, setActiveLine] = useState(0);
   const [loopKey, setLoopKey] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Detect slide visibility via scroll position
+  const slideOpacity = useTransform(scrollYProgress, [range[0], range[0] + (range[1] - range[0]) * 0.30], [0, 1]);
+  useEffect(() => {
+    const unsubscribe = slideOpacity.on('change', (v) => {
+      setIsVisible(v > 0.5);
+    });
+    return unsubscribe;
+  }, [slideOpacity]);
 
   // Lock is open from kick-off until terminal resets (activeLine back to 0)
   const lockOpen = activeLine >= LOCK_OPEN_LINE;
   const lockColor = lockOpen ? '#22C55E' : '#EF4444';
   const accentColor = lockOpen ? '#77BDAC' : '#EF4444';
   const accentRgba = (a: number) => lockOpen ? `rgba(119,189,172,${a})` : `rgba(239,68,68,${a})`;
+  const orbColor = lockOpen ? 'rgba(119,189,172,' : 'rgba(239,68,68,';
 
   const resetAndLoop = useCallback(() => {
     setVisibleChars(CTA_LINES.map(() => 0));
@@ -617,8 +621,10 @@ function CTASlideContent({ diagnosis }: { diagnosis: ClientData['diagnosis'] }) 
   }, []);
 
   useEffect(() => {
+    // Only run typing when slide is visible
+    if (!isVisible) return;
+
     if (activeLine >= CTA_LINES.length) {
-      // Hold green for 1.5s showing completed state, then reset (goes red)
       const holdTimer = setTimeout(resetAndLoop, 1500);
       return () => clearTimeout(holdTimer);
     }
@@ -634,42 +640,76 @@ function CTASlideContent({ diagnosis }: { diagnosis: ClientData['diagnosis'] }) 
       setVisibleChars((prev) => { const next = [...prev]; next[activeLine] = charCount + 1; return next; });
     }, speed);
     return () => clearTimeout(charTimer);
-  }, [activeLine, visibleChars, loopKey, resetAndLoop]);
+  }, [activeLine, visibleChars, loopKey, resetAndLoop, isVisible]);
 
   return (
     <>
+      {/* Ambient glow — reacts to lock state */}
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: -1,
+        transition: 'background 1s ease',
+        background: lockOpen
+          ? 'radial-gradient(ellipse 60% 50% at 50% 40%, rgba(119,189,172,0.06) 0%, transparent 70%)'
+          : 'radial-gradient(ellipse 60% 50% at 50% 40%, rgba(239,68,68,0.06) 0%, transparent 70%)',
+      }} />
+
+      {/* Floating orbs — react to lock state */}
+      {[
+        { top: '12%', left: '4%', size: 4, dur: 7, delay: 0 },
+        { top: '20%', right: '5%', size: 3, dur: 9, delay: 2 },
+        { top: '75%', left: '6%', size: 5, dur: 11, delay: 3.5 },
+      ].map((orb, i) => (
+        <motion.div
+          key={`orb-${i}`}
+          animate={{ y: [0, -(orb.size + 2), 0], opacity: [0.2, 0.4, 0.2] }}
+          transition={{ duration: orb.dur, repeat: Infinity, ease: 'easeInOut', delay: orb.delay }}
+          style={{
+            position: 'absolute', top: orb.top,
+            ...(orb.left ? { left: orb.left } : { right: orb.right }),
+            width: orb.size, height: orb.size, borderRadius: '50%',
+            background: `${orbColor}0.3)`,
+            boxShadow: `0 0 10px ${orbColor}0.12)`,
+            pointerEvents: 'none',
+            transition: 'background 1s ease, box-shadow 1s ease',
+          }}
+        />
+      ))}
+
       {/* Lock icon — synced with terminal */}
       <div
         style={{
-          width: 36, height: 36, borderRadius: '50%',
-          border: `1px solid ${lockColor}40`,
-          background: `${lockColor}08`,
+          width: 56, height: 56, borderRadius: '50%',
+          border: `1px solid ${lockColor}30`,
+          background: `${lockColor}0A`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          margin: '0 auto 10px',
-          transition: 'border-color 0.6s ease, background 0.6s ease',
-          boxShadow: lockOpen ? `0 0 12px ${lockColor}20` : 'none',
+          margin: '0 auto 16px',
+          transition: 'all 0.8s ease',
+          boxShadow: `0 0 20px ${lockColor}15, 0 0 40px ${lockColor}08`,
         }}
       >
-        {lockOpen ? (
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={lockColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'stroke 0.6s ease' }}>
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-            <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
-          </svg>
-        ) : (
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={lockColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'stroke 0.6s ease' }}>
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-          </svg>
-        )}
+        <div style={{
+          width: 40, height: 40, borderRadius: '50%',
+          border: `1px solid ${lockColor}25`,
+          background: `${lockColor}0D`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          transition: 'all 0.8s ease',
+        }}>
+          {lockOpen ? (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={lockColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'stroke 0.6s ease' }}>
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+            </svg>
+          ) : (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={lockColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'stroke 0.6s ease' }}>
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          )}
+        </div>
       </div>
 
-      {/* Badge */}
-      <span style={{ display: 'inline-flex', alignItems: 'center', borderRadius: 9999, border: `1px solid ${accentRgba(0.15)}`, padding: '3px 10px', fontSize: '0.58rem', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: accentColor, background: accentRgba(0.06), marginBottom: 10, transition: 'all 0.6s ease' }}>
-        {diagnosis.copy?.cta?.badge ?? 'Proposta smartscaile.'}
-      </span>
-
       {/* Headline */}
-      <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 'clamp(1.45rem, 4.5vw, 1.9rem)', color: '#F3F4F6', lineHeight: 1.3, letterSpacing: '-0.02em', maxWidth: 400, margin: '0 auto 8px' }}>
+      <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 'clamp(1.75rem, 5.5vw, 2.4rem)', color: '#F3F4F6', lineHeight: 1.2, letterSpacing: '-0.025em', maxWidth: 480, margin: '0 auto 10px' }}>
         {renderAccentText(diagnosis.copy?.cta?.headline ?? 'O *resultado* é a garantia.', accentColor)}
       </h2>
       <p style={{ fontSize: '0.875rem', color: lockOpen ? '#9CA3AF' : '#6B7280', lineHeight: 1.55, maxWidth: 380, margin: '0 auto 14px', transition: 'color 0.6s ease' }}>
@@ -926,7 +966,8 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
       <motion.h2
         style={{ opacity: headlineOpacity, y: headlineY, fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 'clamp(1.35rem,5vw,2rem)', color: '#F3F4F6', letterSpacing: '-0.02em', lineHeight: 1.15 }}
       >
-        {diagnosis.copy?.audit?.headline ?? diagnosis.headline}{' '}
+        {diagnosis.copy?.audit?.headline ?? diagnosis.headline}
+        <br />
         {diagnosis.copy?.audit?.accentWord && (
           <motion.span
             animate={{ textShadow: [`0 0 10px ${diagnosis.copy.audit.accentColor ?? '#EF4444'}25`, `0 0 24px ${diagnosis.copy.audit.accentColor ?? '#EF4444'}80`, `0 0 10px ${diagnosis.copy.audit.accentColor ?? '#EF4444'}25`] }}
@@ -1643,7 +1684,7 @@ function PricingCard({ plan, index, opacity, y }: {
   const highlightService = plan.services[plan.services.length - 1];
 
   return (
-    <motion.div style={{ opacity, y, width: '100%', maxWidth: 380 }}>
+    <motion.div style={{ opacity, y, width: '100%', maxWidth: 440 }}>
       {/* Card with breathing glow — hero solo */}
       <motion.div
         animate={{
@@ -1664,33 +1705,33 @@ function PricingCard({ plan, index, opacity, y }: {
 
         {/* ── Chrome header ── */}
         <div style={{
-          padding: '9px 16px',
-          borderBottom: '1px solid rgba(119,189,172,0.10)',
+          padding: '10px 18px',
+          borderBottom: '1px solid rgba(119,189,172,0.12)',
           background: headerBg,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-            <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#FF5F56' }} />
-            <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#FFBD2E' }} />
-            <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#27C93F' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#FF5F56' }} />
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#FFBD2E' }} />
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#27C93F' }} />
             <span style={{
-              marginLeft: 8,
-              fontFamily: 'var(--font-mono), monospace', fontSize: '0.55rem', color: fnameCol,
+              marginLeft: 10,
+              fontFamily: 'var(--font-mono), monospace', fontSize: '0.65rem', color: fnameCol,
             }}>
               proposta-final.md
             </span>
           </div>
           <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: 4,
-            padding: '2px 8px', borderRadius: 99,
-            background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.25)',
-            fontFamily: 'var(--font-mono), monospace', fontSize: '0.48rem',
+            display: 'inline-flex', alignItems: 'center', gap: 5,
+            padding: '3px 10px', borderRadius: 99,
+            background: 'rgba(34,197,94,0.10)', border: '1px solid rgba(34,197,94,0.30)',
+            fontFamily: 'var(--font-mono), monospace', fontSize: '0.58rem',
             fontWeight: 700, color: '#22c55e', letterSpacing: '0.05em',
           }}>
             <motion.span
               animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }}
               transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
-              style={{ width: 4, height: 4, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }}
+              style={{ width: 5, height: 5, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }}
             />
             APROVADO
           </span>
@@ -1698,12 +1739,12 @@ function PricingCard({ plan, index, opacity, y }: {
 
         {/* ── Plan name ── */}
         <div style={{
-          padding: '14px 18px 0', textAlign: 'center',
+          padding: '16px 20px 0', textAlign: 'center',
         }}>
           <span style={{
             fontFamily: 'var(--font-mono), monospace',
-            fontSize: '0.5rem', fontWeight: 600,
-            color: 'rgba(119,189,172,0.45)',
+            fontSize: '0.6rem', fontWeight: 600,
+            color: 'rgba(119,189,172,0.65)',
             letterSpacing: '0.12em',
             textTransform: 'uppercase',
           }}>
@@ -1712,18 +1753,18 @@ function PricingCard({ plan, index, opacity, y }: {
         </div>
 
         {/* ── Hero investment number ── */}
-        <div style={{ padding: '12px 18px 0', textAlign: 'center' }}>
+        <div style={{ padding: '14px 20px 0', textAlign: 'center' }}>
           <div style={{ display: 'inline-flex', alignItems: 'baseline', gap: 6 }}>
             <span style={{
               fontFamily: 'var(--font-mono), monospace', fontWeight: 500,
-              fontSize: '0.8rem', lineHeight: 1, color: numCol,
-              opacity: 0.4,
+              fontSize: '0.95rem', lineHeight: 1, color: numCol,
+              opacity: 0.6,
             }}>
               {plan.installments}x
             </span>
             <span style={{
               fontFamily: 'var(--font-mono), monospace', fontWeight: 700,
-              fontSize: 'clamp(1.85rem, 5vw, 2.5rem)', lineHeight: 1, color: numCol,
+              fontSize: 'clamp(2.1rem, 5.5vw, 2.8rem)', lineHeight: 1, color: numCol,
               letterSpacing: '-0.03em',
               fontVariantNumeric: 'tabular-nums',
             }}>
@@ -1731,28 +1772,28 @@ function PricingCard({ plan, index, opacity, y }: {
             </span>
           </div>
           {/* SEM JUROS — inline badge under the price */}
-          <div style={{ marginTop: 6, display: 'flex', justifyContent: 'center' }}>
+          <div style={{ marginTop: 8, display: 'flex', justifyContent: 'center' }}>
             <span style={{
-              display: 'inline-flex', alignItems: 'center', gap: 4,
-              padding: '2px 8px', borderRadius: 99,
-              background: 'rgba(119,189,172,0.04)',
-              border: '1px solid rgba(119,189,172,0.10)',
-              fontFamily: 'var(--font-mono), monospace', fontSize: '0.45rem', fontWeight: 600,
-              color: 'rgba(119,189,172,0.5)', letterSpacing: '0.08em',
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              padding: '3px 10px', borderRadius: 99,
+              background: 'rgba(119,189,172,0.06)',
+              border: '1px solid rgba(119,189,172,0.15)',
+              fontFamily: 'var(--font-mono), monospace', fontSize: '0.55rem', fontWeight: 600,
+              color: 'rgba(119,189,172,0.7)', letterSpacing: '0.08em',
             }}>
-              <span style={{ width: 3, height: 3, borderRadius: '50%', background: numCol, opacity: 0.4 }} />
+              <span style={{ width: 4, height: 4, borderRadius: '50%', background: numCol, opacity: 0.6 }} />
               SEM JUROS
             </span>
           </div>
         </div>
 
         {/* ── Discount à vista — positive treatment ── */}
-        <div style={{ padding: '10px 18px 16px', display: 'flex', justifyContent: 'center' }}>
+        <div style={{ padding: '12px 20px 18px', display: 'flex', justifyContent: 'center' }}>
           <span style={{
-            padding: '4px 12px', borderRadius: 6,
-            background: 'rgba(119,189,172,0.06)',
-            border: '1px solid rgba(119,189,172,0.15)',
-            fontSize: '0.52rem', fontWeight: 600, color: 'rgba(119,189,172,0.7)',
+            padding: '5px 14px', borderRadius: 6,
+            background: 'rgba(119,189,172,0.08)',
+            border: '1px solid rgba(119,189,172,0.20)',
+            fontSize: '0.65rem', fontWeight: 600, color: 'rgba(119,189,172,0.85)',
             letterSpacing: '0.02em',
           }}>
             {plan.discount}
@@ -1761,34 +1802,34 @@ function PricingCard({ plan, index, opacity, y }: {
 
         {/* ── Section label ── */}
         <div style={{
-          padding: '8px 18px',
-          fontSize: '0.48rem', fontWeight: 600,
-          color: 'rgba(119,189,172,0.4)',
+          padding: '10px 20px',
+          fontSize: '0.6rem', fontWeight: 600,
+          color: 'rgba(119,189,172,0.6)',
           letterSpacing: '0.1em', textTransform: 'uppercase', textAlign: 'center',
-          borderTop: '1px solid rgba(119,189,172,0.08)',
+          borderTop: '1px solid rgba(119,189,172,0.10)',
         }}>
           O que está incluso
         </div>
 
         {/* ── Core service rows ── */}
-        <div style={{ padding: '4px 14px 0' }}>
+        <div style={{ padding: '6px 16px 0' }}>
           {coreServices.map((service, i) => (
             <div key={i} style={{
-              marginBottom: 5,
-              padding: '7px 12px', borderRadius: 7,
-              background: 'rgba(255,255,255,0.02)',
-              borderLeft: '2px solid rgba(255,255,255,0.05)',
+              marginBottom: 6,
+              padding: '9px 14px', borderRadius: 8,
+              background: 'rgba(255,255,255,0.025)',
+              borderLeft: '2px solid rgba(255,255,255,0.07)',
             }}>
               <div style={{
-                fontSize: '0.7rem', color: '#E5E7EB',
-                lineHeight: 1.45, fontWeight: 500,
+                fontSize: '0.8rem', color: '#F3F4F6',
+                lineHeight: 1.5, fontWeight: 500,
               }}>
                 {service.title}
               </div>
               {service.detail && (
                 <div style={{
-                  fontSize: '0.58rem', color: 'rgba(119,189,172,0.5)',
-                  marginTop: 2, lineHeight: 1.4,
+                  fontSize: '0.7rem', color: 'rgba(119,189,172,0.7)',
+                  marginTop: 3, lineHeight: 1.45,
                 }}>
                   {service.detail}
                 </div>
@@ -1799,38 +1840,38 @@ function PricingCard({ plan, index, opacity, y }: {
 
         {/* ── Highlight service (acompanhamento) — visually distinct ── */}
         {highlightService && (
-          <div style={{ padding: '4px 14px 16px' }}>
+          <div style={{ padding: '6px 16px 18px' }}>
             <div style={{
               marginTop: 4,
-              padding: '10px 12px', borderRadius: 8,
-              background: `${accentCol}0.07)`,
-              borderLeft: `2px solid ${accentCol}0.45)`,
-              border: `1px solid ${accentCol}0.12)`,
+              padding: '12px 14px', borderRadius: 8,
+              background: `${accentCol}0.08)`,
+              borderLeft: `2px solid ${accentCol}0.50)`,
+              border: `1px solid ${accentCol}0.15)`,
               borderLeftWidth: 2,
-              borderLeftColor: `rgba(119,189,172,0.45)`,
+              borderLeftColor: `rgba(119,189,172,0.50)`,
             }}>
               <div style={{
-                display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3,
+                display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4,
               }}>
                 <span style={{
                   fontFamily: 'var(--font-mono), monospace',
-                  fontSize: '0.42rem', fontWeight: 600,
-                  color: numCol, opacity: 0.7,
+                  fontSize: '0.55rem', fontWeight: 600,
+                  color: numCol, opacity: 0.85,
                   letterSpacing: '0.08em', textTransform: 'uppercase',
                 }}>
                   Diferencial
                 </span>
               </div>
               <div style={{
-                fontSize: '0.72rem', color: '#E5E7EB',
-                lineHeight: 1.45, fontWeight: 600,
+                fontSize: '0.85rem', color: '#F3F4F6',
+                lineHeight: 1.5, fontWeight: 600,
               }}>
                 {highlightService.title}
               </div>
               {highlightService.detail && (
                 <div style={{
-                  fontSize: '0.58rem', color: 'rgba(119,189,172,0.55)',
-                  marginTop: 2, lineHeight: 1.4,
+                  fontSize: '0.7rem', color: 'rgba(119,189,172,0.7)',
+                  marginTop: 3, lineHeight: 1.45,
                 }}>
                   {highlightService.detail}
                 </div>
@@ -1903,7 +1944,7 @@ function PricingSlide({ scrollYProgress, pricing, range }: {
   const cardYs = [card1Y, card2Y];
 
   return (
-    <div className="slide-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', paddingBottom: 60 }}>
+    <div className="slide-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', paddingBottom: 60, transform: 'scale(0.82)', transformOrigin: 'center center' }}>
 
       {/* ── Floating orbs ── */}
       {[
@@ -1986,7 +2027,7 @@ function PricingSlide({ scrollYProgress, pricing, range }: {
         </motion.div>
 
         {/* ── Card único (plano completo) ── */}
-        <div style={{ display: 'flex', justifyContent: 'center', maxWidth: 420, width: '100%', margin: '0 auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', maxWidth: 480, width: '100%', margin: '0 auto' }}>
           {pricing.plans.length > 1 ? (
             <PricingCard
               plan={pricing.plans[1]}

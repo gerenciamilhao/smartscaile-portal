@@ -141,7 +141,7 @@
     "goals": [
       {
         "metric": "R$100-200k/dia",
-        "label": "Esse *teto* não é do mercado. É do *tracking.*",
+        "label": "Esse teto não é do *mercado.*\nÉ do *tracking.*",
         "description": "A operação tem audiência, ticket e funil para escalar. O que trava é a leitura parcial dos dados. O algoritmo não consegue otimizar o que não enxerga. Corrigir a atribuição é destravar a escala sem mudar a oferta."
       },
       {
@@ -151,7 +151,7 @@
       },
       {
         "metric": "30-40%",
-        "label": "Enquanto você lê isso, *R$50* já rodaram sem *dados.*",
+        "label": "Enquanto você lê isso,\n*R$50* já rodaram sem *dados.*",
         "description": "R$1.200 por dia do seu investimento não geram sinal de volta. O algoritmo não aprende, não otimiza, não melhora. Isso são R$36.000/mês. E o contador não para."
       }
     ],
@@ -238,6 +238,20 @@
         "badge": "Proposta smartscaile.",
         "headline": "O *resultado* é a garantia.",
         "subtitle": "Teste A/B por 30 dias. Pixel antigo vs. novo. O resultado decide. Setup se paga em 2 semanas."
+      },
+      "painHero": {
+        "badge": "Client-Side Tracking",
+        "headline": "Cada dia sem *Server-Side* é dinheiro perdido.",
+        "subtitle": "Eventos bloqueados, conversões perdidas. Veja o impacto real no seu investimento.",
+        "balloons": ["Conversões invisíveis", "Má atribuição", "Dificuldade em escalar"],
+        "ticker": ["Hotmart", "Kiwify", "WordPress", "Meta Pixel", "Google Ads", "Google Analytics 4", "TikTok Pixel", "Facebook CAPI", "Elementor"]
+      },
+      "pageHero": {
+        "badge": "Server-Side Tracking Ativo",
+        "headline": "{firstName}, *vamos escalar.*",
+        "subtitle": "Preparamos algo especial para você. Role para ver sua proposta personalizada.",
+        "balloons": ["+95% de precisão", "Melhor atribuição", "Redução de CPA"],
+        "ticker": ["Hotmart", "Kiwify", "WordPress", "Google Analytics 4", "Google Tag Manager", "Meta CAPI", "Google Ads", "Stape Server GTM", "Elementor"]
       }
     },
     "proposal": {
