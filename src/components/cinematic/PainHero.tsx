@@ -288,7 +288,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
   const [zoom, setZoom] = useState(1);
 
   useEffect(() => {
-    const CONTENT_HEIGHT = 960;
+    const CONTENT_HEIGHT = 800;
     setZoom(Math.min(1, window.innerHeight / CONTENT_HEIGHT));
   }, []);
 
