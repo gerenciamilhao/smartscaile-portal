@@ -33,9 +33,10 @@ export function ScrollSlide({
   isFirst = false,
   isLast = false,
 }: ScrollSlideProps) {
-  const [zoom, setZoom] = useState(1);
+  const [scaleFactor, setScaleFactor] = useState(1);
   useEffect(() => {
-    setZoom(Math.min(1, window.innerHeight / CONTENT_HEIGHT));
+    const factor = window.innerHeight / CONTENT_HEIGHT;
+    setScaleFactor(factor);
   }, []);
   const [start, end] = range;
   const span = end - start;
@@ -70,18 +71,12 @@ export function ScrollSlide({
   const y       = useTransform(scrollYProgress, yKeys, yVals);
 
   const isVisible = useTransform(opacity, (v) => v > 0.005);
-  const pointer    = useTransform(opacity, (v) => (v > 0.1 ? 'auto' : 'none'));
-  const visibility = useTransform(opacity, (v) =>
-    v > 0.01 ? ('visible' as const) : ('hidden' as const),
-  );
 
   return (
     <motion.div
       style={{
         opacity,
         y,
-        pointerEvents: pointer,
-        visibility,
         position: 'absolute',
         inset: 0,
         zIndex,
@@ -89,10 +84,19 @@ export function ScrollSlide({
         alignItems: 'center',
         justifyContent: 'center',
         overflow: 'hidden',
+        contain: 'layout style paint',
         willChange: 'opacity, transform',
       }}
     >
-      <div style={{ zoom, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{
+        transform: Math.abs(scaleFactor - 1) > 0.05 ? `scale(${scaleFactor})` : undefined,
+        transformOrigin: 'center center',
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
         <LazyContent isVisible={isVisible}>{children}</LazyContent>
       </div>
     </motion.div>

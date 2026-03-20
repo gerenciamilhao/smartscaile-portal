@@ -373,7 +373,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
       <div className="bg-mesh-subtle" style={{ position: 'absolute', inset: 0, opacity: 0.45, pointerEvents: 'none' }} />
 
 
-      <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '640px', margin: '0 auto', padding: '60px 0 40px', textAlign: 'center', zoom: zoom }}>
+      <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '640px', margin: '0 auto', padding: '60px 0 40px', textAlign: 'center', transform: zoom < 1 ? `scale(${zoom})` : undefined, transformOrigin: 'center center' }}>
 
         {/* ─── Badge ─── */}
         <div style={{ position: 'relative', display: 'inline-block', marginBottom: '14px' }}>
