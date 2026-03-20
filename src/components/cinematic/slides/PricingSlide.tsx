@@ -37,6 +37,14 @@ function GoogleAdsLogo({ size = 20, opacity = 0.7 }: { size?: number; opacity?: 
   );
 }
 
+function GTMLogo({ size = 20, opacity = 0.7 }: { size?: number; opacity?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="#246FDB" style={{ opacity }}>
+      <path d="M12.003 0a3 3 0 0 0-2.121 5.121l6.865 6.865-4.446 4.541 1.745 1.836a3.432 3.432 0 0 1 .7.739l.012.011-.001.002a3.432 3.432 0 0 1 .609 1.953 3.432 3.432 0 0 1-.09.78l7.75-7.647c.031-.029.067-.05.098-.08.023-.023.038-.052.06-.076a2.994 2.994 0 0 0-.06-4.166l-9-9A2.99 2.99 0 0 0 12.003 0zM8.63 2.133L.88 9.809a2.998 2.998 0 0 0 0 4.238l7.7 7.75a3.432 3.432 0 0 1-.077-.729 3.432 3.432 0 0 1 3.431-3.431 3.432 3.432 0 0 1 .826.101l-5.523-5.81 4.371-4.373-2.08-2.08c-.903-.904-1.193-2.183-.898-3.342zm3.304 16.004a2.932 2.932 0 0 0-2.931 2.931A2.932 2.932 0 0 0 11.934 24a2.932 2.932 0 0 0 2.932-2.932 2.932 2.932 0 0 0-2.932-2.931z"/>
+    </svg>
+  );
+}
+
 function GA4Logo({ size = 20, opacity = 0.7 }: { size?: number; opacity?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="#E37400" style={{ opacity }}>
@@ -56,7 +64,7 @@ function PricingCard({ plan, opacity, y }: {
   const highlightService = filtered[filtered.length - 1];
 
   return (
-    <motion.div style={{ opacity, y, width: '100%', maxWidth: 480 }}>
+    <motion.div style={{ opacity, y, width: '100%', maxWidth: 580 }}>
       <div
         style={{
           borderRadius: 14,
@@ -230,7 +238,7 @@ export function PricingSlide({ scrollYProgress, pricing, range }: {
   const elemOpacity = useTransform(scrollYProgress, [start + span * 0.25, start + span * 0.42], [0, 1]);
 
   return (
-    <div className="slide-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', paddingBottom: 60, maxWidth: 520, margin: '0 auto' }}>
+    <div className="slide-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', paddingBottom: 60, transform: 'scale(0.88)', transformOrigin: 'center center' }}>
       {/* Orbs decorativos */}
       {[
         { top: '10%', left: '6%', size: 5, dur: 5.5, delay: 0 },
@@ -259,12 +267,19 @@ export function PricingSlide({ scrollYProgress, pricing, range }: {
       </motion.div>
 
       <div style={{ position: 'relative', marginTop: 14, overflow: 'visible' }}>
-        {/* Ícones flutuantes: Meta, Google Ads, GA4 */}
+        {/* Ícones flutuantes: GTM, Meta, Google Ads, GA4 */}
         <motion.div style={{ opacity: elemOpacity, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none', zIndex: 2 }}>
+          <motion.div
+            animate={{ y: [0, -5, 0], rotate: [0, -2, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+            style={{ position: 'absolute', top: '30%', right: -20, padding: 8, borderRadius: 12, background: 'rgba(66,133,244,0.06)', border: '1px solid rgba(66,133,244,0.15)', boxShadow: '0 4px 20px rgba(66,133,244,0.08)' }}
+          >
+            <GTMLogo size={20} opacity={0.75} />
+          </motion.div>
           <motion.div
             animate={{ y: [0, -6, 0], rotate: [0, 3, 0] }}
             transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
-            style={{ position: 'absolute', top: '50%', right: -20, padding: 8, borderRadius: 12, background: 'rgba(0,129,251,0.06)', border: '1px solid rgba(0,129,251,0.15)', boxShadow: '0 4px 20px rgba(0,129,251,0.08)' }}
+            style={{ position: 'absolute', top: '55%', right: -20, padding: 8, borderRadius: 12, background: 'rgba(0,129,251,0.06)', border: '1px solid rgba(0,129,251,0.15)', boxShadow: '0 4px 20px rgba(0,129,251,0.08)' }}
           >
             <MetaLogo size={22} opacity={0.8} />
           </motion.div>
@@ -284,7 +299,7 @@ export function PricingSlide({ scrollYProgress, pricing, range }: {
           </motion.div>
         </motion.div>
 
-        <div style={{ display: 'flex', justifyContent: 'center', maxWidth: 520, width: '100%', margin: '0 auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', maxWidth: 620, width: '100%', margin: '0 auto' }}>
           {pricing.plans.length > 1 ? (
             <PricingCard plan={pricing.plans[1]} opacity={card2Opacity} y={card2Y} />
           ) : (
