@@ -52,7 +52,7 @@ function SourceTag() {
   return (
     <span style={{
       color: 'rgba(96,165,250,0.45)',
-      fontSize: '0.55rem', fontFamily: 'monospace', fontWeight: 400,
+      fontSize: 'clamp(0.4rem, 1.2vw, 0.55rem)', fontFamily: 'monospace', fontWeight: 400,
       flexShrink: 0, letterSpacing: '0.02em',
     }}>
       client-side
@@ -68,7 +68,7 @@ function StatusChip({ status, failLabel }: { status: PainRowStatus; failLabel?: 
         display: 'inline-flex', alignItems: 'center', gap: '4px',
         padding: '2px 7px', borderRadius: '4px',
         background: 'rgba(74,222,128,0.12)', border: '1px solid rgba(74,222,128,0.26)',
-        color: '#4ADE80', fontSize: '0.6rem', fontFamily: 'monospace', fontWeight: 700,
+        color: '#4ADE80', fontSize: 'clamp(0.45rem, 1.3vw, 0.6rem)', fontFamily: 'monospace', fontWeight: 700,
         flexShrink: 0,
       }}>
         <motion.span
@@ -94,7 +94,7 @@ function StatusChip({ status, failLabel }: { status: PainRowStatus; failLabel?: 
       display: 'inline-flex', alignItems: 'center', gap: '4px',
       padding: '2px 7px', borderRadius: '4px',
       background: c.bg, border: `1px solid ${c.border}`,
-      color: c.text, fontSize: '0.6rem', fontFamily: 'monospace', fontWeight: 700,
+      color: c.text, fontSize: 'clamp(0.45rem, 1.3vw, 0.6rem)', fontFamily: 'monospace', fontWeight: 700,
       flexShrink: 0,
     }}>
       <XCircle size={8} />
@@ -383,19 +383,19 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#FF5F56' }} />
                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#FFBD2E' }} />
                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#27C93F' }} />
-                <span style={{ marginLeft: '8px', color: '#4B5563', fontSize: '0.65rem', fontFamily: 'monospace' }}>live-events.js</span>
+                <span style={{ marginLeft: '8px', color: '#4B5563', fontSize: 'clamp(0.5rem, 1.4vw, 0.65rem)', fontFamily: 'monospace' }}>live-events.js</span>
               </div>
-              <span className="animate-blocked-flash" style={{ color: '#EF4444', fontSize: '0.6rem', fontWeight: 600, letterSpacing: '0.05em' }}>
+              <span className="animate-blocked-flash" style={{ color: '#EF4444', fontSize: 'clamp(0.45rem, 1.3vw, 0.6rem)', fontWeight: 600, letterSpacing: '0.05em' }}>
                 ISSUES DETECTED
               </span>
             </div>
 
             {/* Stream header */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', borderBottom: '1px solid #1a1a1a' }}>
-              <span style={{ color: '#9CA3AF', fontSize: '0.72rem', fontFamily: 'monospace' }}>Event stream</span>
+              <span style={{ color: '#9CA3AF', fontSize: 'clamp(0.55rem, 1.5vw, 0.72rem)', fontFamily: 'monospace' }}>Event stream</span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                 <span className="live-dot-red" />
-                <span style={{ color: '#EF4444', fontSize: '0.6rem', fontWeight: 600, letterSpacing: '0.05em' }}>DEGRADED</span>
+                <span style={{ color: '#EF4444', fontSize: 'clamp(0.45rem, 1.3vw, 0.6rem)', fontWeight: 600, letterSpacing: '0.05em' }}>DEGRADED</span>
               </div>
             </div>
 
@@ -420,8 +420,8 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
                       style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '10px',
-                        padding: '7px 10px',
+                        gap: 'clamp(4px, 1.5vw, 10px)',
+                        padding: '7px clamp(6px, 1.5vw, 10px)',
                         borderRadius: '8px',
                         marginBottom: '5px',
                         position: 'relative',
@@ -430,10 +430,10 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
                     >
                       {/* Platform badge */}
                       <div style={{
-                        width: '28px', height: '28px', borderRadius: '7px',
+                        width: 'clamp(22px, 5vw, 28px)', height: 'clamp(22px, 5vw, 28px)', borderRadius: '7px',
                         background: row.platform.bg, border: `1px solid ${row.platform.color}44`,
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        flexShrink: 0, color: row.platform.color, fontSize: '0.55rem', fontWeight: 700, fontFamily: 'monospace',
+                        flexShrink: 0, color: row.platform.color, fontSize: 'clamp(0.4rem, 1.2vw, 0.55rem)', fontWeight: 700, fontFamily: 'monospace',
                         opacity: isFail ? 0.5 : 1,
                       }}>
                         {row.platform.initial}
@@ -442,7 +442,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
                       {/* Event name */}
                       <span style={{
                         color: isFail ? '#6B7280' : '#9CA3AF',
-                        fontSize: '0.72rem', fontFamily: 'monospace', flex: 1,
+                        fontSize: 'clamp(0.55rem, 1.5vw, 0.72rem)', fontFamily: 'monospace', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                         textDecoration: isFail ? 'line-through' : 'none',
                         textDecorationColor: 'rgba(239,68,68,0.3)',
                       }}>
@@ -456,7 +456,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
                       {/* Value */}
                       <span style={{
                         color: isFail ? '#4B5563' : '#77BDAC',
-                        fontWeight: 700, fontSize: '0.72rem', fontVariantNumeric: 'tabular-nums',
+                        fontWeight: 700, fontSize: 'clamp(0.55rem, 1.5vw, 0.72rem)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap',
                         textDecoration: isFail ? 'line-through' : 'none',
                         textDecorationColor: 'rgba(239,68,68,0.3)',
                       }}>
@@ -475,13 +475,13 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
                   <span key={logo} style={{
                     padding: '2px 8px', borderRadius: '4px',
                     background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.08)',
-                    color: '#6B7280', fontSize: '0.6rem', fontWeight: 600,
+                    color: '#6B7280', fontSize: 'clamp(0.45rem, 1.3vw, 0.6rem)', fontWeight: 600,
                   }}>
                     {logo}
                   </span>
                 ))}
               </div>
-              <span style={{ color: '#EF4444', fontSize: '0.6rem', fontFamily: 'monospace' }}>3 platforms affected</span>
+              <span style={{ color: '#EF4444', fontSize: 'clamp(0.45rem, 1.3vw, 0.6rem)', fontFamily: 'monospace', whiteSpace: 'nowrap' }}>3 platforms affected</span>
             </div>
           </div>
 
