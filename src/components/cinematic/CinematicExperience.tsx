@@ -56,13 +56,15 @@ export default function CinematicExperience({ initialData, clienteSlug }: Cinema
             initial={initialData ? { opacity: 1 } : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
           >
             <UnlockedExperience clientData={clientData} onExit={() => {
               document.cookie = 'smartscaile-token=; path=/; max-age=0';
-              setPageState('locked');
-              setClientData(null);
-              window.scrollTo(0, 0);
+              window.scrollTo({ top: 0 });
+              setTimeout(() => {
+                setPageState('locked');
+                setClientData(null);
+              }, 100);
             }} />
           </motion.div>
         )}

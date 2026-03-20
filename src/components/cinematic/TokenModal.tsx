@@ -168,7 +168,7 @@ export default function TokenModal({ open, onClose, onSuccess }: TokenModalProps
                         : '1px solid rgba(255,255,255,0.10)',
                       background: 'rgba(255,255,255,0.04)',
                       color: '#F3F4F6',
-                      fontSize: '15px',
+                      fontSize: '16px',
                       fontFamily: 'var(--font-mono), monospace',
                       letterSpacing: '0.1em',
                       outline: 'none',
