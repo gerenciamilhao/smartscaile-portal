@@ -8,8 +8,8 @@ interface ProgressIndicatorProps {
   sections: string[];
 }
 
-// Midpoints — exatamente no centro de cada slide range (8 slides)
-const SLIDE_MIDS = [0.11, 0.23, 0.35, 0.47, 0.59, 0.71, 0.83, 0.945];
+// Midpoints — exatamente no centro de cada slide range (6 slides, até Implementação)
+const SLIDE_MIDS = [0.11, 0.23, 0.35, 0.47, 0.59, 0.71];
 
 // Each slide's exact range boundaries (from ProposalScroll R)
 const SLIDE_RANGES: [number, number][] = [
@@ -19,19 +19,17 @@ const SLIDE_RANGES: [number, number][] = [
   [0.41, 0.53],
   [0.53, 0.65],
   [0.65, 0.77],
-  [0.77, 0.89],
-  [0.89, 1.00],
 ];
 
 export function ProgressIndicator({ scrollYProgress, sections }: ProgressIndicatorProps) {
   const isMobile = useIsMobile();
   const overallOpacity = useTransform(
     scrollYProgress,
-    [0, 0.04, 0.08, 0.96, 1.0],
+    [0, 0.04, 0.08, 0.74, 0.78],
     [0, 0, 1, 1, 0],
   );
 
-  const thumbPercent = useTransform(scrollYProgress, [0.06, 1.0], [0, 100]);
+  const thumbPercent = useTransform(scrollYProgress, [0.06, 0.77], [0, 100]);
   const thumbTop = useTransform(thumbPercent, (v) => `${Math.min(100, Math.max(0, v))}%`);
 
   return (

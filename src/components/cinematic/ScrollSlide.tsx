@@ -21,7 +21,7 @@ interface ScrollSlideProps {
  * Dessa forma a transição entre slides parece um crossfade elegante,
  * não um bloco duro. O slide atual some enquanto o próximo aparece.
  */
-const CONTENT_HEIGHT = 860;
+const CONTENT_HEIGHT = 960;
 
 export function ScrollSlide({
   children,

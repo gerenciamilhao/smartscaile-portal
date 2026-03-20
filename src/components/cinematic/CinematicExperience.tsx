@@ -13,7 +13,7 @@ import type { ClientData } from '@/lib/clients';
 
 type PageState = 'locked' | 'unlocked';
 
-const SECTION_LABELS = ['Início', 'Auditoria', 'Escala', 'CPA', 'Dados', 'Implementação', 'Investimento', 'Proposta'];
+const SECTION_LABELS = ['Início', 'Auditoria', 'Escala', 'CPA', 'Dados', 'Implementação'];
 
 interface CinematicExperienceProps {
   initialData?: ClientData | null;

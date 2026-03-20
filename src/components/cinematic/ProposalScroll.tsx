@@ -10,6 +10,7 @@ import {
   Target, Cookie, Zap,
   MessageCircle, ExternalLink,
   BarChart2, Activity,
+  Settings, Server, Database, Webhook, ShieldCheck, Headphones,
 } from 'lucide-react';
 
 interface ProposalScrollProps {
@@ -266,7 +267,7 @@ interface TerminalLine {
   delay?: number;   // ms before this line starts
 }
 
-function TerminalTyping({ lines, isMobile = false }: { lines: TerminalLine[]; isMobile?: boolean }) {
+function TerminalTyping({ lines, isMobile = false, fontSize }: { lines: TerminalLine[]; isMobile?: boolean; fontSize?: string }) {
   const [visibleChars, setVisibleChars] = useState<number[]>(lines.map(() => 0));
   const [activeLine, setActiveLine] = useState(0);
   const [loopKey, setLoopKey] = useState(0);
@@ -325,7 +326,7 @@ function TerminalTyping({ lines, isMobile = false }: { lines: TerminalLine[]; is
         backdropFilter: isMobile ? 'none' : 'blur(16px)',
         overflow: 'hidden',
         fontFamily: 'var(--font-mono), monospace',
-        fontSize: '0.7rem',
+        fontSize: fontSize ?? '0.7rem',
         lineHeight: 1.8,
         boxShadow: '0 12px 40px rgba(0,0,0,0.4), 0 0 1px rgba(119,189,172,0.12), inset 0 1px 0 rgba(255,255,255,0.03)',
       }}>
@@ -505,7 +506,7 @@ function HeaderSlideContent({ scrollYProgress, firstName, formattedDate, diagnos
           transformOrigin: 'left center',
           maxWidth: 520,
         }}>
-          <TerminalTyping lines={terminalLines} isMobile={isMobile} />
+          <TerminalTyping lines={terminalLines} isMobile={isMobile} fontSize={isMobile ? '0.55rem' : '0.7rem'} />
         </div>
       </motion.div>
 
@@ -928,7 +929,7 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
         <div className="flex items-center gap-2">
           <span className="live-dot" />
           <span className="text-[0.6rem] font-medium tracking-wide text-[#6B7280]" style={{ fontFamily: 'var(--font-mono), monospace' }}>
-            02 / 05
+            02 / 06
           </span>
         </div>
         <SectionBadge label={diagnosis.copy?.audit?.badge ?? 'Auditoria Técnica'} />
@@ -1196,7 +1197,7 @@ function ScaleGoalSlide({ scrollYProgress, goal, range }: {
         <div className="flex items-center gap-2">
           <span className="live-dot" />
           <span className="text-[0.6rem] font-medium tracking-wide text-[#6B7280]" style={{ fontFamily: 'var(--font-mono), monospace' }}>
-            03 / 07
+            03 / 06
           </span>
         </div>
         <SectionBadge label="Meta de Escala" />
@@ -1223,7 +1224,7 @@ function ScaleGoalSlide({ scrollYProgress, goal, range }: {
 
       {/* Counter — clean, minimal */}
       <motion.div style={{ opacity: barOpacity, y: barY }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, whiteSpace: 'nowrap' }}>
           <span style={{
             fontSize: '0.75rem', color: '#4B5563',
             fontFamily: 'var(--font-mono), monospace', fontWeight: 500,
@@ -1481,7 +1482,7 @@ function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
         <div className="flex items-center gap-2">
           <span className="live-dot" />
           <span className="text-[0.6rem] font-medium tracking-wide text-[#6B7280]" style={{ fontFamily: 'var(--font-mono), monospace' }}>
-            04 / 07
+            04 / 06
           </span>
         </div>
         <SectionBadge label="Meta de CPA" />
@@ -1523,7 +1524,7 @@ function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
               }}>
                 CPA médio
               </span>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, whiteSpace: 'nowrap' }}>
                 <span style={{ fontSize: '0.7rem', color: '#4B5563', fontFamily: 'var(--font-mono), monospace', fontWeight: 500 }}>R$</span>
                 <span style={{
                   fontFamily: 'var(--font-mono), monospace', fontWeight: 600,
@@ -1640,6 +1641,22 @@ function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
   );
 }
 
+// ─── Service icon matcher ─────────────────────────────────────────────────────
+function getServiceIcon(title: string) {
+  const t = title.toLowerCase();
+  if (t.includes('tag manager') || t.includes('gtm')) return Settings;
+  if (t.includes('servidor') || t.includes('server') || t.includes('stape')) return Server;
+  if (t.includes('meta') || t.includes('pixel')) return Target;
+  if (t.includes('whatsapp')) return MessageCircle;
+  if (t.includes('banco de dados') || t.includes('database')) return Database;
+  if (t.includes('webhook') || t.includes('purchase')) return Webhook;
+  if (t.includes('ga4') || t.includes('analytics')) return BarChart2;
+  if (t.includes('google ads')) return Zap;
+  if (t.includes('acompanhamento') || t.includes('suporte')) return Headphones;
+  if (t.includes('reestrutura')) return Settings;
+  return ShieldCheck;
+}
+
 // ─── Pricing Card — ROAS ComparisonCard DNA (extracted for hooks rule) ────────
 function PricingCard({ plan, opacity, y }: {
   plan: PricingPlan;
@@ -1661,7 +1678,7 @@ function PricingCard({ plan, opacity, y }: {
   const highlightService = plan.services[plan.services.length - 1];
 
   return (
-    <motion.div style={{ opacity, y, width: '100%', maxWidth: 440 }}>
+    <motion.div style={{ opacity, y, width: '100%', maxWidth: 580 }}>
       {/* Card with breathing glow — hero solo */}
       <motion.div
         animate={{
@@ -1731,7 +1748,7 @@ function PricingCard({ plan, opacity, y }: {
 
         {/* ── Hero investment number ── */}
         <div style={{ padding: '14px 20px 0', textAlign: 'center' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'baseline', gap: 6 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'baseline', gap: 6, whiteSpace: 'nowrap' }}>
             <span style={{
               fontFamily: 'var(--font-mono), monospace', fontWeight: 500,
               fontSize: '0.95rem', lineHeight: 1, color: numCol,
@@ -1790,29 +1807,44 @@ function PricingCard({ plan, opacity, y }: {
 
         {/* ── Core service rows ── */}
         <div style={{ padding: '6px 16px 0' }}>
-          {coreServices.map((service, i) => (
-            <div key={i} style={{
-              marginBottom: 6,
-              padding: '9px 14px', borderRadius: 8,
-              background: 'rgba(255,255,255,0.025)',
-              borderLeft: '2px solid rgba(255,255,255,0.07)',
-            }}>
-              <div style={{
-                fontSize: '0.8rem', color: '#F3F4F6',
-                lineHeight: 1.5, fontWeight: 500,
+          {coreServices.map((service, i) => {
+            const Icon = getServiceIcon(service.title);
+            return (
+              <div key={i} style={{
+                marginBottom: 5,
+                padding: '10px 14px', borderRadius: 10,
+                background: 'rgba(255,255,255,0.02)',
+                border: '1px solid rgba(255,255,255,0.04)',
+                display: 'flex', alignItems: 'flex-start', gap: 12,
               }}>
-                {service.title}
-              </div>
-              {service.detail && (
                 <div style={{
-                  fontSize: '0.7rem', color: 'rgba(119,189,172,0.7)',
-                  marginTop: 3, lineHeight: 1.45,
+                  flexShrink: 0, marginTop: 2,
+                  width: 28, height: 28, borderRadius: 8,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  background: 'rgba(119,189,172,0.06)',
+                  border: '1px solid rgba(119,189,172,0.10)',
                 }}>
-                  {service.detail}
+                  <Icon size={14} color="rgba(119,189,172,0.55)" strokeWidth={1.5} />
                 </div>
-              )}
-            </div>
-          ))}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{
+                    fontSize: '0.78rem', color: '#E5E7EB',
+                    lineHeight: 1.5, fontWeight: 500,
+                  }}>
+                    {service.title}
+                  </div>
+                  {service.detail && (
+                    <div style={{
+                      fontSize: '0.65rem', color: 'rgba(119,189,172,0.55)',
+                      marginTop: 2, lineHeight: 1.4,
+                    }}>
+                      {service.detail}
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         {/* ── Highlight service (acompanhamento) — visually distinct ── */}
@@ -1952,14 +1984,14 @@ function PricingSlide({ scrollYProgress, pricing, range }: {
       {/* Two cards + floating logos wrapper */}
       <div style={{ position: 'relative', marginTop: 14, overflow: 'visible' }}>
 
-        {/* ── Floating platform logos — ao redor do card único ── */}
+        {/* ── Floating platform logos — laterais, sobrepostas ao card ── */}
         <motion.div style={{ opacity: elemOpacity, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none', zIndex: 2 }}>
-          {/* Meta (left top) */}
+          {/* Meta (right middle — na altura da row Meta Pixel) */}
           <motion.div
             animate={{ y: [0, -6, 0], rotate: [0, 3, 0] }}
             transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
             style={{
-              position: 'absolute', top: '12%', left: -90,
+              position: 'absolute', top: '50%', right: -20,
               padding: 8, borderRadius: 12,
               background: 'rgba(0,129,251,0.06)',
               border: '1px solid rgba(0,129,251,0.15)',
@@ -1969,12 +2001,12 @@ function PricingSlide({ scrollYProgress, pricing, range }: {
             <MetaLogo size={22} opacity={0.8} />
           </motion.div>
 
-          {/* Google Ads (right top) */}
+          {/* Google Ads (left middle — na altura da row Google Ads) */}
           <motion.div
             animate={{ y: [0, -7, 0], rotate: [0, 4, 0] }}
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1.2 }}
             style={{
-              position: 'absolute', top: '20%', right: -95,
+              position: 'absolute', top: '58%', left: -20,
               padding: 8, borderRadius: 12,
               background: 'rgba(66,133,244,0.06)',
               border: '1px solid rgba(66,133,244,0.15)',
@@ -1984,12 +2016,12 @@ function PricingSlide({ scrollYProgress, pricing, range }: {
             <GoogleAdsLogo size={22} opacity={0.8} />
           </motion.div>
 
-          {/* GA4 (left bottom) */}
+          {/* GA4 (left, below Meta) */}
           <motion.div
             animate={{ y: [0, -4, 0], rotate: [0, -3, 0] }}
             transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
             style={{
-              position: 'absolute', top: '60%', left: -85,
+              position: 'absolute', top: '32%', left: -20,
               padding: 8, borderRadius: 12,
               background: 'rgba(227,116,0,0.06)',
               border: '1px solid rgba(227,116,0,0.15)',
@@ -1998,11 +2030,10 @@ function PricingSlide({ scrollYProgress, pricing, range }: {
           >
             <GA4Logo size={20} opacity={0.7} />
           </motion.div>
-
         </motion.div>
 
         {/* ── Card único (plano completo) ── */}
-        <div style={{ display: 'flex', justifyContent: 'center', maxWidth: 480, width: '100%', margin: '0 auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', maxWidth: 620, width: '100%', margin: '0 auto' }}>
           {pricing.plans.length > 1 ? (
             <PricingCard
               plan={pricing.plans[1]}
@@ -2081,7 +2112,7 @@ function DataLossSlide({ scrollYProgress, goal, range }: {
         <div className="flex items-center gap-2">
           <span className="live-dot" />
           <span className="text-[0.6rem] font-medium tracking-wide text-[#6B7280]" style={{ fontFamily: 'var(--font-mono), monospace' }}>
-            05 / 07
+            05 / 06
           </span>
         </div>
         <SectionBadge label="Perda de Dados" />
@@ -2163,7 +2194,7 @@ function DataLossSlide({ scrollYProgress, goal, range }: {
             <span style={{ fontSize: '0.55rem', fontWeight: 400, letterSpacing: '0.04em', color: lossRgba(0.5) }}>
               perda/mês
             </span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
               <div style={{
                 width: 3, height: 3, borderRadius: '50%',
                 background: lossRgba(0.6 + 0.4 * normalizedValue),
@@ -2375,7 +2406,7 @@ function OpportunitiesSlide({ scrollYProgress, opportunities, range }: {
         <div className="flex items-center gap-2">
           <span className="live-dot" />
           <span className="text-[0.6rem] font-medium tracking-wide text-[#6B7280]" style={{ fontFamily: 'var(--font-mono), monospace' }}>
-            06 / 07
+            06 / 06
           </span>
         </div>
         <SectionBadge label="Implementação" />

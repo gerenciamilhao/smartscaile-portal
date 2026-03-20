@@ -168,7 +168,7 @@ export default function Hero({ clientData }: HeroProps) {
   // Zoom adaptativo — mesma lógica do PainHero
   const [zoom, setZoom] = useState(1);
   useEffect(() => {
-    const CONTENT_HEIGHT = 860;
+    const CONTENT_HEIGHT = 960;
     setZoom(Math.min(1, window.innerHeight / CONTENT_HEIGHT));
   }, []);
   const defaultTickerNames = tools.map(t => t.name);
