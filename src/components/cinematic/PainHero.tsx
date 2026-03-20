@@ -6,6 +6,7 @@ import {
   AlertTriangle, XCircle, TrendingUp, Target, BarChart2,
 } from 'lucide-react';
 import SlideToUnlock, { type SlideToUnlockHandle } from '@/components/ui/SlideToUnlock';
+import type { ClientData } from '@/lib/clients';
 
 export interface PainHeroHandle {
   resetSlider: () => void;
@@ -13,14 +14,14 @@ export interface PainHeroHandle {
 
 interface PainHeroProps {
   onUnlock: () => void;
+  clientData?: ClientData | null;
 }
 
 // ─── Ticker ───────────────────────────────────────────────────────────────────
-const TICKER_NAMES = [
-  'Google Analytics 4', 'Meta Pixel', 'Google Ads', 'TikTok Pixel',
-  'Facebook CAPI', 'Shopify', 'WooCommerce', 'Klaviyo',
+const DEFAULT_TICKER_NAMES = [
+  'Hotmart', 'Kiwify', 'Meta Pixel', 'Google Ads',
+  'Google Analytics 4', 'TikTok Pixel', 'Facebook CAPI', 'Elementor',
 ];
-const tickerItems = [...TICKER_NAMES, ...TICKER_NAMES];
 
 // ─── Purchase pool (same as Hero) ────────────────────────────────────────────
 const PURCHASE_POOL = [
@@ -114,7 +115,8 @@ function StatusChip({ status, failLabel }: { status: PainRowStatus; failLabel?: 
 }
 
 // ─── Component ──────────────────────────────────────────────────────────────
-const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ onUnlock }, ref) {
+const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ onUnlock, clientData }, ref) {
+  const painCopy = clientData?.diagnosis?.copy?.painHero;
   const sliderRef = useRef<SlideToUnlockHandle>(null);
 
   useImperativeHandle(ref, () => ({
@@ -185,7 +187,8 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, scale: 0.95, filter: 'blur(8px)' }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="bg-pain-mesh"
+      suppressHydrationWarning
+      className="bg-pain-mesh select-none"
       style={{
         position: 'relative',
         minHeight: '100vh',
@@ -193,7 +196,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '80px 0 48px',
+        padding: '60px 20px 40px',
         overflow: 'hidden',
       }}
     >
@@ -202,7 +205,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
       <div className="bg-mesh-subtle" style={{ position: 'absolute', inset: 0, opacity: 0.45, pointerEvents: 'none' }} />
 
 
-      <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '800px', margin: '0 auto', padding: '0 20px', textAlign: 'center' }}>
+      <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '640px', margin: '0 auto', padding: '0', textAlign: 'center' }}>
 
         {/* ─── Badge ─── */}
         <div style={{ position: 'relative', display: 'inline-block', marginBottom: '14px' }}>
@@ -235,10 +238,10 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
             transition={{ duration: 0.5, delay: 0.1 }}
           >
             <div className="animate-pulse-pain" style={{
-              display: 'inline-flex', alignItems: 'center', gap: '8px',
-              padding: '6px 16px', borderRadius: '9999px',
+              display: 'inline-flex', alignItems: 'center', gap: '6px',
+              padding: '5px 14px', borderRadius: '9999px',
               border: '1px solid rgba(239,68,68,0.3)', background: 'rgba(239,68,68,0.08)',
-              color: '#EF4444', fontSize: '0.75rem', fontWeight: 500,
+              color: '#EF4444', fontSize: '0.65rem', fontWeight: 500,
               letterSpacing: '0.1em', textTransform: 'uppercase',
             }}>
               <motion.span
@@ -246,7 +249,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
                 transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
                 style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', background: '#EF4444', flexShrink: 0 }}
               />
-              Client-Side Tracking
+              {painCopy?.badge ?? 'Client-Side Tracking'}
             </div>
           </motion.div>
         </div>
@@ -257,15 +260,15 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7, delay: 0.2 }}
           style={{
-            width: '100%', overflow: 'hidden', marginBottom: '30px',
+            width: '100%', maxWidth: '560px', overflow: 'hidden', marginBottom: '24px', margin: '0 auto 24px',
             WebkitMaskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
             maskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
           }}
         >
           <div className="animate-ticker">
-            {tickerItems.map((name, i) => (
-              <div key={i} style={{ display: 'inline-flex', alignItems: 'center', padding: '6px 18px', borderRadius: '9999px', background: 'transparent', border: '1px solid rgba(239,68,68,0.1)', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                <span style={{ color: '#6B7280', fontSize: '0.78rem', fontWeight: 400 }}>{name}</span>
+            {[...(painCopy?.ticker ?? DEFAULT_TICKER_NAMES), ...(painCopy?.ticker ?? DEFAULT_TICKER_NAMES)].map((name, i) => (
+              <div key={i} style={{ display: 'inline-flex', alignItems: 'center', padding: '4px 14px', borderRadius: '9999px', background: 'transparent', border: '1px solid rgba(239,68,68,0.1)', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                <span style={{ color: '#6B7280', fontSize: '0.65rem', fontWeight: 400 }}>{name}</span>
               </div>
             ))}
           </div>
@@ -279,13 +282,27 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
           className="font-serif"
           style={{
             fontWeight: 700, lineHeight: 1.12, color: '#F3F4F6',
-            marginBottom: '24px', fontSize: 'clamp(2.4rem, 9vw, 3.75rem)',
+            marginBottom: '18px', fontSize: 'clamp(1.8rem, 7vw, 2.8rem)',
           }}
         >
-          Cada dia sem{' '}
-          <span className="text-glow-red" style={{ color: '#EF4444' }}>Server-Side</span>
-          <br />
-          é dinheiro perdido.
+          {painCopy?.headline ? (
+            (() => {
+              const parts = painCopy.headline.split(/(\*[^*]+\*)/g);
+              return parts.map((part: string, i: number) => {
+                if (part.startsWith('*') && part.endsWith('*')) {
+                  return <span key={i} className="text-glow-red" style={{ color: '#EF4444' }}>{part.slice(1, -1)}</span>;
+                }
+                return <span key={i}>{part}</span>;
+              });
+            })()
+          ) : (
+            <>
+              Cada dia sem{' '}
+              <span className="text-glow-red" style={{ color: '#EF4444' }}>Server-Side</span>
+              <br />
+              é dinheiro perdido.
+            </>
+          )}
         </motion.h1>
 
         {/* ─── Subtitle ─── */}
@@ -293,11 +310,9 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.35, ease: 'easeOut' }}
-          style={{ color: '#9CA3AF', fontSize: '1rem', lineHeight: 1.7, marginBottom: '16px', maxWidth: '520px', marginLeft: 'auto', marginRight: 'auto' }}
+          style={{ color: '#9CA3AF', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '12px', maxWidth: '420px', marginLeft: 'auto', marginRight: 'auto' }}
         >
-          As suas campanhas estão a otimizar com dados incompletos.
-          <br />
-          <span style={{ color: '#6B7280' }}>Descubra o que está a perder.</span>
+          {painCopy?.subtitle ?? 'Eventos bloqueados, conversões perdidas. Veja o impacto real no seu investimento.'}
         </motion.p>
 
         {/* ── 3 mini balões acima do card (tema vermelho) ── */}
@@ -309,9 +324,9 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
         >
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', marginBottom: '56px' }}>
             {[
-              { Icon: XCircle,   text: 'Baixa performance das campanhas' },
-              { Icon: BarChart2, text: 'Má atribuição'                   },
-              { Icon: Target,    text: 'Dificuldade em escalar'          },
+              { Icon: XCircle,   text: painCopy?.balloons?.[0] ?? 'Conversões invisíveis' },
+              { Icon: BarChart2, text: painCopy?.balloons?.[1] ?? 'Má atribuição'      },
+              { Icon: Target,    text: painCopy?.balloons?.[2] ?? 'Dificuldade em escalar' },
             ].map(({ Icon, text }, i) => (
               <motion.div
                 key={i}
@@ -349,7 +364,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
           initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          style={{ maxWidth: '540px', margin: '0 auto', position: 'relative', paddingBottom: '44px', transform: 'translateX(5%)' }}
+          style={{ maxWidth: '460px', margin: '0 auto', position: 'relative', paddingBottom: '40px', transform: 'translateX(5%)' }}
         >
           {/* Card with 3D perspective (same as Hero) */}
           <div
@@ -480,14 +495,14 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
             initial={{ opacity: 0, scale: 0.82, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 1.1, ease: [0.16, 1, 0.3, 1] }}
-            style={{ position: 'absolute', bottom: '-10px', left: '-28px', display: 'flex', gap: '8px', zIndex: 10 }}
+            style={{ position: 'absolute', bottom: '-6px', left: '-16px', display: 'flex', gap: '6px', zIndex: 10 }}
           >
             {/* EMQ badge */}
             <motion.div
               className="animate-float"
               style={{
-                display: 'flex', alignItems: 'center', gap: '10px',
-                padding: '10px 14px', borderRadius: '14px',
+                display: 'flex', alignItems: 'center', gap: '8px',
+                padding: '8px 12px', borderRadius: '12px',
                 background: 'rgba(255,255,255,0.04)',
                 backdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
                 WebkitBackdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
@@ -501,17 +516,17 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
                   transition={{ duration: 2.2, repeat: Infinity, ease: 'easeOut', delay: 0.8 }}
                   style={{ position: 'absolute', inset: '-5px', borderRadius: '11px', background: 'rgba(239,68,68,0.12)' }}
                 />
-                <div style={{ width: '30px', height: '30px', borderRadius: '9px', background: 'rgba(239,68,68,0.09)', border: '1px solid rgba(239,68,68,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Target size={14} color="#EF4444" strokeWidth={2} />
+                <div style={{ width: '24px', height: '24px', borderRadius: '7px', background: 'rgba(239,68,68,0.09)', border: '1px solid rgba(239,68,68,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Target size={12} color="#EF4444" strokeWidth={2} />
                 </div>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: '3px', lineHeight: 1 }}>
-                  <span style={{ color: '#EF4444', fontWeight: 700, fontSize: '0.72rem', fontFamily: 'monospace', letterSpacing: '0.05em' }}>EMQ</span>
-                  <span style={{ color: '#EF4444', fontWeight: 700, fontSize: '1.15rem', fontFamily: 'monospace' }}>4.5</span>
-                  <span style={{ color: 'rgba(239,68,68,0.5)', fontWeight: 600, fontSize: '0.72rem', fontFamily: 'monospace' }}>/10</span>
+                  <span style={{ color: '#EF4444', fontWeight: 700, fontSize: '0.6rem', fontFamily: 'monospace', letterSpacing: '0.05em' }}>EMQ</span>
+                  <span style={{ color: '#EF4444', fontWeight: 700, fontSize: '0.95rem', fontFamily: 'monospace' }}>4.5</span>
+                  <span style={{ color: 'rgba(239,68,68,0.5)', fontWeight: 600, fontSize: '0.6rem', fontFamily: 'monospace' }}>/10</span>
                 </div>
-                <div style={{ color: '#4B5563', fontSize: '0.54rem', fontFamily: 'monospace', letterSpacing: '0.08em', textTransform: 'uppercase', lineHeight: 1 }}>
+                <div style={{ color: '#4B5563', fontSize: '0.45rem', fontFamily: 'monospace', letterSpacing: '0.08em', textTransform: 'uppercase', lineHeight: 1 }}>
                   Event Match Quality
                 </div>
               </div>

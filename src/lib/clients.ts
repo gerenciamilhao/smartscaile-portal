@@ -108,10 +108,28 @@ export interface SlideCtaCopy {
   subtitle: string;
 }
 
+export interface PageHeroCopy {
+  badge: string;
+  headline: string;
+  subtitle: string;
+  balloons: string[];
+  ticker: string[];
+}
+
+export interface PagePainHeroCopy {
+  badge: string;
+  headline: string;
+  subtitle: string;
+  balloons: string[];
+  ticker: string[];
+}
+
 export interface SlideCopy {
   hero: SlideHeroCopy;
   audit: SlideAuditCopy;
   cta?: SlideCtaCopy;
+  pageHero?: PageHeroCopy;
+  painHero?: PagePainHeroCopy;
 }
 
 export interface ClientDiagnosis {

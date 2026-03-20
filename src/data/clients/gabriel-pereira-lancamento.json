@@ -1,0 +1,177 @@
+{
+  "client": {
+    "id": "gabriel-pereira-lancamento",
+    "name": "Gabriel Pereira",
+    "company": "Lançamento próprio (nome TBD)",
+    "type": "prospect",
+    "contact": {
+      "representative": "Carlos Korber",
+      "label": "smartscaile martech"
+    },
+    "instagram": "gabrielgpere",
+    "relatedClient": "gabriel-pereira",
+    "createdAt": "2026-03-18"
+  },
+  "meetings": [
+    {
+      "id": "meet-001",
+      "date": "2026-03-18",
+      "title": "Reunião Inicial — Discovery (cenário lançamento)",
+      "duration": "00:53:32",
+      "participants": ["Carlos Korber", "Ramon Lemos", "Gabriel Pereira"],
+      "status": "completed",
+      "summary": "Cenário 2 da reunião de discovery com Gabriel Pereira. Gabriel quer lançar produto próprio para infoprodutores que faturam R$50k+ e querem escalar. Estado atual: zero de tudo. Sem LP, sem nome de negócio, nada implementado. Funil multi-etapas com low ticket R$47, webinário gravado, produto principal R$1.497 e recorrência R$6.500. Meta: CAC zerado no ingresso. Precisa de tracking profissional desde o dia 1.",
+      "topics": [
+        {
+          "title": "Lançamento Próprio — Setup do Zero",
+          "notes": "Estado atual: 'zero, zero de tudo'. Sem LP, sem nome de negócio, nada implementado. Vai usar Instagram pessoal do Gabriel (@gabrielgpere). Nicho: infoprodutores que faturam R$50k+ consistente (nota de corte) e querem escalar. Público-alvo: infoprodutores fazendo R$100-300k/lançamento mas que não escalam, batem no teto."
+        },
+        {
+          "title": "Funil Planejado",
+          "notes": "Funil multi-etapas: Anúncio Meta > Página de vendas low-ticket R$47 (CPA objetivo R$47, aceita até R$55-60) > Página de obrigado > Redireciona para grupo WhatsApp > 7 dias depois: Webinário gravado via Hot Webinar > Venda do produto principal. Gravações entre ingresso e produto: ~R$100 e poucos. Dentro do WhatsApp: formulário de qualificação (nível A, B, C). Mensagens X1 via API da Meta com ManyChat (NCET). Conversão esperada no webinário: 10-15%."
+        },
+        {
+          "title": "Pricing e Modelo de Negócio",
+          "notes": "Ingresso: R$47. Gravações: ~R$100 e poucos. Produto principal: entrada de R$1.497 + recorrência de R$6.500. Meta: CAC zerado no ingresso (CPA <= R$47, aceita até R$55-60). Gabriel tem 100% de autonomia neste projeto (diferente da Atom Traders)."
+        }
+      ],
+      "decisions": [
+        "Setup de tracking profissional desde o dia 1 (server-side)",
+        "Eventos custom para cada etapa do funil (ingresso, WhatsApp, webinário, venda, upsell)",
+        "Conversões server-side com dedup nativa",
+        "Usar Stape como plataforma de server-side (20EUR/mês)"
+      ],
+      "nextSteps": [
+        {
+          "task": "Enviar proposta para lançamento próprio",
+          "owner": "smartscaile.",
+          "deadline": "2026-03-19",
+          "status": "pending"
+        },
+        {
+          "task": "Gabriel definir nome do negócio e criar LP",
+          "owner": "Gabriel",
+          "deadline": "TBD",
+          "status": "pending"
+        }
+      ],
+      "insights": {
+        "maturityScore": {
+          "tracking": 0,
+          "analytics": 0,
+          "automation": 1,
+          "overall": 0
+        },
+        "currentStack": [
+          { "tool": "Meta Ads", "status": "planned" },
+          { "tool": "Hot Webinar", "status": "planned" },
+          { "tool": "ManyChat (NCET via API Meta)", "status": "planned" },
+          { "tool": "WhatsApp Business", "status": "planned" }
+        ],
+        "opportunities": [
+          {
+            "area": "Server-Side Tracking desde o dia 1",
+            "impact": "high",
+            "description": "Lançamento nasce com tracking profissional. Cada etapa do funil mensurada sem depender de client-side."
+          },
+          {
+            "area": "Eventos custom por etapa do funil",
+            "impact": "high",
+            "description": "Ingresso, WhatsApp, qualificação A/B/C, webinário, venda, recorrência. Visibilidade total de onde está o gargalo."
+          },
+          {
+            "area": "Cookie Persistence + CAPI",
+            "impact": "high",
+            "description": "Funil com 7+ dias entre ingresso e webinário. Sem persistência de cookie, a atribuição se perde completamente nesse intervalo."
+          }
+        ],
+        "painPoints": [
+          "Zero estrutura implementada (sem LP, sem nome, sem nada)",
+          "Funil com 7+ dias entre ingresso e venda: atribuição se perde sem server-side",
+          "Múltiplos touchpoints (WhatsApp, webinário, X1): rastreamento complexo",
+          "Dependência de ManyChat/API Meta para X1: precisa de integração com tracking"
+        ]
+      }
+    }
+  ],
+  "diagnosis": {
+    "headline": "Seu lançamento precisa nascer com tracking profissional",
+    "goals": [
+      {
+        "metric": "CAC zerado",
+        "label": "CPA do ingresso <= R$47",
+        "description": "O ingresso a R$47 precisa se pagar. Para isso, cada conversão precisa ser atribuída corretamente desde o clique no anúncio até o checkout. Sem server-side, parte dessas conversões simplesmente desaparece e o CAC reportado fica inflado."
+      },
+      {
+        "metric": "100%",
+        "label": "Visibilidade total do funil",
+        "description": "Ingresso, WhatsApp, qualificação, webinário, venda principal, recorrência. Cada etapa mensurada desde o dia 1. Você sabe exatamente onde está o gargalo antes de escalar."
+      },
+      {
+        "metric": "7+ dias",
+        "label": "Atribuição que sobrevive ao funil longo",
+        "description": "Entre o clique no anúncio e a venda do produto principal (R$1.497) passam pelo menos 7 dias. Sem cookie persistence, o Meta não conecta o clique à venda. O resultado aparece como orgânico e o algoritmo não aprende."
+      }
+    ],
+    "desires": {
+      "headline": "O que o seu lançamento precisa",
+      "intro": "Ingresso R$47, webinário gravado, produto principal R$1.497 e recorrência de R$6.500. Funil longo com múltiplos touchpoints. Cada etapa precisa ser rastreada com precisão desde o dia 1, porque depois que o tráfego começa a rodar, consertar o tracking é como trocar o pneu com o carro andando.",
+      "items": [
+        {
+          "icon": "rocket",
+          "title": "Cada etapa mensurada desde o dia 1",
+          "description": "Do clique no anúncio até a recorrência de R$6.500. Ingresso, obrigado, WhatsApp, qualificação A/B/C, webinário, venda. Você sabe de onde vem cada real sem depender de achismo."
+        },
+        {
+          "icon": "target",
+          "title": "CAC zerado no ingresso",
+          "description": "Para o ingresso de R$47 se pagar, o Meta precisa enxergar todas as conversões. Se 30-40% se perdem no client-side, o CPA reportado infla e você acha que está perdendo dinheiro quando pode estar empatando."
+        },
+        {
+          "icon": "link",
+          "title": "Atribuição que conecta o clique à venda 7 dias depois",
+          "description": "Cookie persistence de 90 dias. O lead que clicou no anúncio, entrou no WhatsApp e comprou no webinário 7 dias depois aparece corretamente atribuído. O Meta aprende e otimiza para quem realmente converte."
+        },
+        {
+          "icon": "shield",
+          "title": "Estrutura que escala sem quebrar",
+          "description": "Server-side desde o dia 1 significa que quando o lançamento der certo e você quiser colocar R$10k, R$50k/dia, a estrutura aguenta. Sem retrabalho, sem perder dados na hora que mais importa."
+        }
+      ]
+    },
+    "opportunities": [
+      {
+        "title": "Server-side tracking desde o dia zero",
+        "impact": "high",
+        "effort": "medium",
+        "description": "O lançamento nasce com dados trafegando direto do servidor para o Meta. Sem depender do navegador, sem perda de dados. Cada conversão chega limpa e deduplicada."
+      },
+      {
+        "title": "Eventos custom para cada touchpoint do funil",
+        "impact": "high",
+        "effort": "medium",
+        "description": "Ingresso, WhatsApp join, qualificação (A/B/C), webinário view, webinário complete, venda principal, recorrência. Visibilidade granular de onde o funil converte e onde trava."
+      },
+      {
+        "title": "Cookie persistence para funil de 7+ dias",
+        "impact": "high",
+        "effort": "low",
+        "description": "Entre o clique e a venda principal passam pelo menos 7 dias. Sem persistência, o cookie expira e a atribuição morre. Com 90 dias de persistência, cada venda volta pro anúncio certo."
+      },
+      {
+        "title": "Integração ManyChat + CAPI para X1",
+        "impact": "medium",
+        "effort": "medium",
+        "description": "As mensagens X1 via API da Meta precisam ser rastreadas como touchpoint do funil. Integração com CAPI garante que o Meta sabe que o lead que recebeu X1 converteu."
+      }
+    ],
+    "proposal": {
+      "headline": "Começar certo custa menos do que consertar depois",
+      "description": "Implementação completa de server-side tracking para o lançamento. GTM Server-Side via Stape, CAPI Meta, cookie persistence de 90 dias, eventos custom para cada etapa do funil, dedup nativa para Hotmart. Estrutura que escala desde o dia 1.",
+      "timeline": "2-3 semanas para implementar (depende da LP/checkout estarem prontos)",
+      "investment": "Sob consulta",
+      "guarantee": "Setup profissional com acompanhamento nos primeiros 30 dias de tráfego",
+      "cta": "Quero começar"
+    }
+  }
+}

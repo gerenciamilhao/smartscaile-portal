@@ -62,7 +62,7 @@ const SlideToUnlock = forwardRef<SlideToUnlockHandle, SlideToUnlockProps>(functi
           background: 'rgba(255,255,255,0.02)',
           border: '1px solid', borderColor: trackBorder,
           overflow: 'hidden',
-          cursor: unlocked ? 'default' : 'grab',
+          cursor: 'default',
           userSelect: 'none', WebkitUserSelect: 'none',
         }}
       >
@@ -96,10 +96,9 @@ const SlideToUnlock = forwardRef<SlideToUnlockHandle, SlideToUnlockProps>(functi
             width: '44px', height: '44px', borderRadius: '22px',
             background: thumbBg,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: unlocked ? 'default' : 'grab',
+            cursor: 'default',
             x, zIndex: 2,
           }}
-          whileDrag={{ cursor: 'grabbing' }}
         >
           {unlocked ? (
             <motion.div

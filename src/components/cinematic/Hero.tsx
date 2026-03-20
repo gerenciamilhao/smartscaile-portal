@@ -165,8 +165,17 @@ interface HeroProps {
   clientData?: ClientData | null;
 }
 
+const DEFAULT_SUBTITLE = 'Preparamos algo especial para voc\u00ea. Role para ver sua proposta personalizada.';
+
 export default function Hero({ clientData }: HeroProps) {
   const firstName = clientData?.client?.name?.split(' ')[0];
+  const heroCopy = clientData?.diagnosis?.copy?.pageHero;
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const defaultTickerNames = tools.map(t => t.name);
+  const tickerNames = heroCopy?.ticker ?? defaultTickerNames;
+  const tickerDoubled = [...tickerNames, ...tickerNames];
+  const defaultDoubled = [...defaultTickerNames, ...defaultTickerNames];
   const [rows, setRows] = useState<Row[]>([
     { uid: 'init-0', platform: PURCHASE_POOL[0].platform, name: PURCHASE_POOL[0].name, value: PURCHASE_POOL[0].value, status: 'browser'      },
     { uid: 'init-1', platform: PURCHASE_POOL[0].platform, name: PURCHASE_POOL[0].name, value: PURCHASE_POOL[0].value, status: 'server-dedup' },
@@ -228,7 +237,9 @@ export default function Hero({ clientData }: HeroProps) {
 
   return (
     <section
-      style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '80px 0 48px', overflow: 'hidden' }}
+      suppressHydrationWarning
+      className="select-none"
+      style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px 40px', overflow: 'hidden' }}
     >
       {/* Floating code snippets background */}
       <FloatingCodeBg />
@@ -242,16 +253,16 @@ export default function Hero({ clientData }: HeroProps) {
         transition={{ duration: 0.5, delay: 0.1 }}
         style={{
           position: 'relative', zIndex: 1, display: 'inline-flex', alignItems: 'center',
-          gap: '8px', marginBottom: '14px', padding: '6px 16px', borderRadius: '9999px',
+          gap: '6px', marginBottom: '12px', padding: '5px 14px', borderRadius: '9999px',
           border: '1px solid rgba(119,189,172,0.2)',
           background: 'rgba(119,189,172,0.05)',
           color: '#77BDAC',
-          fontSize: '0.75rem', fontWeight: 500, letterSpacing: '0.1em',
+          fontSize: '0.65rem', fontWeight: 500, letterSpacing: '0.1em',
           textTransform: 'uppercase',
         }}
       >
         <span className="live-dot" />
-        Server-Side Tracking Ativo
+        {heroCopy?.badge ?? 'Server-Side Tracking Ativo'}
       </motion.div>
 
       {/* ── Tools Ticker ── */}
@@ -259,19 +270,19 @@ export default function Hero({ clientData }: HeroProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.7, delay: 0.2 }}
-        style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '680px', overflow: 'hidden', marginBottom: '30px', WebkitMaskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)', maskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)' }}
+        style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '560px', overflow: 'hidden', marginBottom: '24px', WebkitMaskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)', maskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)' }}
       >
         <div className="animate-ticker">
-          {tickerItems.map((tool, i) => (
-            <div key={i} style={{ display: 'inline-flex', alignItems: 'center', padding: '6px 18px', borderRadius: '9999px', background: 'transparent', border: '1px solid rgba(255,255,255,0.08)', whiteSpace: 'nowrap', flexShrink: 0 }}>
-              <span style={{ color: '#6B7280', fontSize: '0.78rem', fontWeight: 400 }}>{tool.name}</span>
+          {(mounted ? tickerDoubled : defaultDoubled).map((name, i) => (
+            <div key={i} style={{ display: 'inline-flex', alignItems: 'center', padding: '4px 14px', borderRadius: '9999px', background: 'transparent', border: '1px solid rgba(255,255,255,0.08)', whiteSpace: 'nowrap', flexShrink: 0 }}>
+              <span style={{ color: '#6B7280', fontSize: '0.65rem', fontWeight: 400 }}>{name}</span>
             </div>
           ))}
         </div>
       </motion.div>
 
       {/* ── Main content ── */}
-      <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '800px', margin: '0 auto', padding: '0 20px', textAlign: 'center' }}>
+      <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '640px', margin: '0 auto', padding: '0', textAlign: 'center' }}>
 
         {/* Headline */}
         <motion.h1
@@ -279,7 +290,7 @@ export default function Hero({ clientData }: HeroProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           className="font-serif"
-          style={{ fontWeight: 700, lineHeight: 1.12, color: '#F3F4F6', marginBottom: '24px', fontSize: 'clamp(2.4rem, 9vw, 3.75rem)' }}
+          style={{ fontWeight: 700, lineHeight: 1.12, color: '#F3F4F6', marginBottom: '18px', fontSize: 'clamp(1.8rem, 7vw, 2.8rem)' }}
         >
           {firstName ? (
             <>
@@ -298,14 +309,15 @@ export default function Hero({ clientData }: HeroProps) {
 
         {/* Subtitle */}
         <motion.p
+          suppressHydrationWarning
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.45, ease: 'easeOut' }}
-          style={{ color: '#9CA3AF', fontSize: '1rem', lineHeight: 1.7, marginBottom: '16px', maxWidth: '520px', marginLeft: 'auto', marginRight: 'auto' }}
+          style={{ color: '#9CA3AF', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '12px', maxWidth: '420px', marginLeft: 'auto', marginRight: 'auto' }}
         >
           {firstName
-            ? 'Preparamos algo especial para voce. Role para ver sua proposta personalizada.'
-            : 'Agende um diagnostico estrategico gratuito. Em 30 minutos identificamos o gargalo da sua estrutura de tracking.'}
+            ? (heroCopy?.subtitle ?? DEFAULT_SUBTITLE)
+            : 'Agende um diagnóstico estratégico gratuito. Em 30 minutos identificamos o gargalo da sua estrutura de tracking.'}
         </motion.p>
 
         {/* ── 3 Balloons above live events ── */}
@@ -317,9 +329,9 @@ export default function Hero({ clientData }: HeroProps) {
         >
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', marginBottom: '56px' }}>
             {[
-              { Icon: Activity, text: '+95% de precisão'  },
-              { Icon: Server,   text: 'Melhor atribuição' },
-              { Icon: Award,    text: 'Redução de CPA'    },
+              { Icon: Activity, text: heroCopy?.balloons?.[0] ?? '+95% de precisão'  },
+              { Icon: Server,   text: heroCopy?.balloons?.[1] ?? 'Melhor atribuição' },
+              { Icon: Award,    text: heroCopy?.balloons?.[2] ?? 'Redução de CPA'    },
             ].map(({ Icon, text }, i) => (
               <motion.div
                 key={i}
@@ -357,7 +369,7 @@ export default function Hero({ clientData }: HeroProps) {
           initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.85, ease: [0.16, 1, 0.3, 1] }}
-          style={{ maxWidth: '540px', margin: '0 auto', position: 'relative', paddingBottom: '44px', transform: 'translateX(5%)' }}
+          style={{ maxWidth: '460px', margin: '0 auto', position: 'relative', paddingBottom: '40px', transform: 'translateX(5%)' }}
         >
           {/* Card with 3D perspective */}
           <div
@@ -471,14 +483,14 @@ export default function Hero({ clientData }: HeroProps) {
             initial={{ opacity: 0, scale: 0.82, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 1.1, ease: [0.16, 1, 0.3, 1] }}
-            style={{ position: 'absolute', bottom: '-10px', left: '-28px', display: 'flex', gap: '8px', zIndex: 10 }}
+            style={{ position: 'absolute', bottom: '-6px', left: '-16px', display: 'flex', gap: '6px', zIndex: 10 }}
           >
             {/* EMQ badge */}
             <motion.div
               className="animate-float"
               style={{
-                display: 'flex', alignItems: 'center', gap: '10px',
-                padding: '10px 14px', borderRadius: '14px',
+                display: 'flex', alignItems: 'center', gap: '8px',
+                padding: '8px 12px', borderRadius: '12px',
                 background: 'rgba(255,255,255,0.04)',
                 backdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
                 WebkitBackdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
@@ -492,17 +504,17 @@ export default function Hero({ clientData }: HeroProps) {
                   transition={{ duration: 2.2, repeat: Infinity, ease: 'easeOut' }}
                   style={{ position: 'absolute', inset: '-5px', borderRadius: '11px', background: 'rgba(119,189,172,0.12)' }}
                 />
-                <div style={{ width: '30px', height: '30px', borderRadius: '9px', background: 'rgba(119,189,172,0.09)', border: '1px solid rgba(119,189,172,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Award size={14} color="#77BDAC" strokeWidth={2} />
+                <div style={{ width: '24px', height: '24px', borderRadius: '7px', background: 'rgba(119,189,172,0.09)', border: '1px solid rgba(119,189,172,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Award size={12} color="#77BDAC" strokeWidth={2} />
                 </div>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: '3px', lineHeight: 1 }}>
-                  <span style={{ color: '#77BDAC', fontWeight: 700, fontSize: '0.72rem', fontFamily: 'monospace', letterSpacing: '0.05em' }}>EMQ</span>
-                  <span style={{ color: '#77BDAC', fontWeight: 700, fontSize: '1.15rem', fontFamily: 'monospace' }}>9.4</span>
-                  <span style={{ color: 'rgba(119,189,172,0.5)', fontWeight: 600, fontSize: '0.72rem', fontFamily: 'monospace' }}>/10</span>
+                  <span style={{ color: '#77BDAC', fontWeight: 700, fontSize: '0.6rem', fontFamily: 'monospace', letterSpacing: '0.05em' }}>EMQ</span>
+                  <span style={{ color: '#77BDAC', fontWeight: 700, fontSize: '0.95rem', fontFamily: 'monospace' }}>9.4</span>
+                  <span style={{ color: 'rgba(119,189,172,0.5)', fontWeight: 600, fontSize: '0.6rem', fontFamily: 'monospace' }}>/10</span>
                 </div>
-                <div style={{ color: '#374151', fontSize: '0.54rem', fontFamily: 'monospace', letterSpacing: '0.08em', textTransform: 'uppercase', lineHeight: 1 }}>
+                <div style={{ color: '#374151', fontSize: '0.45rem', fontFamily: 'monospace', letterSpacing: '0.08em', textTransform: 'uppercase', lineHeight: 1 }}>
                   Event Match Quality
                 </div>
               </div>
