@@ -53,9 +53,9 @@ export default function TokenModal({ open, onClose, onSuccess }: TokenModalProps
           style={{
             position: 'fixed', inset: 0, zIndex: 200,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: 'rgba(3,3,3,0.90)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
+            background: 'rgba(0,0,0,0.98)',
+            backdropFilter: 'blur(4px)',
+            WebkitBackdropFilter: 'blur(4px)',
           }}
           onClick={onClose}
         >
@@ -71,9 +71,9 @@ export default function TokenModal({ open, onClose, onSuccess }: TokenModalProps
               margin: '0 20px',
               overflow: 'hidden',
               borderRadius: '20px',
-              background: 'linear-gradient(180deg, rgba(12,12,12,0.98) 0%, rgba(5,5,5,0.98) 100%)',
-              border: '1px solid rgba(119,189,172,0.10)',
-              boxShadow: '0 32px 100px rgba(0,0,0,0.8), 0 0 1px rgba(119,189,172,0.15), inset 0 1px 0 rgba(255,255,255,0.03)',
+              background: 'transparent',
+              border: 'none',
+              boxShadow: 'none',
             }}
           >
             {/* Close button */}
@@ -105,28 +105,18 @@ export default function TokenModal({ open, onClose, onSuccess }: TokenModalProps
             {/* Content */}
             <div style={{ position: 'relative', padding: '44px 32px 32px', zIndex: 1 }}>
 
-              {/* Lock icon with ring */}
+              {/* Logo */}
               <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
-                <motion.div
+                <motion.img
+                  src="/logo-avatar.png"
+                  alt="smartscaile."
+                  width={64}
+                  height={64}
                   initial={{ scale: 0.7, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
+                  animate={{ scale: 1, opacity: 0.15 }}
                   transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <div style={{
-                    position: 'relative',
-                    width: 52, height: 52,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}>
-                    {/* Static ring */}
-                    <div style={{
-                      position: 'absolute', inset: 0,
-                      borderRadius: '14px',
-                      background: 'rgba(119,189,172,0.06)',
-                      border: '1px solid rgba(119,189,172,0.10)',
-                    }} />
-                    <Lock size={20} color="#77BDAC" strokeWidth={1.5} style={{ position: 'relative', zIndex: 1 }} />
-                  </div>
-                </motion.div>
+                  style={{ display: 'block' }}
+                />
               </div>
 
               {/* Branding */}
@@ -136,21 +126,11 @@ export default function TokenModal({ open, onClose, onSuccess }: TokenModalProps
                 transition={{ delay: 0.15, duration: 0.4 }}
                 style={{ textAlign: 'center', marginBottom: '28px' }}
               >
-                <p
-                  className="font-serif"
-                  style={{
-                    fontSize: '1.15rem', fontWeight: 700,
-                    letterSpacing: '0.01em', color: '#F3F4F6',
-                    lineHeight: 1,
-                  }}
-                >
-                  smartscaile.
-                </p>
                 <p style={{
-                  marginTop: '10px', color: '#6B7280', fontSize: '0.78rem',
-                  lineHeight: 1.5, maxWidth: 260, margin: '10px auto 0',
+                  color: '#9CA3AF', fontSize: '0.85rem',
+                  lineHeight: 1.5, maxWidth: 260, margin: '0 auto',
                 }}>
-                  Insira o token enviado para acessar seu diagnóstico exclusivo
+                  Insira o token enviado para acessar sua proposta exclusiva
                 </p>
               </motion.div>
 
@@ -185,8 +165,8 @@ export default function TokenModal({ open, onClose, onSuccess }: TokenModalProps
                       borderRadius: '12px',
                       border: error
                         ? '1px solid rgba(239,68,68,0.30)'
-                        : '1px solid rgba(255,255,255,0.06)',
-                      background: 'rgba(255,255,255,0.02)',
+                        : '1px solid rgba(255,255,255,0.10)',
+                      background: 'rgba(255,255,255,0.04)',
                       color: '#F3F4F6',
                       fontSize: '15px',
                       fontFamily: 'var(--font-mono), monospace',
@@ -272,7 +252,7 @@ export default function TokenModal({ open, onClose, onSuccess }: TokenModalProps
                     </>
                   ) : (
                     <>
-                      Acessar diagnóstico
+                      Acessar proposta
                       <ArrowRight size={14} strokeWidth={1.5} />
                     </>
                   )}

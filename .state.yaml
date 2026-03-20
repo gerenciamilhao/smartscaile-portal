@@ -7,7 +7,7 @@ phase_1:
 phase_2:
   setup_complete: true
   build_complete: true
-  review_complete: false
+  review_complete: true
 scroll_upgrade:
   status: implemented
   date: 2026-03-19
@@ -25,26 +25,34 @@ performance_cleanup:
 slides:
   slide_1_header:
     status: complete
+    validated: true
     isFirst: true
     features: [terminal-typing, perspective-3d, char-by-char-loop, static-content-on-load, mouse-scroll-indicator]
   slide_2_results:
     status: complete
+    validated: true
     features: [score-ring-loop, sub-scores-minimal, stape-diagnostic, score-color-system]
   slide_3_goal_escala:
     status: complete
+    validated: true
     features: [synced-counter-bar, single-animation-source, easeInOut-braking, context-pills]
   slide_4_goal_cpa:
     status: complete
+    validated: true
     features: [tracking-ring-synced, dual-counter-inverse, meta-badge-alive, amber-warning-pills, useLoopProgress-hook, rAF-throttled]
   slide_5_goal_dados:
     status: complete
+    validated: true
     features: [loss-calculator-ledger, smooth-rgb-interpolation, split-bar-visible-lost, lerpRGB3-helper, red-pills-causes, useLoopProgress-shared]
   slide_6_opportunities:
     status: complete
+    validated: true
     features: [apple-notes-container, macos-chrome, checkbox-breathing, impact-dot-breathing, scroll-driven-stagger]
   slide_7_pricing:
     status: complete
+    validated: true
     features: [pricing-card-compact, macos-chrome, scroll-driven-stagger, inline-service-rows, inline-discount-badge]
   slide_8_proposal:
     status: complete
+    validated: true
     features: [scroll-driven-stagger, cta-terminal-typing, lock-state-reactive]

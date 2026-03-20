@@ -72,16 +72,16 @@ function PricingCard({ plan, opacity, y }: {
       <div
         style={{
           borderRadius: 14,
-          border: '1px solid rgba(119,189,172,0.15)',
-          background: 'linear-gradient(180deg, rgba(12,20,17,0.98) 0%, rgba(6,10,8,0.99) 100%)',
+          border: '1px solid rgba(255,255,255,0.08)',
+          background: 'linear-gradient(180deg, rgba(18,18,20,0.98) 0%, rgba(10,10,12,0.99) 100%)',
           overflow: 'hidden',
           boxShadow: '0 24px 50px rgba(0,0,0,0.55), 0 8px 20px rgba(0,0,0,0.3)',
         }}
       >
         <div style={{
           padding: '10px 18px',
-          borderBottom: '1px solid rgba(119,189,172,0.10)',
-          background: 'rgba(10,18,15,0.95)',
+          borderBottom: '1px solid rgba(255,255,255,0.06)',
+          background: 'rgba(14,14,16,0.95)',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -108,7 +108,7 @@ function PricingCard({ plan, opacity, y }: {
           </span>
         </div>
 
-        <div style={{ padding: '10px 20px 0', textAlign: 'center' }}>
+        <div style={{ padding: '16px 20px 0', textAlign: 'center' }}>
           <span style={{
             fontFamily: 'var(--font-mono), monospace', fontSize: '0.6rem', fontWeight: 600,
             color: 'rgba(119,189,172,0.65)', letterSpacing: '0.12em', textTransform: 'uppercase',
@@ -117,7 +117,7 @@ function PricingCard({ plan, opacity, y }: {
           </span>
         </div>
 
-        <div style={{ padding: '8px 20px 0', textAlign: 'center' }}>
+        <div style={{ padding: '10px 20px 0', textAlign: 'center' }}>
           <div style={{ display: 'inline-flex', alignItems: 'baseline', gap: 6, whiteSpace: 'nowrap' }}>
             <span style={{ fontFamily: 'var(--font-mono), monospace', fontWeight: 500, fontSize: '0.95rem', lineHeight: 1, color: '#77BDAC', opacity: 0.6 }}>
               {plan.installments}x
@@ -130,28 +130,28 @@ function PricingCard({ plan, opacity, y }: {
               R${formattedAmount}
             </span>
           </div>
-          <div style={{ marginTop: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+          <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14 }}>
             <span style={{
-              display: 'inline-flex', alignItems: 'center', gap: 5,
-              padding: '3px 10px', borderRadius: 99,
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              padding: '5px 14px', borderRadius: 99,
               background: 'rgba(119,189,172,0.06)', border: '1px solid rgba(119,189,172,0.15)',
-              fontFamily: 'var(--font-mono), monospace', fontSize: '0.55rem', fontWeight: 600,
+              fontFamily: 'var(--font-mono), monospace', fontSize: '0.62rem', fontWeight: 600,
               color: 'rgba(119,189,172,0.7)', letterSpacing: '0.08em',
             }}>
-              <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#77BDAC', opacity: 0.6 }} />
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#77BDAC', opacity: 0.6 }} />
               SEM JUROS
             </span>
             <span style={{
-              padding: '3px 10px', borderRadius: 6,
+              padding: '5px 14px', borderRadius: 6,
               background: 'rgba(119,189,172,0.08)', border: '1px solid rgba(119,189,172,0.20)',
-              fontSize: '0.6rem', fontWeight: 600, color: 'rgba(119,189,172,0.85)', letterSpacing: '0.02em',
+              fontSize: '0.65rem', fontWeight: 600, color: 'rgba(119,189,172,0.85)', letterSpacing: '0.02em',
             }}>
               {plan.discount}
             </span>
           </div>
         </div>
 
-        <div style={{ padding: '8px 16px 0', borderTop: '1px solid rgba(119,189,172,0.10)' }}>
+        <div style={{ padding: '14px 16px 0', borderTop: '1px solid rgba(255,255,255,0.06)', marginTop: 14 }}>
           {coreServices.map((service, i) => {
             const Icon = getServiceIcon(service.title);
             return (
@@ -183,7 +183,7 @@ function PricingCard({ plan, opacity, y }: {
         </div>
 
         {highlightService && (
-          <div style={{ padding: '4px 16px 14px' }}>
+          <div style={{ padding: '8px 16px 18px' }}>
             <div style={{
               marginTop: 2, padding: '8px 12px', borderRadius: 8,
               background: 'rgba(119,189,172,0.06)',

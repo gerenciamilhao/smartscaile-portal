@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const trimmed = token.trim().toLowerCase();
+    const trimmed = token.trim();
     const entry = (tokenMap as Record<string, { clientId: string; name: string }>)[trimmed];
 
     if (!entry) {

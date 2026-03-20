@@ -16,9 +16,10 @@ const SECTION_LABELS = ['Início', 'Auditoria', 'Escala', 'CPA', 'Dados', 'Imple
 
 interface CinematicExperienceProps {
   initialData?: ClientData | null;
+  clienteSlug?: string;
 }
 
-export default function CinematicExperience({ initialData }: CinematicExperienceProps) {
+export default function CinematicExperience({ initialData, clienteSlug }: CinematicExperienceProps) {
   const [pageState, setPageState] = useState<PageState>(initialData ? 'unlocked' : 'locked');
   const [showModal, setShowModal] = useState(false);
   const [clientData, setClientData] = useState<ClientData | null>(initialData || null);
@@ -30,11 +31,12 @@ export default function CinematicExperience({ initialData }: CinematicExperience
     setShowModal(false);
     // Fetch data first, then transition
     try {
-      const res = await fetch('/api/client-data');
+      const url = clienteSlug ? `/api/client-data?cliente=${clienteSlug}` : '/api/client-data';
+      const res = await fetch(url);
       if (res.ok) setClientData(await res.json());
     } catch {}
     setPageState('unlocked');
-  }, []);
+  }, [clienteSlug]);
 
   const handleModalClose = useCallback(() => {
     setShowModal(false);
