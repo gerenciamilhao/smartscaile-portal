@@ -103,7 +103,7 @@ function StatusChip({ status, failLabel }: { status: PainRowStatus; failLabel?: 
 }
 
 // ─── Hold to Unlock ─────────────────────────────────────────────────────────
-const HOLD_DURATION = 2000; // 2 seconds
+const HOLD_DURATION = 1200; // 1.2 seconds
 
 function HoldToUnlock({ onUnlock }: { onUnlock: () => void }) {
   const [progress, setProgress] = useState(0);
@@ -255,8 +255,28 @@ function HoldToUnlock({ onUnlock }: { onUnlock: () => void }) {
 const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ onUnlock, clientData }, ref) {
   const painCopy = clientData?.diagnosis?.copy?.painHero;
 
+  const [resetKey, setResetKey] = useState(0);
+
   useImperativeHandle(ref, () => ({
-    resetSlider() { /* no-op — button doesn't need reset */ },
+    resetSlider() {
+      unlockedRef.current = false;
+      setResetKey(k => k + 1);
+      // Restart scene animations
+      sceneIdxRef.current = 0;
+      timeoutsRef.current.forEach(clearTimeout);
+      timeoutsRef.current = [];
+      const t = setTimeout(() => {
+        if (!unlockedRef.current) {
+          // Re-trigger runScene indirectly via effect
+          setRows([
+            { uid: 'init-0', ...PURCHASE_POOL[0], status: 'processed' },
+            { uid: 'init-1', ...PURCHASE_POOL[1], status: 'blocked', failLabel: 'BLOCKED', blockReason: 'ITP blocked' },
+            { uid: 'init-2', ...PURCHASE_POOL[2], status: 'processed' },
+          ]);
+        }
+      }, 100);
+      timeoutsRef.current.push(t);
+    },
   }), []);
 
   const [rows, setRows] = useState<PainRow[]>([
@@ -734,7 +754,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
           transition={{ duration: 0.6, delay: 1.0 }}
           style={{ marginTop: '56px', display: 'flex', justifyContent: 'center' }}
         >
-          <HoldToUnlock onUnlock={handleUnlock} />
+          <HoldToUnlock key={resetKey} onUnlock={handleUnlock} />
         </motion.div>
       </div>
     </motion.section>
