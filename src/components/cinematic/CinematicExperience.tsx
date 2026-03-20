@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useRef } from 'react';
+import { useIsMobile } from '@/lib/useIsMobile';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import PainHero, { type PainHeroHandle } from './PainHero';
 import Hero from './Hero';
@@ -84,6 +85,7 @@ export default function CinematicExperience({ initialData }: CinematicExperience
 
 // ─── Unlocked Experience ──────────────────────────────────────────────────────
 function UnlockedExperience({ clientData }: { clientData: ClientData | null }) {
+  const isMobile = useIsMobile();
   const scrollRef = useRef<HTMLDivElement>(null);
   const hasProposal = !!clientData;
 
@@ -137,7 +139,7 @@ function UnlockedExperience({ clientData }: { clientData: ClientData | null }) {
                 width: '80%',
                 height: '50%',
                 background: 'radial-gradient(ellipse at center, rgba(119,189,172,0.07) 0%, transparent 70%)',
-                filter: 'blur(60px)',
+                filter: isMobile ? 'blur(20px)' : 'blur(60px)',
               }}
             />
             {/* Bottom-right subtle glow */}
@@ -149,7 +151,7 @@ function UnlockedExperience({ clientData }: { clientData: ClientData | null }) {
                 width: '40%',
                 height: '40%',
                 background: 'radial-gradient(ellipse at center, rgba(119,189,172,0.04) 0%, transparent 70%)',
-                filter: 'blur(80px)',
+                filter: isMobile ? 'blur(20px)' : 'blur(80px)',
               }}
             />
           </div>

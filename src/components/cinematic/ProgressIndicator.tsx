@@ -1,6 +1,7 @@
 'use client';
 
 import { motion, useTransform, type MotionValue } from 'framer-motion';
+import { useIsMobile } from '@/lib/useIsMobile';
 
 interface ProgressIndicatorProps {
   scrollYProgress: MotionValue<number>;
@@ -23,6 +24,7 @@ const SLIDE_RANGES: [number, number][] = [
 ];
 
 export function ProgressIndicator({ scrollYProgress, sections }: ProgressIndicatorProps) {
+  const isMobile = useIsMobile();
   const overallOpacity = useTransform(
     scrollYProgress,
     [0, 0.04, 0.08, 0.96, 1.0],
@@ -31,6 +33,8 @@ export function ProgressIndicator({ scrollYProgress, sections }: ProgressIndicat
 
   const thumbPercent = useTransform(scrollYProgress, [0.06, 1.0], [0, 100]);
   const thumbTop = useTransform(thumbPercent, (v) => `${Math.min(100, Math.max(0, v))}%`);
+
+  if (isMobile) return null;
 
   return (
     <>

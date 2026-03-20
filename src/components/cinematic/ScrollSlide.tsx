@@ -1,7 +1,7 @@
 'use client';
 
-import { type ReactNode } from 'react';
-import { motion, useTransform, type MotionValue } from 'framer-motion';
+import { type ReactNode, useState } from 'react';
+import { motion, useTransform, useMotionValueEvent, type MotionValue } from 'framer-motion';
 
 interface ScrollSlideProps {
   children: ReactNode;
@@ -52,6 +52,7 @@ export function ScrollSlide({
   const opacity = useTransform(scrollYProgress, opacityKeys, opacityVals);
   const y       = useTransform(scrollYProgress, yKeys, yVals);
 
+  const isVisible = useTransform(opacity, (v) => v > 0.005);
   const pointer    = useTransform(opacity, (v) => (v > 0.1 ? 'auto' : 'none'));
   const visibility = useTransform(opacity, (v) =>
     v > 0.01 ? ('visible' as const) : ('hidden' as const),
@@ -74,7 +75,14 @@ export function ScrollSlide({
         willChange: 'opacity, transform',
       }}
     >
-      {children}
+      <LazyContent isVisible={isVisible}>{children}</LazyContent>
     </motion.div>
   );
+}
+
+function LazyContent({ isVisible, children }: { isVisible: MotionValue<boolean>; children: ReactNode }) {
+  const [mounted, setMounted] = useState(false);
+  useMotionValueEvent(isVisible, 'change', (v) => setMounted(v));
+  if (!mounted) return null;
+  return <>{children}</>;
 }

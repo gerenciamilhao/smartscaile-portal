@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import type { ClientData } from '@/lib/clients';
 import { PURCHASE_POOL } from '@/lib/purchase-pool';
+import { useIsMobile } from '@/lib/useIsMobile';
 
 // ─── Ticker ───────────────────────────────────────────────────────────────────
 const tools = [
@@ -158,6 +159,7 @@ interface HeroProps {
 const DEFAULT_SUBTITLE = 'Preparamos algo especial para voc\u00ea. Role para ver sua proposta personalizada.';
 
 export default function Hero({ clientData }: HeroProps) {
+  const isMobile = useIsMobile();
   const firstName = clientData?.client?.name?.split(' ')[0];
   const heroCopy = clientData?.diagnosis?.copy?.pageHero;
   const [mounted, setMounted] = useState(false);
@@ -230,8 +232,8 @@ export default function Hero({ clientData }: HeroProps) {
       className="select-none"
       style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px 40px', overflow: 'hidden' }}
     >
-      {/* Floating code snippets background */}
-      <FloatingCodeBg />
+      {/* Floating code snippets background — skip on mobile (10 blur+3D elements) */}
+      {!isMobile && <FloatingCodeBg />}
 
       <div className="bg-mesh-subtle" style={{ position: 'absolute', inset: 0, opacity: 0.45, pointerEvents: 'none' }} />
 
@@ -479,19 +481,21 @@ export default function Hero({ clientData }: HeroProps) {
               style={{
                 display: 'flex', alignItems: 'center', gap: '8px',
                 padding: '8px 12px', borderRadius: '12px',
-                background: 'rgba(255,255,255,0.04)',
-                backdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
-                WebkitBackdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
+                background: isMobile ? 'rgba(10,10,10,0.85)' : 'rgba(255,255,255,0.04)',
+                ...(!isMobile && {
+                  backdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
+                  WebkitBackdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
+                }),
                 border: '1px solid rgba(255,255,255,0.07)',
                 boxShadow: '0 4px 24px rgba(0,0,0,0.2)',
               }}
             >
               <div style={{ position: 'relative', flexShrink: 0 }}>
-                <motion.div
+                {!isMobile && <motion.div
                   animate={{ scale: [1, 1.7], opacity: [0.2, 0] }}
                   transition={{ duration: 2.2, repeat: Infinity, ease: 'easeOut' }}
                   style={{ position: 'absolute', inset: '-5px', borderRadius: '11px', background: 'rgba(119,189,172,0.12)' }}
-                />
+                />}
                 <div style={{ width: '24px', height: '24px', borderRadius: '7px', background: 'rgba(119,189,172,0.09)', border: '1px solid rgba(119,189,172,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Award size={12} color="#77BDAC" strokeWidth={2} />
                 </div>
@@ -516,20 +520,24 @@ export default function Hero({ clientData }: HeroProps) {
               style={{
                 display: 'flex', alignItems: 'center', gap: '8px',
                 padding: '8px 10px', borderRadius: '12px',
-                background: recoveryPulse ? 'rgba(119,189,172,0.12)' : 'rgba(255,255,255,0.04)',
-                backdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
-                WebkitBackdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
+                background: isMobile
+                  ? (recoveryPulse ? 'rgba(119,189,172,0.12)' : 'rgba(10,10,10,0.85)')
+                  : (recoveryPulse ? 'rgba(119,189,172,0.12)' : 'rgba(255,255,255,0.04)'),
+                ...(!isMobile && {
+                  backdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
+                  WebkitBackdropFilter: 'blur(12px) saturate(1.8) contrast(1.1)',
+                }),
                 border: '1px solid rgba(119,189,172,0.15)',
                 boxShadow: '0 4px 24px rgba(0,0,0,0.2)',
                 transition: 'background 0.3s ease',
               }}
             >
               <div style={{ position: 'relative', flexShrink: 0 }}>
-                <motion.div
+                {!isMobile && <motion.div
                   animate={{ scale: [1, 1.7], opacity: [0.2, 0] }}
                   transition={{ duration: 2.2, repeat: Infinity, ease: 'easeOut', delay: 0.6 }}
                   style={{ position: 'absolute', inset: '-4px', borderRadius: '9px', background: 'rgba(119,189,172,0.12)' }}
-                />
+                />}
                 <div style={{ width: '26px', height: '26px', borderRadius: '8px', background: 'rgba(119,189,172,0.09)', border: '1px solid rgba(119,189,172,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Activity size={12} color="#77BDAC" strokeWidth={2} />
                 </div>

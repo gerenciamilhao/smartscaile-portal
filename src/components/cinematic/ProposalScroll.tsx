@@ -5,6 +5,7 @@ import { motion, useTransform, type MotionValue } from 'framer-motion';
 import { ScrollSlide } from './ScrollSlide';
 import { SectionBadge } from '@/components/portal/SectionBadge';
 import type { ClientData, Opportunity, PricingPlan } from '@/lib/clients';
+import { useIsMobile } from '@/lib/useIsMobile';
 import {
   Target, Cookie, Zap,
   MessageCircle, ExternalLink,
@@ -31,12 +32,15 @@ const R = {
 
 // ─── Accent text helper — parses *word* into serif+glow spans ────────────────
 // Usage: renderAccentText("Esse *teto* não é do mercado.", "#77BDAC")
-function renderAccentText(text: string, color: string = '#77BDAC', delay: number = 0) {
+function renderAccentText(text: string, color: string = '#77BDAC', delay: number = 0, isMobile: boolean = false) {
   const parts = text.split(/(\*[^*]+\*)/g);
   let accentIndex = 0;
   return parts.map((part, i) => {
     if (part.startsWith('*') && part.endsWith('*')) {
       const word = part.slice(1, -1);
+      if (isMobile) {
+        return <span key={i} style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', color }}>{word}</span>;
+      }
       const d = delay + accentIndex * 1.6;
       accentIndex++;
       return (
@@ -75,7 +79,7 @@ function lerpRGB3(
 const easeInOutCubic = (x: number) =>
   x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
 
-function useLoopProgress() {
+function useLoopProgress(isMobile: boolean = false) {
   const startRef = useRef(0);
   const lastRef = useRef(0);
   const [normalizedValue, setNormalizedValue] = useState(0);
@@ -83,10 +87,10 @@ function useLoopProgress() {
   useEffect(() => {
     startRef.current = Date.now();
     let raf: number;
+    const throttleMs = isMobile ? 66 : 33; // ~15fps mobile, ~30fps desktop
     const tick = () => {
       const now = Date.now();
-      // Throttle to ~30fps (33ms) to avoid excess re-renders
-      if (now - lastRef.current >= 33) {
+      if (now - lastRef.current >= throttleMs) {
         lastRef.current = now;
         const elapsed = (now - startRef.current) % (LOOP_S * 1000);
         const progress = elapsed / (LOOP_S * 1000);
@@ -108,12 +112,13 @@ function useLoopProgress() {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [isMobile]);
 
   return normalizedValue;
 }
 
 export default function ProposalScroll({ scrollYProgress, clientData }: ProposalScrollProps) {
+  const isMobile = useIsMobile();
   const { client, meetings, diagnosis } = clientData;
   const firstName = client.name.split(' ')[0];
   const meetingDate = meetings[0]?.date || '';
@@ -131,34 +136,36 @@ export default function ProposalScroll({ scrollYProgress, clientData }: Proposal
       <ScrollSlide range={R.header} scrollYProgress={scrollYProgress} zIndex={2}>
         <div className="slide-dot-grid" />
 
-        {/* Floating decorative orbs */}
-        <motion.div
-          animate={{ y: [0, -8, 0], opacity: [0.4, 0.7, 0.4] }}
-          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-          style={{
-            position: 'absolute', top: '15%', right: '12%', width: 6, height: 6,
-            borderRadius: '50%', background: 'rgba(119,189,172,0.3)',
-            boxShadow: '0 0 12px rgba(119,189,172,0.15)', pointerEvents: 'none',
-          }}
-        />
-        <motion.div
-          animate={{ y: [0, 6, 0], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
-          style={{
-            position: 'absolute', bottom: '22%', left: '8%', width: 4, height: 4,
-            borderRadius: '50%', background: 'rgba(119,189,172,0.25)',
-            boxShadow: '0 0 8px rgba(119,189,172,0.1)', pointerEvents: 'none',
-          }}
-        />
-        <motion.div
-          animate={{ y: [0, -5, 0], x: [0, 3, 0] }}
-          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
-          style={{
-            position: 'absolute', top: '35%', left: '18%', width: 3, height: 3,
-            borderRadius: '50%', background: 'rgba(119,189,172,0.2)',
-            pointerEvents: 'none',
-          }}
-        />
+        {/* Floating decorative orbs — skip on mobile */}
+        {!isMobile && <>
+          <motion.div
+            animate={{ y: [0, -8, 0], opacity: [0.4, 0.7, 0.4] }}
+            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+            style={{
+              position: 'absolute', top: '15%', right: '12%', width: 6, height: 6,
+              borderRadius: '50%', background: 'rgba(119,189,172,0.3)',
+              boxShadow: '0 0 12px rgba(119,189,172,0.15)', pointerEvents: 'none',
+            }}
+          />
+          <motion.div
+            animate={{ y: [0, 6, 0], opacity: [0.3, 0.5, 0.3] }}
+            transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
+            style={{
+              position: 'absolute', bottom: '22%', left: '8%', width: 4, height: 4,
+              borderRadius: '50%', background: 'rgba(119,189,172,0.25)',
+              boxShadow: '0 0 8px rgba(119,189,172,0.1)', pointerEvents: 'none',
+            }}
+          />
+          <motion.div
+            animate={{ y: [0, -5, 0], x: [0, 3, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
+            style={{
+              position: 'absolute', top: '35%', left: '18%', width: 3, height: 3,
+              borderRadius: '50%', background: 'rgba(119,189,172,0.2)',
+              pointerEvents: 'none',
+            }}
+          />
+        </>}
 
         <HeaderSlideContent scrollYProgress={scrollYProgress} firstName={firstName} formattedDate={formattedDate} diagnosis={diagnosis} />
       </ScrollSlide>
@@ -169,34 +176,36 @@ export default function ProposalScroll({ scrollYProgress, clientData }: Proposal
       <ScrollSlide range={R.results} scrollYProgress={scrollYProgress} zIndex={3}>
         <div className="slide-dot-grid" />
 
-        {/* Floating decorative orbs */}
-        <motion.div
-          animate={{ y: [0, -6, 0], opacity: [0.3, 0.6, 0.3] }}
-          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-          style={{
-            position: 'absolute', top: '12%', left: '10%', width: 5, height: 5,
-            borderRadius: '50%', background: 'rgba(119,189,172,0.3)',
-            boxShadow: '0 0 10px rgba(119,189,172,0.12)', pointerEvents: 'none',
-          }}
-        />
-        <motion.div
-          animate={{ y: [0, 5, 0], x: [0, -3, 0] }}
-          transition={{ duration: 7.5, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-          style={{
-            position: 'absolute', bottom: '18%', right: '14%', width: 4, height: 4,
-            borderRadius: '50%', background: 'rgba(119,189,172,0.2)',
-            pointerEvents: 'none',
-          }}
-        />
-        <motion.div
-          animate={{ y: [0, -4, 0] }}
-          transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-          style={{
-            position: 'absolute', top: '40%', right: '8%', width: 3, height: 3,
-            borderRadius: '50%', background: 'rgba(119,189,172,0.15)',
-            pointerEvents: 'none',
-          }}
-        />
+        {/* Floating decorative orbs — skip on mobile */}
+        {!isMobile && <>
+          <motion.div
+            animate={{ y: [0, -6, 0], opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+            style={{
+              position: 'absolute', top: '12%', left: '10%', width: 5, height: 5,
+              borderRadius: '50%', background: 'rgba(119,189,172,0.3)',
+              boxShadow: '0 0 10px rgba(119,189,172,0.12)', pointerEvents: 'none',
+            }}
+          />
+          <motion.div
+            animate={{ y: [0, 5, 0], x: [0, -3, 0] }}
+            transition={{ duration: 7.5, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+            style={{
+              position: 'absolute', bottom: '18%', right: '14%', width: 4, height: 4,
+              borderRadius: '50%', background: 'rgba(119,189,172,0.2)',
+              pointerEvents: 'none',
+            }}
+          />
+          <motion.div
+            animate={{ y: [0, -4, 0] }}
+            transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+            style={{
+              position: 'absolute', top: '40%', right: '8%', width: 3, height: 3,
+              borderRadius: '50%', background: 'rgba(119,189,172,0.15)',
+              pointerEvents: 'none',
+            }}
+          />
+        </>}
 
         <ResultsSlideContent scrollYProgress={scrollYProgress} diagnosis={diagnosis} />
       </ScrollSlide>
@@ -566,6 +575,7 @@ function CTASlideContent({ diagnosis, scrollYProgress, range }: {
   scrollYProgress: MotionValue<number>;
   range: [number, number];
 }) {
+  const isMobile = useIsMobile();
   const [visibleChars, setVisibleChars] = useState<number[]>(CTA_LINES.map(() => 0));
   const [activeLine, setActiveLine] = useState(0);
   const [loopKey, setLoopKey] = useState(0);
@@ -683,7 +693,7 @@ function CTASlideContent({ diagnosis, scrollYProgress, range }: {
 
       {/* Headline */}
       <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 'clamp(1.75rem, 5.5vw, 2.4rem)', color: '#F3F4F6', lineHeight: 1.2, letterSpacing: '-0.025em', maxWidth: 480, margin: '0 auto 10px' }}>
-        {renderAccentText(diagnosis.copy?.cta?.headline ?? 'O *resultado* é a garantia.', accentColor)}
+        {renderAccentText(diagnosis.copy?.cta?.headline ?? 'O *resultado* é a garantia.', accentColor, 0, isMobile)}
       </h2>
       <p style={{ fontSize: '0.875rem', color: lockOpen ? '#9CA3AF' : '#6B7280', lineHeight: 1.55, maxWidth: 380, margin: '0 auto 14px', transition: 'color 0.6s ease' }}>
         {diagnosis.copy?.cta?.subtitle ?? 'Teste A/B por 30 dias. Pixel antigo vs. novo. O resultado decide. Setup se paga em 2 semanas.'}
@@ -875,6 +885,7 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
   scrollYProgress: MotionValue<number>;
   diagnosis: ClientData['diagnosis'];
 }) {
+  const isMobile = useIsMobile();
   const s = 0.19;
   const span = 0.14;
   const t = (offset: number) => s + span * offset;
@@ -1011,7 +1022,7 @@ function ResultsSlideContent({ scrollYProgress, diagnosis }: {
               style={{
                 position: 'absolute', inset: -32, borderRadius: '50%',
                 background: `radial-gradient(circle, ${scoreColor(overallScore)}18 0%, transparent 65%)`,
-                filter: 'blur(28px)', pointerEvents: 'none',
+                filter: isMobile ? 'blur(8px)' : 'blur(28px)', pointerEvents: 'none',
               }}
             />
             <svg width={ringSize} height={ringSize} style={{ transform: 'rotate(-90deg)', position: 'relative', zIndex: 1 }}>
@@ -1172,9 +1183,10 @@ function ScaleGoalSlide({ scrollYProgress, goal, range }: {
   const footerOpacity   = useTransform(scrollYProgress, [t(0.46), t(0.58)], [0, 1]);
 
   // Single animation source — rAF synced
+  const isMobile = useIsMobile();
   const TARGET = 100000;
   const START = 3000;
-  const normalizedValue = useLoopProgress();
+  const normalizedValue = useLoopProgress(isMobile);
 
   const barPct = 3 + 97 * normalizedValue;
   const counterValue = Math.round(START + (TARGET - START) * normalizedValue);
@@ -1206,7 +1218,7 @@ function ScaleGoalSlide({ scrollYProgress, goal, range }: {
       <motion.h2
         style={{ opacity: metricOpacity, y: metricY, fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 'clamp(1.35rem,5vw,2rem)', color: '#F3F4F6', letterSpacing: '-0.02em', lineHeight: 1.15 }}
       >
-        {goal.label.includes('*') ? renderAccentText(goal.label, '#77BDAC') : goal.label}
+        {goal.label.includes('*') ? renderAccentText(goal.label, '#77BDAC', 0, isMobile) : goal.label}
       </motion.h2>
       <motion.p
         style={{ opacity: metricOpacity, y: metricY }}
@@ -1341,6 +1353,7 @@ function ScaleGoalSlide({ scrollYProgress, goal, range }: {
 function CPATrackingRing({ trackingValue, trackingColor, normalizedValue }: {
   trackingValue: number; trackingColor: string; normalizedValue: number;
 }) {
+  const isMobile = useIsMobile();
   const size = 120;
   const stroke = 6;
   const r = (size - stroke) / 2;
@@ -1378,7 +1391,7 @@ function CPATrackingRing({ trackingValue, trackingColor, normalizedValue }: {
           style={{
             position: 'absolute', inset: -20, borderRadius: '50%',
             background: `radial-gradient(circle, ${trackingColor}${normalizedValue > 0.5 ? '18' : '08'} 0%, transparent 65%)`,
-            filter: 'blur(20px)', pointerEvents: 'none',
+            filter: isMobile ? 'blur(8px)' : 'blur(20px)', pointerEvents: 'none',
             transition: 'background 200ms ease',
           }}
         />
@@ -1451,11 +1464,12 @@ function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
   const footerOpacity   = useTransform(scrollYProgress, [t(0.46), t(0.58)], [0, 1]);
 
   // Single animation source — rAF synced
+  const isMobile = useIsMobile();
   const TRACKING_START = trackingScore;
   const TRACKING_TARGET = 100;
   const CPA_START = 191;
   const CPA_TARGET = 100;
-  const normalizedValue = useLoopProgress();
+  const normalizedValue = useLoopProgress(isMobile);
 
   // Tracking goes UP: 31→100, CPA goes DOWN: 191→100
   const trackingValue = Math.round(TRACKING_START + (TRACKING_TARGET - TRACKING_START) * normalizedValue);
@@ -1490,7 +1504,7 @@ function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
       <motion.h2
         style={{ opacity: metricOpacity, y: metricY, fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 'clamp(1.35rem,5vw,2rem)', color: '#F3F4F6', letterSpacing: '-0.02em', lineHeight: 1.15 }}
       >
-        {goal.label.includes('*') ? renderAccentText(goal.label, '#77BDAC') : goal.label}
+        {goal.label.includes('*') ? renderAccentText(goal.label, '#77BDAC', 0, isMobile) : goal.label}
       </motion.h2>
       <motion.p
         style={{ opacity: metricOpacity, y: metricY }}
@@ -1892,6 +1906,7 @@ function PricingSlide({ scrollYProgress, pricing, range }: {
   pricing: { plans: PricingPlan[] };
   range: [number, number];
 }) {
+  const isMobile = useIsMobile();
   const [start, end] = range;
   const span = end - start;
 
@@ -2017,7 +2032,7 @@ function PricingSlide({ scrollYProgress, pricing, range }: {
         transform: 'translate(-50%, -50%)',
         width: 400, height: 400, borderRadius: '50%',
         background: 'radial-gradient(circle, rgba(119,189,172,0.04) 0%, transparent 70%)',
-        filter: 'blur(40px)', pointerEvents: 'none',
+        filter: isMobile ? 'blur(8px)' : 'blur(40px)', pointerEvents: 'none',
       }} />
 
     </div>
@@ -2043,10 +2058,11 @@ function DataLossSlide({ scrollYProgress, goal, range }: {
   const descY           = useTransform(scrollYProgress, [t(0.34), t(0.48)], [10, 0]);
   const footerOpacity   = useTransform(scrollYProgress, [t(0.46), t(0.58)], [0, 1]);
 
+  const isMobile = useIsMobile();
   // Loop animation — loss builds up each cycle
   const DAILY_LOSS = 1200;
   const MONTHLY_LOSS = 36000;
-  const normalizedValue = useLoopProgress();
+  const normalizedValue = useLoopProgress(isMobile);
 
   const lossValue = Math.round(DAILY_LOSS * normalizedValue);
   const monthlyLossValue = Math.round(MONTHLY_LOSS * normalizedValue);
@@ -2088,7 +2104,7 @@ function DataLossSlide({ scrollYProgress, goal, range }: {
       <motion.h2
         style={{ opacity: metricOpacity, y: metricY, fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 'clamp(1.35rem,5vw,2rem)', color: '#F3F4F6', letterSpacing: '-0.02em', lineHeight: 1.15 }}
       >
-        {goal.label.includes('*') ? renderAccentText(goal.label, '#EF4444') : goal.label}
+        {goal.label.includes('*') ? renderAccentText(goal.label, '#EF4444', 0, isMobile) : goal.label}
       </motion.h2>
       <motion.p
         style={{ opacity: metricOpacity, y: metricY }}
@@ -2324,6 +2340,7 @@ function OpportunitiesSlide({ scrollYProgress, opportunities, range }: {
   opportunities: Opportunity[];
   range: [number, number];
 }) {
+  const isMobile = useIsMobile();
   const [s] = range;
   const span = range[1] - range[0];
   const t = (offset: number) => s + span * offset;
@@ -2454,7 +2471,7 @@ function OpportunitiesSlide({ scrollYProgress, opportunities, range }: {
           width: 280, height: 280, borderRadius: '50%',
           background: 'radial-gradient(circle, rgba(119,189,172,0.04) 0%, transparent 70%)',
           transform: 'translate(-50%, -50%)',
-          filter: 'blur(40px)', pointerEvents: 'none',
+          filter: isMobile ? 'blur(8px)' : 'blur(40px)', pointerEvents: 'none',
         }} />
 
         {/* Note card */}
