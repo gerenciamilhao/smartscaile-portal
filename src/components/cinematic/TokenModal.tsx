@@ -195,7 +195,7 @@ export default function TokenModal({ open, onClose, onSuccess }: TokenModalProps
                     border: '1px solid rgba(239,68,68,0.15)',
                     background: '#080505',
                     color: '#F3F4F6',
-                    fontSize: '0.875rem',
+                    fontSize: '16px',
                     fontFamily: 'var(--font-sans)',
                     outline: 'none',
                     transition: 'border-color 0.2s, box-shadow 0.2s',
