@@ -490,7 +490,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
           transition={{ duration: 0.6, delay: 0.7 }}
           style={{ marginTop: '4px', position: 'relative' }}
         >
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', marginBottom: '56px' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', marginBottom: '32px' }}>
             {[
               { Icon: XCircle,   text: painCopy?.balloons?.[0] ?? 'Conversões invisíveis' },
               { Icon: BarChart2, text: painCopy?.balloons?.[1] ?? 'Má atribuição'      },
@@ -532,7 +532,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
           initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          style={{ maxWidth: '460px', margin: '0 auto', position: 'relative', paddingBottom: '40px', transform: 'translateX(5%)' }}
+          style={{ maxWidth: '460px', margin: '0 auto', position: 'relative', paddingBottom: '40px' }}
         >
           {/* Card with 3D perspective (same as Hero) */}
           <div
@@ -663,7 +663,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
             initial={{ opacity: 0, scale: 0.82, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 1.1, ease: [0.16, 1, 0.3, 1] }}
-            style={{ position: 'absolute', bottom: '-6px', left: '-16px', display: 'flex', gap: '6px', zIndex: 10 }}
+            style={{ position: 'absolute', bottom: '-6px', left: '0px', display: 'flex', gap: '6px', zIndex: 10 }}
           >
             {/* EMQ badge */}
             <motion.div
@@ -736,7 +736,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.0 }}
-          style={{ marginTop: '56px', display: 'flex', justifyContent: 'center' }}
+          style={{ marginTop: '32px', display: 'flex', justifyContent: 'center' }}
         >
           <HoldToUnlock key={resetKey} onUnlock={handleUnlock} />
         </motion.div>
