@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, type MotionValue } from 'framer-motion';
-import { ArrowUp } from 'lucide-react';
+import { ArrowUp, LogOut } from 'lucide-react';
 import PainHero, { type PainHeroHandle } from './PainHero';
 import TokenModal from './TokenModal';
 import ProposalScroll from './ProposalScroll';
@@ -65,20 +65,30 @@ export default function CinematicExperience({ initialData, clienteSlug }: Cinema
 
       <TokenModal open={showModal} onClose={handleModalClose} onSuccess={handleTokenSuccess} />
 
-      {/* DEV: botão de reset para testar fluxo */}
-      {process.env.NODE_ENV === 'development' && pageState === 'unlocked' && (
-        <button
-          onClick={() => { setPageState('locked'); setClientData(null); window.scrollTo(0, 0); }}
-          style={{
-            position: 'fixed', top: 12, right: 12, zIndex: 9999,
-            padding: '4px 10px', borderRadius: 6,
-            background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)',
-            color: '#EF4444', fontSize: '0.6rem', fontFamily: 'monospace',
-            cursor: 'pointer', opacity: 0.6,
+      {/* Botão sair — volta para PainHero */}
+      {pageState === 'unlocked' && (
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 0.5 }}
+          onClick={() => {
+            document.cookie = 'smartscaile-token=; path=/; max-age=0';
+            setPageState('locked');
+            setClientData(null);
+            window.scrollTo(0, 0);
           }}
+          style={{
+            position: 'fixed', top: 20, right: 20, zIndex: 50,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            width: 32, height: 32, borderRadius: '50%',
+            background: 'transparent', border: 'none',
+            color: 'rgba(255,255,255,0.15)',
+            cursor: 'pointer', transition: 'color 0.2s ease',
+          }}
+          whileHover={{ color: 'rgba(255,255,255,0.4)' }}
         >
-          ← PainHero
-        </button>
+          <LogOut size={13} strokeWidth={1.5} />
+        </motion.button>
       )}
     </>
   );
