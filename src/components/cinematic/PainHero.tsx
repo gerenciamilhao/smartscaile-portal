@@ -289,7 +289,13 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
 
   useEffect(() => {
     const CONTENT_HEIGHT = 800;
-    setZoom(Math.min(1, window.innerHeight / CONTENT_HEIGHT));
+    const updateZoom = () => {
+      const vh = window.visualViewport?.height ?? window.innerHeight;
+      setZoom(Math.min(1, vh / CONTENT_HEIGHT));
+    };
+    updateZoom();
+    window.visualViewport?.addEventListener('resize', updateZoom);
+    return () => window.visualViewport?.removeEventListener('resize', updateZoom);
   }, []);
 
   const [lostCount, setLostCount] = useState(10);
