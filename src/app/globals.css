@@ -175,4 +175,24 @@ body {
   background: linear-gradient(90deg, #77BDAC, rgba(119,189,172,0.1));
 }
 
+/* ─── Landscape blocker (mobile only) ─── */
+@media (max-width: 768px) and (orientation: landscape) {
+  body::after {
+    content: 'Gire o dispositivo para portrait';
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #050505;
+    color: #6B7280;
+    font-size: 0.85rem;
+    font-family: var(--font-mono), monospace;
+    letter-spacing: 0.04em;
+    text-align: center;
+    padding: 40px;
+  }
+}
+
 

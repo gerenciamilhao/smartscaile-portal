@@ -3,9 +3,8 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useRef, useCallback, useImperativeHandle, forwardRef } from 'react';
 import {
-  AlertTriangle, XCircle, TrendingUp, Target, BarChart2,
+  AlertTriangle, XCircle, TrendingUp, Target, BarChart2, Lock,
 } from 'lucide-react';
-import SlideToUnlock, { type SlideToUnlockHandle } from '@/components/ui/SlideToUnlock';
 import type { ClientData } from '@/lib/clients';
 import { PURCHASE_POOL_EXTENDED as PURCHASE_POOL } from '@/lib/purchase-pool';
 
@@ -103,15 +102,161 @@ function StatusChip({ status, failLabel }: { status: PainRowStatus; failLabel?: 
   );
 }
 
+// ─── Hold to Unlock ─────────────────────────────────────────────────────────
+const HOLD_DURATION = 2000; // 2 seconds
+
+function HoldToUnlock({ onUnlock }: { onUnlock: () => void }) {
+  const [progress, setProgress] = useState(0);
+  const [holding, setHolding] = useState(false);
+  const [unlocked, setUnlocked] = useState(false);
+  const startRef = useRef<number>(0);
+  const rafRef = useRef<number>(0);
+
+  const startHold = useCallback(() => {
+    if (unlocked) return;
+    setHolding(true);
+    startRef.current = Date.now();
+    const tick = () => {
+      const elapsed = Date.now() - startRef.current;
+      const p = Math.min(1, elapsed / HOLD_DURATION);
+      setProgress(p);
+      if (p >= 1) {
+        setUnlocked(true);
+        setTimeout(() => onUnlock(), 400);
+        return;
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+  }, [onUnlock, unlocked]);
+
+  const stopHold = useCallback(() => {
+    if (unlocked) return;
+    setHolding(false);
+    cancelAnimationFrame(rafRef.current);
+    // Animate progress back to 0
+    const from = progress;
+    const start = Date.now();
+    const duration = 300;
+    const decay = () => {
+      const elapsed = Date.now() - start;
+      const t = Math.min(1, elapsed / duration);
+      setProgress(from * (1 - t));
+      if (t < 1) rafRef.current = requestAnimationFrame(decay);
+    };
+    rafRef.current = requestAnimationFrame(decay);
+  }, [progress, unlocked]);
+
+  useEffect(() => {
+    return () => cancelAnimationFrame(rafRef.current);
+  }, []);
+
+  // SVG ring
+  const size = 52;
+  const stroke = 3;
+  const r = (size - stroke) / 2;
+  const circ = 2 * Math.PI * r;
+  const offset = circ - progress * circ;
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+      {/* Ring button */}
+      <motion.div
+        onPointerDown={startHold}
+        onPointerUp={stopHold}
+        onPointerLeave={stopHold}
+        onPointerCancel={stopHold}
+        whileTap={!unlocked ? { scale: 0.95 } : {}}
+        style={{
+          position: 'relative',
+          width: size + 16, height: size + 16,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          cursor: unlocked ? 'default' : 'pointer',
+          userSelect: 'none', WebkitUserSelect: 'none',
+          touchAction: 'none',
+        }}
+      >
+        {/* Outer pulse when holding */}
+        {holding && !unlocked && (
+          <motion.div
+            animate={{ scale: [1, 1.4], opacity: [0.2, 0] }}
+            transition={{ duration: 1.2, repeat: Infinity, ease: 'easeOut' }}
+            style={{
+              position: 'absolute', inset: -4, borderRadius: '50%',
+              border: '1px solid rgba(239,68,68,0.15)',
+              pointerEvents: 'none',
+            }}
+          />
+        )}
+
+        {/* SVG progress ring */}
+        <svg width={size + 16} height={size + 16} style={{ position: 'absolute', transform: 'rotate(-90deg)' }}>
+          {/* Track */}
+          <circle
+            cx={(size + 16) / 2} cy={(size + 16) / 2} r={r}
+            fill="none"
+            stroke="rgba(239,68,68,0.10)"
+            strokeWidth={stroke}
+          />
+          {/* Progress arc */}
+          <circle
+            cx={(size + 16) / 2} cy={(size + 16) / 2} r={r}
+            fill="none"
+            stroke={unlocked ? '#77BDAC' : '#EF4444'}
+            strokeWidth={stroke}
+            strokeDasharray={circ}
+            strokeDashoffset={offset}
+            strokeLinecap="round"
+            style={{ transition: unlocked ? 'stroke 0.4s ease' : 'none' }}
+          />
+        </svg>
+
+        {/* Center icon */}
+        <motion.div
+          animate={unlocked ? { rotate: 0 } : {}}
+          style={{
+            width: size - 4, height: size - 4, borderRadius: '50%',
+            background: unlocked ? 'rgba(119,189,172,0.12)' : 'rgba(239,68,68,0.08)',
+            border: `1px solid ${unlocked ? 'rgba(119,189,172,0.25)' : 'rgba(239,68,68,0.20)'}`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            transition: 'background 0.4s ease, border-color 0.4s ease',
+          }}
+        >
+          {unlocked ? (
+            <motion.div
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Lock size={18} color="#77BDAC" strokeWidth={1.5} style={{ transform: 'rotate(12deg)' }} />
+            </motion.div>
+          ) : (
+            <Lock size={18} color={holding ? '#EF4444' : 'rgba(239,68,68,0.6)'} strokeWidth={1.5} style={{ transition: 'color 0.2s ease' }} />
+          )}
+        </motion.div>
+      </motion.div>
+
+      {/* Label */}
+      <span style={{
+        color: unlocked ? '#77BDAC' : '#4B5563',
+        fontSize: '0.6rem',
+        fontFamily: 'var(--font-mono), monospace',
+        letterSpacing: '0.08em',
+        textTransform: 'uppercase',
+        transition: 'color 0.4s ease',
+      }}>
+        {unlocked ? 'Desbloqueado' : 'Pressione para desbloquear'}
+      </span>
+    </div>
+  );
+}
+
 // ─── Component ──────────────────────────────────────────────────────────────
 const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ onUnlock, clientData }, ref) {
   const painCopy = clientData?.diagnosis?.copy?.painHero;
-  const sliderRef = useRef<SlideToUnlockHandle>(null);
 
   useImperativeHandle(ref, () => ({
-    resetSlider() {
-      sliderRef.current?.reset();
-    },
+    resetSlider() { /* no-op — button doesn't need reset */ },
   }), []);
 
   const [rows, setRows] = useState<PainRow[]>([
@@ -131,14 +276,24 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
   const [counterPulse, setCounterPulse] = useState(false);
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const sceneIdxRef = useRef(0);
+  const unlockedRef = useRef(false);
 
   const schedule = useCallback((fn: () => void, delay: number) => {
     const t = setTimeout(fn, delay);
     timeoutsRef.current.push(t);
   }, []);
 
+  // Wrap onUnlock to stop animations
+  const handleUnlock = useCallback(() => {
+    unlockedRef.current = true;
+    timeoutsRef.current.forEach(clearTimeout);
+    timeoutsRef.current = [];
+    onUnlock();
+  }, [onUnlock]);
+
   useEffect(() => {
     function runScene() {
+      if (unlockedRef.current) return;
       const idx = sceneIdxRef.current++;
       const event = PURCHASE_POOL[idx % PURCHASE_POOL.length];
       const isFail = Math.random() > 0.65; // ~35% fail
@@ -572,14 +727,14 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
         </motion.div>
 
 
-        {/* ─── Slider ─── */}
+        {/* ─── Hold to unlock ─── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.0 }}
-          style={{ marginTop: '56px' }}
+          style={{ marginTop: '56px', display: 'flex', justifyContent: 'center' }}
         >
-          <SlideToUnlock ref={sliderRef} onUnlock={onUnlock} />
+          <HoldToUnlock onUnlock={handleUnlock} />
         </motion.div>
       </div>
     </motion.section>

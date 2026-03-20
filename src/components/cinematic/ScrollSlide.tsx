@@ -90,7 +90,13 @@ export function ScrollSlide({
 
 function LazyContent({ isVisible, children }: { isVisible: MotionValue<boolean>; children: ReactNode }) {
   const [mounted, setMounted] = useState(false);
-  useMotionValueEvent(isVisible, 'change', (v) => setMounted(v));
+  const [visible, setVisible] = useState(false);
+
+  useMotionValueEvent(isVisible, 'change', (v) => {
+    setVisible(v);
+    if (v && !mounted) setMounted(true);
+  });
+
   if (!mounted) return null;
-  return <>{children}</>;
+  return <div style={{ display: visible ? 'contents' : 'none' }}>{children}</div>;
 }
