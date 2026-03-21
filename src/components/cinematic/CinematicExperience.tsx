@@ -58,8 +58,8 @@ export default function CinematicExperience({ initialData, clienteSlug }: Cinema
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
           >
-            <UnlockedExperience clientData={clientData} onExit={() => {
-              document.cookie = 'smartscaile-token=; path=/; max-age=0';
+            <UnlockedExperience clientData={clientData} onExit={async () => {
+              await fetch('/api/logout', { method: 'POST' });
               window.scrollTo({ top: 0 });
               setTimeout(() => {
                 setPageState('locked');

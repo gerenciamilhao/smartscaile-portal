@@ -39,7 +39,7 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${inter.variable} ${playfair.variable} ${firaCode.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full bg-[#050505] text-[#F3F4F6] select-none" style={{ cursor: 'default' }} suppressHydrationWarning>
+      <body className="min-h-full bg-[#050505] text-[#F3F4F6] select-none cursor-default" suppressHydrationWarning>
         <GSAPProvider>{children}</GSAPProvider>
       </body>
     </html>
