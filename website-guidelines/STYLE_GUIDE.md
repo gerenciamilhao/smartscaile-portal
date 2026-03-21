@@ -555,4 +555,40 @@ Pills em tom vermelho para causas root da perda:
 
 ---
 
-*Extracted from Hero.tsx, PainHero.tsx, VideoSection.tsx, ScrollSlide.tsx, ProposalScroll.tsx, page.tsx, globals.css, motion.tsx — v1.8*
+## Padrão: Token Modal (Acesso)
+
+Modal de input de token — design super minimalista:
+- **Overlay**: `rgba(0,0,0,0.98)` + `backdrop-filter: blur(4px)`
+- **Card**: `background: transparent`, sem border, sem boxShadow
+- **Logo**: `logo-avatar.png`, 64px, opacity 0.15 (marca d'água sutil)
+- **Texto**: `#9CA3AF`, `0.85rem`
+- **Input**: `fontSize: 16px` (OBRIGATÓRIO — Safari auto-zoom), `background: rgba(255,255,255,0.04)`, border `rgba(255,255,255,0.10)`
+- **Botão**: gradient teal sutil, disabled a 35% opacity
+- **Footer**: dot pulsante 3px + texto uppercase mono 0.5rem
+- **NUNCA**: gradientes no card, borders decorativos verdes, blur alto no backdrop
+
+---
+
+## Padrão: Pricing Card (Neutro)
+
+Card de pricing com estilo neutro (sem tint verde no container):
+- **Card border**: `rgba(255,255,255,0.08)` (neutro, NÃO verde)
+- **Card background**: `rgba(18,18,20,0.98)` → `rgba(10,10,12,0.99)` (cinza puro)
+- **Title bar**: `rgba(14,14,16,0.95)`
+- **Separadores**: `rgba(255,255,255,0.06)`
+- **Rows de serviço**: MANTÊM cor teal (background, icons, borders)
+- **Highlight service**: border-left teal `#77BDAC`
+
+---
+
+## Padrão: Navigation Buttons (Início + Sair)
+
+Botões fixos minimalistas controlados por `scrollYProgress`:
+- **Início** (top-left): `ArrowUp` 14px, sem texto, sem background/border, cor `rgba(255,255,255,0.2)` → hover `0.5`
+- **Sair** (top-right): `LogOut` 13px, mesma estética, cor `rgba(255,255,255,0.15)` → hover `0.4`
+- **Opacidade**: controlada pelo `scrollYProgress` — invisíveis no topo e no final, visíveis durante scroll
+- **Sair limpa cookie** `smartscaile-token` e volta para PainHero (scroll topo + 100ms delay)
+
+---
+
+*Extracted from Hero.tsx, PainHero.tsx, VideoSection.tsx, ScrollSlide.tsx, ProposalScroll.tsx, page.tsx, globals.css, motion.tsx — v1.9*

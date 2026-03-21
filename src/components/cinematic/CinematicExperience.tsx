@@ -15,14 +15,13 @@ type PageState = 'locked' | 'unlocked';
 const SECTION_LABELS = ['Início', 'Auditoria', 'Escala', 'CPA', 'Dados', 'Implementação'];
 
 interface CinematicExperienceProps {
-  initialData?: ClientData | null;
   clienteSlug?: string;
 }
 
-export default function CinematicExperience({ initialData, clienteSlug }: CinematicExperienceProps) {
-  const [pageState, setPageState] = useState<PageState>(initialData ? 'unlocked' : 'locked');
+export default function CinematicExperience({ clienteSlug }: CinematicExperienceProps) {
+  const [pageState, setPageState] = useState<PageState>('locked');
   const [showModal, setShowModal] = useState(false);
-  const [clientData, setClientData] = useState<ClientData | null>(initialData || null);
+  const [clientData, setClientData] = useState<ClientData | null>(null);
   const painRef = useRef<PainHeroHandle>(null);
 
   const handleUnlock = useCallback(() => setShowModal(true), []);
@@ -53,13 +52,12 @@ export default function CinematicExperience({ initialData, clienteSlug }: Cinema
         {pageState === 'unlocked' && (
           <motion.div
             key="solution"
-            initial={initialData ? { opacity: 1 } : { opacity: 0 }}
+            initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
           >
-            <UnlockedExperience clientData={clientData} onExit={async () => {
-              await fetch('/api/logout', { method: 'POST' });
+            <UnlockedExperience clientData={clientData} onExit={() => {
               window.scrollTo({ top: 0 });
               setTimeout(() => {
                 setPageState('locked');

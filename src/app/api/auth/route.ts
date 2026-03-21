@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createToken, COOKIE_NAME } from "@/lib/auth";
 import tokenMap from "@/data/token-map.json";
 
 export async function POST(request: NextRequest) {
@@ -23,22 +22,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const jwt = await createToken({
-      clientId: entry.clientId,
-      name: entry.name,
-    });
-
-    const response = NextResponse.json({ success: true, name: entry.name, clientId: entry.clientId });
-
-    response.cookies.set(COOKIE_NAME, jwt, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-    });
-
-    return response;
+    return NextResponse.json({ success: true, name: entry.name, clientId: entry.clientId });
   } catch {
     return NextResponse.json(
       { error: "Erro interno" },

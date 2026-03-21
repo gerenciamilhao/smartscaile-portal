@@ -35,6 +35,7 @@ export default function TokenModal({ open, onClose, onSuccess }: TokenModalProps
         return;
       }
 
+      setLoading(false);
       onSuccess();
     } catch {
       setError('Erro de conexão. Tente novamente.');
