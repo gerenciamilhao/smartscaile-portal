@@ -155,6 +155,7 @@ export default function TokenModal({ open, onClose, onSuccess }: TokenModalProps
                   <input
                     type="text"
                     autoComplete="off"
+                    className="input-masked"
                     value={token}
                     onChange={e => { setToken(e.target.value); if (error) setError(''); }}
                     placeholder="Token de acesso"
@@ -172,7 +173,6 @@ export default function TokenModal({ open, onClose, onSuccess }: TokenModalProps
                       fontSize: '16px',
                       fontFamily: 'var(--font-mono), monospace',
                       letterSpacing: '0.1em',
-                      WebkitTextSecurity: 'disc',
                       outline: 'none',
                       transition: 'border-color 0.2s, box-shadow 0.2s',
                     }}
