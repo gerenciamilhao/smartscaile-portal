@@ -737,7 +737,7 @@ const PainHero = forwardRef<PainHeroHandle, PainHeroProps>(function PainHero({ o
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.0 }}
-          style={{ marginTop: '24px', display: 'flex', justifyContent: 'center' }}
+          style={{ marginTop: '24px', display: 'flex', justifyContent: 'center', position: 'relative', zIndex: 10 }}
         >
           <HoldToUnlock key={resetKey} onUnlock={handleUnlock} />
         </motion.div>
