@@ -153,7 +153,8 @@ export default function TokenModal({ open, onClose, onSuccess }: TokenModalProps
                     <Lock size={9} color="#77BDAC" strokeWidth={2} style={{ opacity: 0.6 }} />
                   </div>
                   <input
-                    type="password"
+                    type="text"
+                    autoComplete="off"
                     value={token}
                     onChange={e => { setToken(e.target.value); if (error) setError(''); }}
                     placeholder="Token de acesso"
@@ -171,6 +172,7 @@ export default function TokenModal({ open, onClose, onSuccess }: TokenModalProps
                       fontSize: '16px',
                       fontFamily: 'var(--font-mono), monospace',
                       letterSpacing: '0.1em',
+                      WebkitTextSecurity: 'disc',
                       outline: 'none',
                       transition: 'border-color 0.2s, box-shadow 0.2s',
                     }}

@@ -8,7 +8,7 @@ import { renderAccentText } from '@/lib/animation-helpers';
 import type { TerminalLine } from '@/lib/useTerminalTyping';
 
 const CTA_LINES: TerminalLine[] = [
-  { text: 'smartscaile deploy --client kim-pifer', prefix: '$', color: '#6B7280' },
+  { text: 'smartscaile deploy --client kim-paiffer', prefix: '$', color: '#6B7280' },
   { text: '1ª parcela confirmada', prefix: '>', color: '#9CA3AF', delay: 500 },
   { text: 'verificando pagamento...', prefix: ' ', color: '#4B5563', delay: 1200 },
   { text: 'kick-off liberado', prefix: '✓', color: '#22C55E', delay: 300 },

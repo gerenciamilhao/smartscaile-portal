@@ -20,11 +20,11 @@
       "duration": "00:53:32",
       "participants": ["Carlos Korber", "Ramon Lemos", "Gabriel Pereira"],
       "status": "completed",
-      "summary": "Reunião de discovery com Gabriel Pereira, gestor de tráfego que opera a conta do Kim Paiffer (Kim Pifer, empresa de capital aberto). Auditoria técnica ao vivo no site pre-especializacao.com.br/pet-pc4 revelou tracking 100% client-side, sem CAPI, sem cookie persistence, UTMFY perdendo ~50% de atribuição, FBC com 1 dia, com perda estimada de 30-40% de atribuição e dados sujos no gerenciador (CPA reportado R$700 vs R$140-191 real). Escala travada em R$3-4k/dia com potencial de R$100-200k/dia. Gabriel demonstrou interesse em parceria de longo prazo, trazendo ~15 clientes se o resultado for positivo.",
+      "summary": "Reunião de discovery com Gabriel Pereira, gestor de tráfego que opera a conta do Kim Paiffer (Kim Paiffer, empresa de capital aberto). Auditoria técnica ao vivo no site pre-especializacao.com.br/pet-pc4 revelou tracking 100% client-side, sem CAPI, sem cookie persistence, UTMFY perdendo ~50% de atribuição, FBC com 1 dia, com perda estimada de 30-40% de atribuição e dados sujos no gerenciador (CPA reportado R$700 vs R$140-191 real). Escala travada em R$3-4k/dia com potencial de R$100-200k/dia. Gabriel demonstrou interesse em parceria de longo prazo, trazendo ~15 clientes se o resultado for positivo.",
       "topics": [
         {
           "title": "Cliente Kim Paiffer — Diagnóstico",
-          "notes": "Kim Paiffer (Joaquim Paiffer), CEO da Kim Pifer Publicações S.A. (Kim Educacional). Empresa de capital aberto na bolsa. Irmão da Carol Pifer (participou do Shark Tank, também cliente do Gabriel). Instagram @kimpaiffer, ~117k seguidores. Produto: Pré-Especialização em Trading 2026 (R$297). Site auditado: pre-especializacao.com.br/pet-pc4 (WordPress + Elementor, VSL via ConverteAI, checkout Hotmart com cupom 20OFF). Público-alvo: classe baixa, nicho 'ganhar dinheiro' / educação financeira e day trading. Funil: Anúncio Meta > LP com delay no botão > Checkout direto Hotmart > escadinha upsell/downsell (Compra R$297 > Upsell 1 > se não compra > Downsell 1 > Upsell 2 > Downsell 2). Ticket médio R$450-570. ~10% do tráfego passa por formulário antes do redirect. Investimento R$3-4k/dia, só Meta. CPA atual R$140-191 nos melhores criativos, meta R$100. Escala travada, bate no teto. Budget potencial R$100-200k/dia. Burocracia: 'muitos caciques', Gabriel não tem autonomia para decisões financeiras, processo de aprovação com múltiplos decisores."
+          "notes": "Kim Paiffer (Joaquim Paiffer), CEO da Atom Traders Publicações S.A. (Atom Educacional). Empresa de capital aberto na bolsa. Irmão da Carol Paiffer (participou do Shark Tank, também cliente do Gabriel). Instagram @kimpaiffer, ~117k seguidores. Produto: Pré-Especialização em Trading 2026 (R$297). Site auditado: pre-especializacao.com.br/pet-pc4 (WordPress + Elementor, VSL via ConverteAI, checkout Hotmart com cupom 20OFF). Público-alvo: classe baixa, nicho 'ganhar dinheiro' / educação financeira e day trading. Funil: Anúncio Meta > LP com delay no botão > Checkout direto Hotmart > escadinha upsell/downsell (Compra R$297 > Upsell 1 > se não compra > Downsell 1 > Upsell 2 > Downsell 2). Ticket médio R$450-570. ~10% do tráfego passa por formulário antes do redirect. Investimento R$3-4k/dia, só Meta. CPA atual R$140-191 nos melhores criativos, meta R$100. Escala travada, bate no teto. Budget potencial R$100-200k/dia. Burocracia: 'muitos caciques', Gabriel não tem autonomia para decisões financeiras, processo de aprovação com múltiplos decisores."
         },
         {
           "title": "Auditoria Técnica ao Vivo",
@@ -32,11 +32,11 @@
         },
         {
           "title": "Parceria Futura",
-          "notes": "Se funcionar, Gabriel quer trazer ~15 clientes de infoprodutos (faturam R$100-300k/lançamento). Interesse em white label: 'plugando por trás' com margem própria. Carol Pifer (irmã do Kim, participante do Shark Tank, também cliente do Gabriel) como potencial adicional. Modelos apresentados: white label (margem própria) ou indicação com comissão."
+          "notes": "Se funcionar, Gabriel quer trazer ~15 clientes de infoprodutos (faturam R$100-300k/lançamento). Interesse em white label: 'plugando por trás' com margem própria. Carol Paiffer (irmã do Kim, participante do Shark Tank, também cliente do Gabriel) como potencial adicional. Modelos apresentados: white label (margem própria) ou indicação com comissão."
         }
       ],
       "decisions": [
-        "Implementar server-side tracking para a operação do Kim Pifer",
+        "Implementar server-side tracking para a operação do Kim Paiffer",
         "Substituir UTMFY por solução server-side completa",
         "Realizar teste A/B pixel antigo vs novo por 30 dias",
         "Garantia: devolução das 2 últimas parcelas se pixel antigo performar melhor",
@@ -109,7 +109,7 @@
           }
         ],
         "painPoints": [
-          "Não escala: trava em R$3-4k/dia no Kim Pifer",
+          "Não escala: trava em R$3-4k/dia no Kim Paiffer",
           "CPA alto: R$140-191 nos melhores criativos, meta R$100",
           "Dados sujos: CPA reportado R$700 no gerenciador vs R$140-191 real",
           "100% client-side: sem server-side tracking",
