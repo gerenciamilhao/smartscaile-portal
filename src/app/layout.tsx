@@ -21,11 +21,19 @@ const firaCode = Fira_Code({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://propostas.smartscaile.com"),
   title: "smartscaile. <> Proposta Exclusiva",
   description: "Sua proposta personalizada de server-side tracking.",
   icons: {
     icon: "/favicon.png",
     apple: "/favicon.png",
+  },
+  openGraph: {
+    title: "smartscaile. <> Proposta Exclusiva",
+    description: "Sua proposta personalizada de server-side tracking.",
+    images: [{ url: "/og-image.png", width: 1024, height: 1024 }],
+    siteName: "smartscaile.",
+    type: "website",
   },
 };
 
