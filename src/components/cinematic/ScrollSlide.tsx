@@ -71,12 +71,14 @@ export function ScrollSlide({
   const y       = useTransform(scrollYProgress, yKeys, yVals);
 
   const isVisible = useTransform(opacity, (v) => v > 0.005);
+  const pointerEvents = useTransform(opacity, (v) => v > 0.5 ? 'auto' : 'none');
 
   return (
     <motion.div
       style={{
         opacity,
         y,
+        pointerEvents,
         position: 'absolute',
         inset: 0,
         zIndex,
