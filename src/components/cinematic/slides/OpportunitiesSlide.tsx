@@ -122,10 +122,10 @@ export function OpportunitiesSlide({ scrollYProgress, opportunities, range }: {
         <div className="flex items-center gap-2">
           <span className="live-dot" />
           <span className="text-[0.6rem] font-medium tracking-wide text-[#6B7280]" style={{ fontFamily: 'var(--font-mono), monospace' }}>
-            06 / 06
+            06 / 07
           </span>
         </div>
-        <SectionBadge label="Implementação" />
+        <SectionBadge label="Solução" />
       </motion.div>
 
       <motion.div

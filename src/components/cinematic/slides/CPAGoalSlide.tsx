@@ -6,6 +6,7 @@ import { SectionBadge } from '@/components/portal/SectionBadge';
 import { useIsMobile } from '@/lib/useIsMobile';
 import { useLoopProgress } from '@/lib/useLoopProgress';
 import { renderAccentText } from '@/lib/animation-helpers';
+import type { Goal } from '@/lib/clients';
 
 function CPATrackingRing({ trackingValue, trackingColor, normalizedValue }: {
   trackingValue: number; trackingColor: string; normalizedValue: number;
@@ -67,7 +68,7 @@ function CPATrackingRing({ trackingValue, trackingColor, normalizedValue }: {
 
 export function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
   scrollYProgress: MotionValue<number>;
-  goal: { metric: string; label: string; description: string };
+  goal: Goal;
   range: [number, number];
   trackingScore: number;
 }) {
@@ -87,8 +88,8 @@ export function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
   const isMobile = useIsMobile();
   const TRACKING_START = trackingScore;
   const TRACKING_TARGET = 100;
-  const CPA_START = 191;
-  const CPA_TARGET = 100;
+  const CPA_START = goal.cpaStart ?? 191;
+  const CPA_TARGET = goal.cpaTarget ?? 100;
   const normalizedValue = useLoopProgress(isMobile);
 
   const trackingValue = Math.round(TRACKING_START + (TRACKING_TARGET - TRACKING_START) * normalizedValue);
@@ -105,7 +106,7 @@ export function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
         <div className="flex items-center gap-2">
           <span className="live-dot" />
           <span className="text-[0.6rem] font-medium tracking-wide text-[#6B7280]" style={{ fontFamily: 'var(--font-mono), monospace' }}>
-            04 / 06
+            04 / 07
           </span>
         </div>
         <SectionBadge label="Meta de CPA" />
@@ -182,7 +183,7 @@ export function CPAGoalSlide({ scrollYProgress, goal, range, trackingScore }: {
                 fontFamily: 'var(--font-mono), monospace', fontWeight: 600,
                 fontSize: '0.7rem', color: '#77BDAC',
               }}>
-                R$100
+                R${(goal.cpaTarget ?? 100).toLocaleString('pt-BR')}
               </span>
             </motion.div>
           </div>

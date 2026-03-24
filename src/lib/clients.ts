@@ -24,6 +24,12 @@ export interface Goal {
   metric: string;
   label: string;
   description: string;
+  tags?: string[];
+  cpaStart?: number;
+  cpaTarget?: number;
+  dailyLoss?: number;
+  monthlyLoss?: number;
+  dailyInvestment?: number;
 }
 
 export interface StapeScore {
@@ -38,6 +44,7 @@ export interface StapeChecker {
   noteId: string;
   url: string;
   label: string;
+  domain?: string;
   scores?: StapeScore;
 }
 
@@ -132,12 +139,29 @@ export interface SlideCopy {
   painHero?: PagePainHeroCopy;
 }
 
+export interface RoiProjection {
+  label: string;
+  from?: string;
+  to?: string;
+  value?: string;
+  description: string;
+}
+
+export interface Roi {
+  headline: string;
+  subtitle: string;
+  projections: RoiProjection[];
+  paybackDays: number;
+  tags?: string[];
+}
+
 export interface ClientDiagnosis {
   headline: string;
   stapeChecker?: StapeChecker;
   goals: Goal[];
   desires?: Desires;
   opportunities: Opportunity[];
+  roi?: Roi;
   pricing?: Pricing;
   proposal: Proposal;
   copy?: SlideCopy;

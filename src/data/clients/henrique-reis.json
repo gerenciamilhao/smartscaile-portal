@@ -1,0 +1,284 @@
+{
+  "client": {
+    "id": "henrique-reis",
+    "name": "Henrique Reis",
+    "company": "Sou Rei / Waster",
+    "type": "prospect",
+    "contact": {
+      "representative": "Carlos Korber",
+      "label": "smartscaile martech"
+    },
+    "createdAt": "2026-03-23"
+  },
+  "meetings": [
+    {
+      "id": "meet-001",
+      "date": "2026-03-23",
+      "title": "Reunião Inicial — Discovery & Parceria Estratégica",
+      "duration": "01:59:46",
+      "participants": ["Carlos Korber", "Ramon Lemos", "Henrique Reis"],
+      "status": "completed",
+      "summary": "Reunião de discovery com Henrique Reis, CEO da Sou Rei (agência de performance) e Waster (SaaS de infraestrutura server-side, EUR 2.3M ARR, concorrente direto da Stape). Henrique encontrou a smartscaile via ads no Instagram, elogiou criativos e oferta. Reunião de quase 2h revelou oportunidade de parceria estratégica bilateral: smartscaile como braço de tracking (Henrique não tem/não quer fazer tracking) e Waster como infraestrutura superior à Stape (NAT egress 1.600 IPs, Cloudflare Enterprise, 100% optimization score Facebook). Henrique tem ~100 clientes (30% Enterprise: Havan R$120K/mês, WePink R$30K/mês, Le Biscuit/Casa & Video R$40-50K/mês). Está expandindo para Europa (Croácia, parceria com ex-fundador Infobip). Primeiro teste: Witrina.eu (Shopify, Croácia, ~R$18.500). Pipeline potencial: R$200K-500K/12 meses entre indicações, comissões e contrato publicitário. Red flags: aprovação conselho Havan/Avan para gastos, Bruno da Witrina 'chato com pagamento'.",
+      "topics": [
+        {
+          "title": "Apresentação Henrique & Ecossistema Sou Rei/Waster",
+          "notes": "CEO de 4 empresas: Sou Rei (agência, reduzindo), Waster (SaaS server-side, EUR 2.3M ARR, ~350 clientes, 90% margem), Halver DataCenter (R$23M investimento, Varginha/MG), StayCloud (hosting adquirida). 12 engenheiros Kubernetes, Cloudflare Enterprise, 3 data centers Brasil. Tracking desde 2020, pegou clientes Enterprise (Havan, Le Biscuit, WePink). Buscando EUR 500K seed para expansão EU (Croácia)."
+        },
+        {
+          "title": "Infraestrutura Waster vs Stape",
+          "notes": "Waster é concorrente direto da Stape ($10M ARR, 90 pessoas). Diferenciais: NAT egress 1.600 IPs Cloudflare (100% optimization score Facebook vs 93-97% Stape), SSL Force, Argo Smart Routing, banco Cassandra NVME Optane, preço metade da Stape, cobrança em real. Stape amarra com ecossistema (templates, plugins, banco, log). Waster está construindo equivalentes. Contrato Stape x Cloudflare: EUR 250K/ano."
+        },
+        {
+          "title": "Oportunidades de Parceria",
+          "notes": "5 modelos discutidos: (1) Indicação bilateral, (2) Afiliado Waster (10-40% comissão lifetime + 100% 1ª mensalidade incentivo migração Stape), (3) White label, (4) Contrato publicidade ~R$5K/mês, (5) Co-desenvolvimento técnico (API audit, bloqueio bots, Zaraz, MCP). Henrique quer indicar clientes: Witrina.eu, Minimal Club, Pozze, Boca Rosa, Drooms. smartscaile como braço de tracking EU (fala inglês)."
+        },
+        {
+          "title": "Clientes e Oportunidades Identificadas",
+          "notes": "Witrina.eu (Shopify, Croácia, primeiro teste), Pozze.com.br (R$1M/mês mídia, nota Stape 6), WePink (R$30K/mês infra, nota atual 50), Minimal Club (nota 46), Drooms (data room Alemanha, EUR 3-4K), Secret Outlet (R$6M/mês faturamento). Henrique não cobra implementação para Enterprise, inclui na infra."
+        }
+      ],
+      "decisions": [
+        "Witrina.eu como primeiro teste piloto (smartscaile tracking + infra Waster)",
+        "Criar grupo WhatsApp (Henrique + Guilherme + Carlos + Ramon)",
+        "smartscaile envia proposta implementação Witrina (~R$18.500)",
+        "Henrique compromete-se a criar API de audit (replicar Stape checker)",
+        "Explorar contrato publicidade R$5K/mês para smartscaile divulgar Waster",
+        "Parceria bilateral de indicação de clientes"
+      ],
+      "nextSteps": [
+        {
+          "task": "Enviar proposta implementação Witrina.eu",
+          "owner": "smartscaile.",
+          "deadline": "2026-03-25",
+          "status": "pending"
+        },
+        {
+          "task": "Criar grupo WhatsApp com Guilherme (comercial Waster)",
+          "owner": "Henrique",
+          "deadline": "2026-03-24",
+          "status": "pending"
+        },
+        {
+          "task": "Criar grupo separado com Bruno da Witrina",
+          "owner": "Henrique",
+          "deadline": "2026-03-25",
+          "status": "pending"
+        },
+        {
+          "task": "Agendar segunda reunião (conhecer Guilherme)",
+          "owner": "smartscaile.",
+          "deadline": "2026-03-28",
+          "status": "pending"
+        },
+        {
+          "task": "Re-analisar tracking WePink (estado atual)",
+          "owner": "smartscaile.",
+          "deadline": "2026-03-28",
+          "status": "pending"
+        },
+        {
+          "task": "Avaliar contrato publicidade internamente (conselho Avan)",
+          "owner": "Henrique",
+          "deadline": "TBD",
+          "status": "pending"
+        }
+      ],
+      "insights": {
+        "maturityScore": {
+          "tracking": 8,
+          "analytics": 7,
+          "automation": 6,
+          "overall": 7
+        },
+        "currentStack": [
+          { "tool": "Kubernetes", "status": "active" },
+          { "tool": "Cloudflare Enterprise", "status": "active" },
+          { "tool": "Stape (referência/concorrente)", "status": "active" },
+          { "tool": "GTM Server-Side", "status": "active" },
+          { "tool": "GTM Client-Side", "status": "active" },
+          { "tool": "GA4", "status": "active" },
+          { "tool": "Meta Ads", "status": "active" },
+          { "tool": "Cassandra DB", "status": "active" },
+          { "tool": "Grafana", "status": "active" },
+          { "tool": "N8N", "status": "active" },
+          { "tool": "Shopify (App Tracklens)", "status": "active" },
+          { "tool": "WordPress", "status": "basic" },
+          { "tool": "UptimeRobot", "status": "active" },
+          { "tool": "BetterStack", "status": "active" }
+        ],
+        "opportunities": [
+          {
+            "area": "Parceria Estratégica Bilateral",
+            "impact": "high",
+            "description": "smartscaile como braço de tracking que Henrique não tem. Waster como infra superior à Stape. Juntos oferecem solução completa que compete com ecossistema Stape."
+          },
+          {
+            "area": "Pipeline de Clientes Enterprise",
+            "impact": "high",
+            "description": "Henrique tem clientes que precisam de tracking e não consegue atender: Witrina.eu, Pozze (R$1M/mês mídia, nota 6), WePink, Minimal Club, Boca Rosa, Drooms. Cada implementação ~R$18.500."
+          },
+          {
+            "area": "Expansão Europa via Waster",
+            "impact": "high",
+            "description": "Henrique precisa de quem fala inglês para atender clientes EU. smartscaile está em Portugal. Sinergia natural para mercado europeu (Croácia, Alemanha)."
+          },
+          {
+            "area": "Comissionamento Afiliado Waster",
+            "impact": "medium",
+            "description": "10-40% comissão lifetime sobre MRR gerado + 100% primeira mensalidade como incentivo migração Stape. Cookie 90 dias."
+          },
+          {
+            "area": "Contrato Publicidade",
+            "impact": "medium",
+            "description": "~R$5K/mês para smartscaile mencionar Waster em conteúdo/vídeos de audit. Precisa aprovação conselho Avan."
+          }
+        ],
+        "painPoints": [
+          "Falta braços para tracking: 'preciso de gente para traquear, meu time não aguenta'",
+          "Trackers indicados incompetentes: perdeu credibilidade com Secret Outlet (R$6M/mês)",
+          "Barreira do idioma para Europa: 'meu time não fala inglês, só eu'",
+          "Competir com Stape em ecossistema: templates, plugins, banco atrasados",
+          "Conselho Avan/Havan 'mão de vaca': aprovação lenta para gastos",
+          "Clientes Enterprise com tracking horrível: Pozze nota 6 com R$1M/mês investimento"
+        ]
+      }
+    }
+  ],
+  "diagnosis": {
+    "headline": "O tracking dos seus clientes está travando a escala deles",
+    "stapeChecker": {
+      "noteId": "019d1b73-527a-7a1f-b0a3-cc4502a31751",
+      "url": "https://stape.io/website-tracking-checker/019d1b73-527a-7a1f-b0a3-cc4502a31751",
+      "label": "Ver relatório completo da Stape",
+      "domain": "waster.com.br",
+      "scores": {
+        "analytics": 38,
+        "ads": 45,
+        "cookieLifetime": 24,
+        "pageSpeed": 77,
+        "overall": 42
+      }
+    },
+    "goals": [
+      {
+        "metric": "R$1M+/mês",
+        "label": "Seus clientes investem *pesado.*\nO tracking não acompanha.",
+        "description": "Pozze investe R$1M/mês com nota 6 no tracking. WePink paga R$30K/mês de infra com nota 50. A infraestrutura é de ponta. O que falta é implementação profissional que extraia o máximo dos dados."
+      },
+      {
+        "metric": "100%",
+        "label": "Sua infra entrega *100%.*\nO tracking dos clientes, não.",
+        "description": "A Waster atinge 100% no optimization score do Facebook com NAT de 1.600 IPs. Mas sem implementação correta, os clientes não aproveitam esse potencial. Dados limpos na infra, sujos na ponta."
+      },
+      {
+        "metric": "70%",
+        "label": "O mercado europeu tem *70%* inexplorado.",
+        "description": "Server-side tracking na Europa ainda está em 5-20%. A Waster está expandindo para a Croácia. Com um braço de tracking que fala inglês e entende GDPR, o potencial é enorme."
+      }
+    ],
+    "opportunities": [
+      {
+        "title": "Pipeline imediato: 6+ clientes Enterprise precisando de tracking",
+        "impact": "high",
+        "effort": "medium",
+        "description": "Witrina.eu, Pozze, WePink, Minimal Club, Boca Rosa, Drooms. Cada um com implementação de R$15-20K. A infra já está na Waster. Falta quem implemente com qualidade."
+      },
+      {
+        "title": "Comissionamento vitalício como afiliado Waster",
+        "impact": "high",
+        "effort": "low",
+        "description": "10-40% sobre todo MRR gerado + 100% da primeira mensalidade. Cada cliente migrado da Stape gera receita recorrente permanente para a smartscaile."
+      },
+      {
+        "title": "Braço de tracking na Europa",
+        "impact": "high",
+        "effort": "medium",
+        "description": "Henrique precisa de quem atenda em inglês com conhecimento GDPR. smartscaile em Portugal é a peça que falta para a expansão EU."
+      },
+      {
+        "title": "Co-desenvolvimento de ferramentas",
+        "impact": "medium",
+        "effort": "high",
+        "description": "API de audit, bloqueio de bots via WAF Cloudflare, integração Zaraz, MCP para automação. Produtos conjuntos que diferenciam ambos da concorrência."
+      }
+    ],
+    "pricing": {
+      "plans": [
+        {
+          "name": "Implementação Shopify",
+          "label": "Tracking server-side: Shopify (Witrina.eu)",
+          "services": [
+            { "title": "Configuração GTM Web + Server" },
+            { "title": "Implementação Meta CAPI + Advanced Matching" },
+            { "title": "Configuração GA4 Server-Side" },
+            { "title": "Cookie Keeper + Custom Loader" },
+            { "title": "Integração com infraestrutura Waster" },
+            { "title": "Configuração consent mode (GDPR EU)" },
+            { "title": "40 dias de acompanhamento + suporte técnico" }
+          ],
+          "installments": 3,
+          "amount": 6000,
+          "discount": "R$16.500 à vista"
+        },
+        {
+          "name": "Pacote Enterprise",
+          "label": "Tracking server-side: Meta + Google + GA4 (múltiplos clientes)",
+          "services": [
+            { "title": "Implementação completa por cliente" },
+            { "title": "Reestruturação GTM + GA4 Web + Server" },
+            { "title": "Meta CAPI + Google Ads Server-Side + Enhanced Conversions" },
+            { "title": "Cookie Keeper + Custom Loader via Waster/Cloudflare" },
+            { "title": "Dedup nativa para e-commerce" },
+            { "title": "Configuração banco de dados Waster" },
+            { "title": "40 dias de acompanhamento por implementação" }
+          ],
+          "installments": 3,
+          "amount": 6000,
+          "discount": "Preço parceiro (valor de mercado: R$18.000/3x)"
+        }
+      ]
+    },
+    "copy": {
+      "hero": {
+        "badge": "Proposta de Parceria",
+        "headline": "Dois lados da mesma",
+        "accentWord": "moeda.",
+        "subtitle": "{firstName}, você tem a melhor infra do Brasil. A gente tem o melhor tracking. Juntos, ninguém compete."
+      },
+      "audit": {
+        "badge": "Auditoria Técnica",
+        "headline": "Seus clientes investem milhões com tracking",
+        "accentWord": "quebrado.",
+        "accentColor": "#EF4444",
+        "subtitle": "Pozze: nota 6, R$1M/mês em mídia. WePink: nota 50 após melhorias. Minimal Club: nota 46. A infra Waster entrega 100%. O tracking na ponta, não."
+      },
+      "cta": {
+        "badge": "Parceria smartscaile + Waster",
+        "headline": "O *resultado* fala por si.",
+        "subtitle": "Primeiro teste: Witrina.eu. Se a nota passar de 90, escalamos juntos. Sem risco."
+      },
+      "painHero": {
+        "badge": "Tracking na Ponta",
+        "headline": "Infra de *ponta.* Tracking de *2020.*",
+        "subtitle": "Seus clientes Enterprise rodam na melhor infraestrutura server-side do Brasil. Mas sem implementação profissional, os dados se perdem antes de chegar.",
+        "balloons": ["Clientes sem tracking", "Indicações que deram errado", "Braços que faltam"],
+        "ticker": ["Waster", "Cloudflare", "Kubernetes", "Stape", "GTM Server-Side", "Meta CAPI", "GA4", "Shopify", "N8N"]
+      },
+      "pageHero": {
+        "badge": "Parceria Estratégica Ativa",
+        "headline": "{firstName}, vamos *escalar juntos.*",
+        "subtitle": "Preparamos algo especial para esta parceria. Role para ver a proposta.",
+        "balloons": ["Nota mínimo 90", "Pipeline Enterprise", "Expansão Europa"],
+        "ticker": ["Waster", "Cloudflare Enterprise", "GTM Server-Side", "Meta CAPI", "GA4", "Google Ads SS", "Stape Migration", "Cookie Keeper", "Custom Loader"]
+      }
+    },
+    "proposal": {
+      "headline": "Cada cliente sem tracking profissional é dinheiro que não volta",
+      "description": "A Waster tem a melhor infraestrutura server-side do Brasil: Cloudflare Enterprise, NAT de 1.600 IPs, 100% optimization score. Mas os clientes que mais investem estão com tracking quebrado. Pozze investe R$1M/mês com nota 6. WePink paga R$30K/mês de infra com nota 50. A smartscaile entra como braço de tracking especializado. Implementação completa: GTM Server-Side, Meta CAPI, GA4, Cookie Keeper, Custom Loader, dedup nativa. Tudo rodando na infra Waster. Primeiro teste: Witrina.eu. Se a nota passar de 90, escalamos para o pipeline inteiro.",
+      "timeline": "2-3 semanas por implementação",
+      "investment": "R$16.500 à vista por implementação Shopify (ou 3x de R$6.000)",
+      "guarantee": "Se o tracking não atingir nota mínimo 90, revisamos sem custo adicional",
+      "cta": "Vamos começar pela Witrina"
+    }
+  }
+}

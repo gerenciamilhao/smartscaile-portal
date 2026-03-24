@@ -7,8 +7,9 @@ import { MessageCircle } from 'lucide-react';
 import { renderAccentText } from '@/lib/animation-helpers';
 import type { TerminalLine } from '@/lib/useTerminalTyping';
 
-const CTA_LINES: TerminalLine[] = [
-  { text: 'smartscaile deploy --client kim-paiffer', prefix: '$', color: '#6B7280' },
+function buildCtaLines(clientId: string): TerminalLine[] {
+  return [
+  { text: `smartscaile deploy --client ${clientId}`, prefix: '$', color: '#6B7280' },
   { text: '1ª parcela confirmada', prefix: '>', color: '#9CA3AF', delay: 500 },
   { text: 'verificando pagamento...', prefix: ' ', color: '#4B5563', delay: 1200 },
   { text: 'kick-off liberado', prefix: '✓', color: '#22C55E', delay: 300 },
@@ -34,15 +35,18 @@ const CTA_LINES: TerminalLine[] = [
   { text: 'estrutura validada', prefix: '✓', color: '#22C55E', delay: 300 },
   { text: '', prefix: ' ', color: '#1a1a1a', delay: 200 },
   { text: 'ciclo completo', prefix: '!', color: '#22C55E', delay: 600 },
-];
+  ];
+}
 
 const LOCK_OPEN_LINE = 3;
 
-export function CTASlideContent({ diagnosis, scrollYProgress, range }: {
+export function CTASlideContent({ diagnosis, scrollYProgress, range, clientId }: {
   diagnosis: ClientData['diagnosis'];
   scrollYProgress: MotionValue<number>;
   range: [number, number];
+  clientId?: string;
 }) {
+  const CTA_LINES = React.useMemo(() => buildCtaLines(clientId ?? 'client'), [clientId]);
   const [visibleChars, setVisibleChars] = useState<number[]>(CTA_LINES.map(() => 0));
   const [activeLine, setActiveLine] = useState(0);
   const [loopKey, setLoopKey] = useState(0);
@@ -65,7 +69,7 @@ export function CTASlideContent({ diagnosis, scrollYProgress, range }: {
     setVisibleChars(CTA_LINES.map(() => 0));
     setActiveLine(0);
     setLoopKey((k) => k + 1);
-  }, []);
+  }, [CTA_LINES]);
 
   useEffect(() => {
     if (!isVisible) return;

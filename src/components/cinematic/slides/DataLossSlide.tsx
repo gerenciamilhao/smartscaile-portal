@@ -6,10 +6,11 @@ import { SectionBadge } from '@/components/portal/SectionBadge';
 import { useIsMobile } from '@/lib/useIsMobile';
 import { useLoopProgress } from '@/lib/useLoopProgress';
 import { renderAccentText, lerpRGB3 } from '@/lib/animation-helpers';
+import type { Goal } from '@/lib/clients';
 
 export function DataLossSlide({ scrollYProgress, goal, range }: {
   scrollYProgress: MotionValue<number>;
-  goal: { metric: string; label: string; description: string };
+  goal: Goal;
   range: [number, number];
 }) {
   const [s] = range;
@@ -26,8 +27,8 @@ export function DataLossSlide({ scrollYProgress, goal, range }: {
   const footerOpacity   = useTransform(scrollYProgress, [t(0.46), t(0.58)], [0, 1]);
 
   const isMobile = useIsMobile();
-  const DAILY_LOSS = 1200;
-  const MONTHLY_LOSS = 36000;
+  const DAILY_LOSS = goal.dailyLoss ?? 1200;
+  const MONTHLY_LOSS = goal.monthlyLoss ?? 36000;
   const normalizedValue = useLoopProgress(isMobile);
 
   const lossValue = Math.round(DAILY_LOSS * normalizedValue);
@@ -52,7 +53,7 @@ export function DataLossSlide({ scrollYProgress, goal, range }: {
         <div className="flex items-center gap-2">
           <span className="live-dot" />
           <span className="text-[0.6rem] font-medium tracking-wide text-[#6B7280]" style={{ fontFamily: 'var(--font-mono), monospace' }}>
-            05 / 06
+            05 / 07
           </span>
         </div>
         <SectionBadge label="Perda de Dados" />
@@ -82,7 +83,7 @@ export function DataLossSlide({ scrollYProgress, goal, range }: {
               investimento/dia
             </span>
             <span style={{ fontSize: '0.7rem', color: '#6B7280', fontWeight: 400 }}>
-              R$4.000
+              R${(goal.dailyInvestment ?? 4000).toLocaleString('pt-BR')}
             </span>
           </div>
 

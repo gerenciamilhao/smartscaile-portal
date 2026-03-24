@@ -1,115 +1,12 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { SectionBadge } from '@/components/portal/SectionBadge';
 import type { ClientData } from '@/lib/clients';
 import { useIsMobile } from '@/lib/useIsMobile';
-import { useTerminalTyping, type TerminalLine } from '@/lib/useTerminalTyping';
-
-function TerminalTyping({ lines, isMobile = false, fontSize }: { lines: TerminalLine[]; isMobile?: boolean; fontSize?: string }) {
-  const { visibleChars, activeLine } = useTerminalTyping(lines);
-
-  return (
-    <div style={{ position: 'relative' }}>
-      <div style={{
-        position: 'relative',
-        borderRadius: 14,
-        background: 'linear-gradient(180deg, rgba(12,12,12,0.92) 0%, rgba(5,5,5,0.88) 100%)',
-        border: '1px solid rgba(119,189,172,0.08)',
-
-        overflow: 'hidden',
-        fontFamily: 'var(--font-mono), monospace',
-        fontSize: fontSize ?? '0.7rem',
-        lineHeight: 1.8,
-        boxShadow: '0 16px 48px rgba(0,0,0,0.5)',
-      }}>
-        {/* Window chrome */}
-        <div style={{
-          padding: '10px 16px',
-          display: 'flex', alignItems: 'center', gap: 7,
-          background: 'rgba(255,255,255,0.015)',
-          borderBottom: '1px solid rgba(255,255,255,0.04)',
-        }}>
-          <div style={{ display: 'flex', gap: 6 }}>
-            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#EF4444', opacity: 0.65 }} />
-            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#F59E0B', opacity: 0.65 }} />
-            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#22C55E', opacity: 0.65 }} />
-          </div>
-          <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-            <span style={{
-              fontSize: '0.5rem', color: '#374151', letterSpacing: '0.06em',
-              textTransform: 'uppercase', fontWeight: 500,
-            }}>
-              smartscaile — audit
-            </span>
-          </div>
-          <div style={{ width: 46 }} />
-        </div>
-
-        {/* Terminal body */}
-        <div style={{ padding: '16px 20px' }}>
-          {lines.map((line, i) => {
-            const fullText = `${line.prefix ?? '>'} ${line.text}`;
-            const chars = visibleChars[i];
-            const notYet = i > activeLine && chars === 0;
-            const displayed = fullText.slice(0, chars);
-            const showCursor = i === activeLine && activeLine < lines.length;
-
-            return (
-              <div key={i} style={{
-                color: line.color ?? '#77BDAC',
-                height: '1.5em',
-                visibility: notYet ? 'hidden' : 'visible',
-                display: 'flex', alignItems: 'center',
-              }}>
-                <span style={{
-                  width: 20, flexShrink: 0, textAlign: 'right', marginRight: 12,
-                  color: '#27272a', fontSize: 'clamp(0.4rem, 1vw, 0.55rem)', userSelect: 'none',
-                }}>
-                  {i + 1}
-                </span>
-                <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1, minWidth: 0 }}>
-                  {notYet ? '\u00A0' : displayed}
-                  {showCursor && (
-                    <motion.span
-                      animate={{ opacity: [1, 0, 1] }}
-                      transition={{ duration: 0.8, repeat: Infinity }}
-                      style={{ color: '#77BDAC', marginLeft: 1 }}
-                    >
-                      ▌
-                    </motion.span>
-                  )}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Bottom bar */}
-        <div style={{
-          padding: '6px 16px',
-          borderTop: '1px solid rgba(255,255,255,0.03)',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <motion.div
-              animate={{ opacity: [0.4, 1, 0.4] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-              style={{ width: 4, height: 4, borderRadius: '50%', background: '#77BDAC' }}
-            />
-            <span style={{ fontSize: '0.45rem', color: '#374151', letterSpacing: '0.05em' }}>
-              live
-            </span>
-          </div>
-          <span style={{ fontSize: '0.45rem', color: '#27272a' }}>
-            stape.io/checker
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { useLoopProgress } from '@/lib/useLoopProgress';
+import { lerpRGB3 } from '@/lib/animation-helpers';
 
 export function HeaderSlideContent({ firstName, formattedDate, diagnosis }: {
   firstName: string;
@@ -117,20 +14,22 @@ export function HeaderSlideContent({ firstName, formattedDate, diagnosis }: {
   diagnosis: ClientData['diagnosis'];
 }) {
   const isMobile = useIsMobile();
+  const normalizedValue = useLoopProgress(isMobile);
 
-  const scores = diagnosis.stapeChecker?.scores;
-  const terminalLines = useMemo<TerminalLine[]>(() => [
-    { text: 'stape audit --domain pre-especializacao.com.br', prefix: '$', color: '#6B7280' },
-    { text: 'conectando...', prefix: ' ', color: '#4B5563', delay: 300 },
-    { text: `score geral ················ ${scores?.overall ?? '—'}/100`, color: scores && scores.overall <= 30 ? '#EF4444' : '#F59E0B', delay: 200 },
-    { text: `analytics ·················· ${scores?.analytics ?? '—'}/100`, delay: 100 },
-    { text: `ads tracking ··············· ${scores?.ads ?? '—'}/100`, delay: 100 },
-    { text: `cookie lifetime ············ ${scores?.cookieLifetime ?? '—'}/100`, color: scores && scores.cookieLifetime <= 30 ? '#EF4444' : '#77BDAC', delay: 100 },
-    { text: `page speed ················· ${scores?.pageSpeed ?? '—'}/100`, delay: 100 },
-    { text: 'server-side (CAPI) ········ not detected', color: '#EF4444', delay: 200 },
-    { text: 'data loss estimado ········ ~30-40%', color: '#EF4444', delay: 150 },
-    { text: 'resultado: intervenção necessária', prefix: '!', color: '#F59E0B', delay: 400 },
-  ], [scores]);
+  const monthlyLoss = diagnosis.goals?.[2]?.monthlyLoss ?? 3600;
+  const dailyLoss = diagnosis.goals?.[2]?.dailyLoss ?? 120;
+  const dailyInvestment = diagnosis.goals?.[2]?.dailyInvestment ?? 400;
+
+  const lossValue = Math.round(monthlyLoss * normalizedValue);
+  const formattedLoss = lossValue.toLocaleString('pt-BR');
+
+  const [lr, lg, lb] = lerpRGB3(normalizedValue,
+    [119, 189, 172],
+    [245, 158, 11],
+    [239, 68, 68],
+  );
+  const lossColor = `rgb(${lr},${lg},${lb})`;
+  const lossRgba = (a: number) => `rgba(${lr},${lg},${lb},${a})`;
 
   return (
     <div className="slide-content">
@@ -146,26 +45,85 @@ export function HeaderSlideContent({ firstName, formattedDate, diagnosis }: {
 
       <div className="accent-line mb-5" />
 
-      <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 600, lineHeight: 1.15, color: '#F3F4F6', fontSize: 'clamp(1.75rem, 7vw, 3rem)', letterSpacing: '-0.02em' }}>
-        {diagnosis.copy?.hero?.headline ?? 'Destrave a'}{' '}
+      <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 600, lineHeight: 1.15, color: '#F3F4F6', fontSize: 'clamp(1.35rem, 5vw, 2rem)', letterSpacing: '-0.02em' }}>
+        {(diagnosis.copy?.hero?.headline ?? 'Destrave a').split('\n').map((line, i, arr) => (
+          <React.Fragment key={i}>{line}{i < arr.length - 1 && <br />}</React.Fragment>
+        ))}{' '}
         <span className="text-glow" style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', color: '#77BDAC' }}>{diagnosis.copy?.hero?.accentWord ?? 'escala.'}</span>
       </h2>
 
       <p className="mt-4 max-w-[480px] text-[0.875rem] leading-relaxed text-[#9CA3AF]">
-        {(diagnosis.copy?.hero?.subtitle ?? '{firstName}, sua operação sustenta R$100k/dia. O tracking é o que está segurando. Montamos o plano para liberar esse potencial.').replace('{firstName}', firstName).replace('{formattedDate}', formattedDate)}
+        {(diagnosis.copy?.hero?.subtitle ?? '{firstName}, sua operação sustenta R$100k/dia. O tracking é o que está segurando.').replace('{firstName}', firstName).replace('{formattedDate}', formattedDate)}
       </p>
 
-      <div className="mt-6" style={{ perspective: 800 }}>
+      {/* Loss counter */}
+      <div className="mt-8 max-w-[320px]" style={{ fontFamily: 'var(--font-mono), monospace', fontVariantNumeric: 'tabular-nums' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '6px 0' }}>
+          <span style={{ fontSize: '0.55rem', color: '#4B5563', fontWeight: 400, letterSpacing: '0.04em' }}>
+            investimento/mês
+          </span>
+          <span style={{ fontSize: '0.7rem', color: '#6B7280', fontWeight: 400 }}>
+            R${(monthlyLoss > 0 ? Math.round(dailyInvestment * 30) : 12000).toLocaleString('pt-BR')}
+          </span>
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '6px 0' }}>
+          <span style={{ fontSize: '0.55rem', fontWeight: 400, letterSpacing: '0.04em', color: lossRgba(0.5) }}>
+            perda estimada/mês
+          </span>
+          <span style={{ fontSize: '0.7rem', fontWeight: 500, color: lossRgba(0.8) }}>
+            -R${formattedLoss}
+          </span>
+        </div>
+
         <div style={{
-          transform: 'rotateY(8deg) rotateX(1deg)',
-          transformOrigin: 'left center',
-          maxWidth: 520,
+          height: 2, borderRadius: 1, background: 'rgba(255,255,255,0.03)',
+          overflow: 'hidden', display: 'flex', margin: '8px 0 4px',
         }}>
-          <TerminalTyping lines={terminalLines} isMobile={isMobile} fontSize="clamp(0.45rem, 1.3vw, 0.65rem)" />
+          <div style={{
+            height: '100%',
+            width: `${100 - 30 * normalizedValue}%`,
+            background: 'linear-gradient(90deg, rgba(119,189,172,0.2), rgba(119,189,172,0.5))',
+            transition: 'width 50ms linear',
+            borderRadius: '1px 0 0 1px',
+          }} />
+          <div style={{
+            height: '100%',
+            width: `${30 * normalizedValue}%`,
+            background: `linear-gradient(90deg, ${lossRgba(0.6)}, ${lossRgba(0.2)})`,
+            transition: 'width 50ms linear',
+            borderRadius: '0 1px 1px 0',
+          }} />
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
+          <span style={{ fontSize: '0.4rem', color: 'rgba(119,189,172,0.4)', fontFamily: 'var(--font-mono), monospace', fontWeight: 500, letterSpacing: '0.05em' }}>
+            visível
+          </span>
+          <span style={{ fontSize: '0.4rem', color: lossRgba(0.4), fontFamily: 'var(--font-mono), monospace', fontWeight: 500, letterSpacing: '0.05em' }}>
+            perdido
+          </span>
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '8px 0 0' }}>
+          <span style={{ fontSize: '0.55rem', fontWeight: 400, letterSpacing: '0.04em', color: lossRgba(0.5) }}>
+            perda acumulada
+          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
+            <div style={{
+              width: 3, height: 3, borderRadius: '50%',
+              background: lossRgba(0.6 + 0.4 * normalizedValue),
+            }} />
+            <span style={{
+              fontSize: 'clamp(1rem, 3.5vw, 1.25rem)', fontWeight: 600,
+              letterSpacing: '-0.02em', color: lossColor,
+            }}>
+              R${formattedLoss}/mês
+            </span>
+          </div>
         </div>
       </div>
 
-      <div className="mt-6 flex items-center gap-3">
+      <div className="mt-8 flex items-center gap-3">
         <div className="h-px flex-1" style={{ background: 'linear-gradient(90deg, rgba(119,189,172,0.15), transparent)' }} />
         <motion.div
           animate={{ y: [0, 4, 0], opacity: [0.4, 0.8, 0.4] }}

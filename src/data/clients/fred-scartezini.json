@@ -1,0 +1,279 @@
+{
+  "client": {
+    "id": "fred-scartezini",
+    "name": "Fred Scartezini",
+    "company": "Busqy",
+    "type": "prospect",
+    "contact": {
+      "representative": "Carlos Korber",
+      "label": "smartscaile martech"
+    },
+    "instagram": "fred_scartezini",
+    "createdAt": "2026-03-23"
+  },
+  "meetings": [
+    {
+      "id": "meet-001",
+      "date": "2026-03-23",
+      "title": "Reunião Inicial — Discovery",
+      "duration": "00:45:00",
+      "participants": ["Carlos Korber", "Ramon Lemos", "Fred Scartezini"],
+      "status": "completed",
+      "summary": "Reunião de discovery com Fred Scartezini, gestor de tráfego exclusivo da Busqy (SaaS de automação para afiliados, Stripe). Fred identificou problemas de tracking por conta própria e se inscreveu. Análise ao vivo revelou nota Stape 27/100, com perda estimada de 30-40% dos dados de conversão. CPA da Busqy dobrou de R$50 para R$100 sem explicação. Toda a stack de tracking é client-side, sem CAPI, sem server-side. Checkout Stripe quebra a sessão completamente. Boleto é o pior cenário (cookie expira em 24h+). Fred já tentou RD Station, Swift Analytics e UTMFY sem sucesso. Nenhuma integra com Stripe. Escopo: implementação server-side completa com webhook Stripe para match de sessão LP↔checkout. Red flag: Fred não é decisor financeiro, precisa convencer o dono da Busqy.",
+      "topics": [
+        {
+          "title": "Análise de Tracking ao Vivo",
+          "notes": "Nota Stape 27/100 (Analytics: 34, Ads: 28, Cookie: 11, PageSpeed: 50). Tudo client-side: Meta Pixel, GA4, Google Ads, Microsoft Clarity. Cookies críticos: _fbc com apenas 1 dia de vida, _fbp e _ga com 7 dias. Sem CAPI, sem server-side, sem custom loader, sem cookie keeper."
+        },
+        {
+          "title": "Problema Stripe e Checkout Externo",
+          "notes": "Stripe é checkout externo, impossível migrar (complexidade alta). Quando sai da LP para Stripe, perde tracking. Boleto: volta após 24h+, cookie já expirou. Sem match de sessão LP↔Stripe. Fred tentou UTMFY mas não integra com Stripe."
+        },
+        {
+          "title": "Impacto no Negócio",
+          "notes": "CPA dobrou de R$50 para R$100. Otimizações não surtem efeito. Fred investe R$12K/mês em Busqy. Ticket médio R$350-400. Perda estimada: R$3.600/mês em dados não atribuídos. Frustração acumulada com ferramentas que não resolvem."
+        },
+        {
+          "title": "Funil Busqy",
+          "notes": "Ads Meta + Google → LP busqy.app → Checkout Stripe (cartão/boleto) OU plano anual via WhatsApp → Kommo CRM → Stripe. Dois caminhos, ambos com quebra de tracking na saída para Stripe."
+        }
+      ],
+      "decisions": [
+        "smartscaile envia proposta em 48h via WhatsApp",
+        "Necessária conversa direta com o dono da Busqy para entender estrutura de planos/Stripe",
+        "Fred apresenta proposta ao dono da Busqy"
+      ],
+      "nextSteps": [
+        {
+          "task": "Enviar proposta via WhatsApp",
+          "owner": "smartscaile.",
+          "deadline": "2026-03-25",
+          "status": "pending"
+        },
+        {
+          "task": "Conversa com dono da Busqy sobre Stripe e planos",
+          "owner": "smartscaile.",
+          "deadline": "2026-03-28",
+          "status": "pending"
+        },
+        {
+          "task": "Apresentar proposta ao dono da Busqy",
+          "owner": "Fred Scartezini",
+          "deadline": "2026-03-28",
+          "status": "pending"
+        }
+      ],
+      "insights": {
+        "maturityScore": {
+          "tracking": 2,
+          "analytics": 3,
+          "automation": 4,
+          "overall": 3
+        },
+        "currentStack": [
+          { "tool": "Meta Pixel (client-side)", "status": "active" },
+          { "tool": "GA4 (client-side)", "status": "active" },
+          { "tool": "Google Ads (client-side)", "status": "active" },
+          { "tool": "Microsoft Clarity", "status": "active" },
+          { "tool": "GTM Client-Side", "status": "active" },
+          { "tool": "Stripe (checkout)", "status": "active" },
+          { "tool": "Kommo (CRM)", "status": "active" },
+          { "tool": "WhatsApp Business", "status": "active" },
+          { "tool": "GTM Server-Side", "status": "inactive" },
+          { "tool": "CAPI", "status": "inactive" },
+          { "tool": "Cookie Keeper", "status": "inactive" },
+          { "tool": "Custom Loader", "status": "inactive" }
+        ],
+        "opportunities": [
+          {
+            "area": "Implementação Server-Side Completa",
+            "impact": "high",
+            "description": "GTM Server-Side + CAPI + Cookie Keeper + Custom Loader. Recuperar 30-40% dos dados perdidos. Potencial de reduzir CPA de R$100 para próximo de R$50."
+          },
+          {
+            "area": "Integração Stripe via Webhook",
+            "impact": "high",
+            "description": "Banco de dados para match de sessão LP↔Stripe. Resolver a quebra de tracking no checkout externo. Essencial para atribuição de boleto e cartão."
+          },
+          {
+            "area": "Remarketing com Dados Confiáveis",
+            "impact": "medium",
+            "description": "Com tracking corrigido, viabilizar remarketing eficaz. Atualmente impossível por falta de dados de conversão confiáveis."
+          },
+          {
+            "area": "Segundo Cliente (PersonalFit)",
+            "impact": "medium",
+            "description": "Se Busqy comprovar resultados, Fred quer expandir para PersonalFit (R$15-16K/mês mídia, ticket R$50 recorrente, LTV R$900)."
+          }
+        ],
+        "painPoints": [
+          "CPA dobrou de R$50 para R$100: 'tudo que eu faço no máximo empata, não melhora'",
+          "Checkout Stripe quebra tracking: 'a gente não tá conseguindo trackar tudo'",
+          "Cookie _fbc com apenas 1 dia de vida: conversões após 24h não atribuídas",
+          "Nota Stape 27/100 com perda estimada de 30-40% dos dados",
+          "Ferramentas anteriores falharam: RD Station, Swift Analytics, UTMFY",
+          "Frustração acumulada: 'já tive bastante frustração'"
+        ]
+      }
+    }
+  ],
+  "diagnosis": {
+    "headline": "Seu tracking está custando R$3.600 por mês em dados perdidos",
+    "stapeChecker": {
+      "noteId": "019d1b02-e2d6-7869-8db7-a4335b8c8339",
+      "url": "https://stape.io/website-tracking-checker/019d1b02-e2d6-7869-8db7-a4335b8c8339",
+      "label": "Ver relatório completo da Stape",
+      "domain": "busqy.app",
+      "scores": {
+        "analytics": 34,
+        "ads": 28,
+        "cookieLifetime": 11,
+        "pageSpeed": 50,
+        "overall": 27
+      }
+    },
+    "goals": [
+      {
+        "metric": "27/100",
+        "label": "Cada real investido rende *metade* do que deveria.",
+        "description": "Com score 27, o algoritmo do Meta recebe dados incompletos e otimiza no escuro. O CPA dobrou de R$50 para R$100. Não é problema de criativo. É problema de tracking.",
+        "tags": ["CPA dobrou em 6 meses", "R$12K/mês em mídia", "Ticket R$350-400", "Stripe sem rastreio"]
+      },
+      {
+        "metric": "R$100",
+        "label": "Seu CPA *dobrou.*\nE nada que você tenta *resolve.*",
+        "description": "Criativo novo, público diferente, lance ajustado. O CPA não cede. Não é falta de esforço. É uma estrutura de tracking de 2020 tentando performar em 2026.",
+        "cpaStart": 100,
+        "cpaTarget": 50
+      },
+      {
+        "metric": "30-40%",
+        "label": "Enquanto você lê isso,\no contador *já subiu.*",
+        "description": "A cada dia sem CAPI, R$120 em dados nunca chegam às plataformas. Cookie de 1 dia, checkout externo, zero server-side. O acúmulo é silencioso, o rombo não.",
+        "dailyLoss": 120,
+        "monthlyLoss": 3600,
+        "dailyInvestment": 400
+      }
+    ],
+    "opportunities": [
+      {
+        "title": "Cada venda rastreada. Zero receita invisível.",
+        "impact": "high",
+        "effort": "medium",
+        "description": "Webhook Stripe cruza sessão da LP com pagamento real. Boleto, cartão, plano anual. Nenhuma conversão fica de fora do relatório."
+      },
+      {
+        "title": "Custom Loader. Invisível para ad blockers.",
+        "impact": "high",
+        "effort": "low",
+        "description": "O tracking passa a rodar em subdomínio próprio. O navegador trata como first-party. Ad blockers e ITP Safari deixam de ser problema."
+      },
+      {
+        "title": "Remarketing que gera venda, não impressão.",
+        "impact": "medium",
+        "effort": "low",
+        "description": "Audiências construídas com compradores reais. Lookalike limpo, retargeting preciso. CPA volta para a casa dos R$50."
+      },
+      {
+        "title": "Cookie Keeper. Cookies que duram.",
+        "impact": "high",
+        "effort": "low",
+        "description": "Reescreve cookies via server-side, contornando ITP Safari. _fbc passa de 1 para 90 dias. Atribuição que sobrevive ao tempo."
+      }
+    ],
+    "roi": {
+      "headline": "Payback em *60 dias.* O resto é lucro.",
+      "subtitle": "Com R$12K/mês de mídia, cada real desperdiçado em tracking quebrado custa caro. Veja a projeção conservadora.",
+      "projections": [
+        {
+          "label": "Nota tracking",
+          "from": "27/100",
+          "to": "90+",
+          "description": "Benchmark server-side com CAPI"
+        },
+        {
+          "label": "CPA projetado",
+          "from": "R$100",
+          "to": "R$60-70",
+          "description": "Estimativa conservadora com dados completos"
+        },
+        {
+          "label": "Conversões recuperadas",
+          "value": "+8-10/mês",
+          "description": "30% dos dados hoje invisíveis para o Meta"
+        },
+        {
+          "label": "Receita recuperada",
+          "value": "R$3.000+/mês",
+          "description": "~9 conversões x ticket médio R$350"
+        }
+      ],
+      "paybackDays": 60,
+      "tags": ["Payback em 60 dias", "R$3.000+/mês recuperados"]
+    },
+    "pricing": {
+      "plans": [
+        {
+          "name": "Implementação Busqy",
+          "label": "Tracking Server-Side: LP + Stripe + WhatsApp/Kommo",
+          "services": [
+            { "title": "Configuração GTM Web + Server" },
+            { "title": "Implementação Meta CAPI + Advanced Matching" },
+            { "title": "Configuração GA4 Server-Side" },
+            { "title": "Google Ads Enhanced Conversions" },
+            { "title": "Cookie Keeper + Custom Loader + Subdomínio" },
+            { "title": "Webhook Stripe + Banco de dados (match sessão LP↔checkout)" },
+            { "title": "Integração WhatsApp/Kommo no fluxo de dados" },
+            { "title": "Batalha de Pixels (antes vs depois)" },
+            { "title": "40 dias de acompanhamento + suporte técnico" }
+          ],
+          "installments": 3,
+          "amount": 4000,
+          "discount": "R$11.000 à vista"
+        }
+      ]
+    },
+    "copy": {
+      "hero": {
+        "badge": "Proposta Comercial",
+        "headline": "R$3.600/mês nunca chegam às",
+        "accentWord": "plataformas.",
+        "subtitle": "{firstName}, a cada R$12K investidos, a Busqy perde 30% dos sinais de conversão. O Meta otimiza no escuro. O CPA dobrou porque o algoritmo não sabe o que funciona."
+      },
+      "audit": {
+        "badge": "Auditoria Técnica",
+        "headline": "Sua nota de tracking é",
+        "accentWord": "27/100.",
+        "accentColor": "#EF4444",
+        "subtitle": "Você otimiza campanha no escuro. Sem CAPI, sem server-side. O algoritmo recebe metade dos sinais e cobra o dobro."
+      },
+      "cta": {
+        "badge": "Garantia smartscaile",
+        "headline": "O *resultado* é a garantia.",
+        "subtitle": "Teste A/B por 30 dias. Pixel antigo vs. novo. O resultado decide. Setup se paga em 2 meses."
+      },
+      "painHero": {
+        "badge": "O Cenário Atual",
+        "headline": "CPA *dobrou.* Otimizações *não funcionam.*",
+        "subtitle": "De R$50 para R$100 sem explicação. Você testa criativos, ajusta públicos, muda lances. Nada melhora. Porque o problema está nos dados, não na campanha.",
+        "balloons": ["CPA dobrou em meses", "Stripe quebra sessão", "Ferramentas falharam"],
+        "ticker": ["Meta Pixel", "GA4", "Google Ads", "Clarity", "Stripe", "Kommo", "WhatsApp", "RD Station", "UTMFY", "GTM"]
+      },
+      "pageHero": {
+        "badge": "Proposta Personalizada",
+        "headline": "{firstName}, os dados da Busqy precisam de *server-side.*",
+        "subtitle": "Diagnóstico completo com nota de tracking, cálculo de perda e projeção de ROI. Role para ver.",
+        "balloons": ["Nota mínimo 90", "Webhook Stripe", "Cookie 90 dias"],
+        "ticker": ["GTM Server-Side", "Meta CAPI", "GA4 SS", "Cookie Keeper", "Custom Loader", "Stripe Webhook", "Enhanced Conversions", "Advanced Matching"]
+      }
+    },
+    "proposal": {
+      "headline": "Cada dia sem server-side são dados que não voltam",
+      "description": "A Busqy tem um funil que funciona. O problema é que 30-40% das conversões desaparecem no caminho entre a LP e o Stripe. O CPA dobrou porque o Meta não vê metade dos resultados. A solução: implementação server-side completa com webhook Stripe para match de sessão, Cookie Keeper para cookies de 90 dias, e CAPI para redundância de dados. Tudo rodando em subdomínio próprio, invisível para ad blockers e ITP.",
+      "timeline": "2-3 semanas de implementação + 40 dias de acompanhamento",
+      "investment": "R$11.000 à vista ou 3x de R$4.000",
+      "guarantee": "Batalha de Pixels: antes vs depois com dados reais. Se o tracking não atingir nota mínimo 90, revisamos sem custo adicional.",
+      "cta": "Bora resolver o tracking da Busqy"
+    }
+  }
+}

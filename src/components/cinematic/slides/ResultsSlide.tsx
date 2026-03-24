@@ -126,7 +126,7 @@ export function ResultsSlideContent({ scrollYProgress, diagnosis }: {
         <div className="flex items-center gap-2">
           <span className="live-dot" />
           <span className="text-[0.6rem] font-medium tracking-wide text-[#6B7280]" style={{ fontFamily: 'var(--font-mono), monospace' }}>
-            02 / 06
+            02 / 07
           </span>
         </div>
         <SectionBadge label={diagnosis.copy?.audit?.badge ?? 'Auditoria Técnica'} />

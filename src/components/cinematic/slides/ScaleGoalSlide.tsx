@@ -1,16 +1,18 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { motion, useTransform, type MotionValue } from 'framer-motion';
 import { SectionBadge } from '@/components/portal/SectionBadge';
-import { useIsMobile } from '@/lib/useIsMobile';
-import { useLoopProgress } from '@/lib/useLoopProgress';
 import { renderAccentText } from '@/lib/animation-helpers';
+import { TerminalTyping, type TerminalLine } from './TerminalTyping';
+import type { Goal, StapeScore } from '@/lib/clients';
 
-export function ScaleGoalSlide({ scrollYProgress, goal, range }: {
+export function ScaleGoalSlide({ scrollYProgress, goal, range, stapeScores, domain }: {
   scrollYProgress: MotionValue<number>;
-  goal: { metric: string; label: string; description: string };
+  goal: Goal;
   range: [number, number];
+  stapeScores?: StapeScore;
+  domain?: string;
 }) {
   const [s] = range;
   const span = range[1] - range[0];
@@ -19,20 +21,25 @@ export function ScaleGoalSlide({ scrollYProgress, goal, range }: {
   const topBarOpacity   = useTransform(scrollYProgress, [t(0.05), t(0.18)], [0, 1]);
   const metricOpacity   = useTransform(scrollYProgress, [t(0.10), t(0.28)], [0, 1]);
   const metricY         = useTransform(scrollYProgress, [t(0.10), t(0.28)], [24, 0]);
-  const barOpacity      = useTransform(scrollYProgress, [t(0.20), t(0.36)], [0, 1]);
-  const barY            = useTransform(scrollYProgress, [t(0.20), t(0.36)], [16, 0]);
-  const descOpacity     = useTransform(scrollYProgress, [t(0.34), t(0.48)], [0, 1]);
-  const descY           = useTransform(scrollYProgress, [t(0.34), t(0.48)], [10, 0]);
+  const terminalOpacity = useTransform(scrollYProgress, [t(0.20), t(0.36)], [0, 1]);
+  const terminalY       = useTransform(scrollYProgress, [t(0.20), t(0.36)], [16, 0]);
+  const tagsOpacity     = useTransform(scrollYProgress, [t(0.34), t(0.48)], [0, 1]);
+  const tagsY           = useTransform(scrollYProgress, [t(0.34), t(0.48)], [10, 0]);
   const footerOpacity   = useTransform(scrollYProgress, [t(0.46), t(0.58)], [0, 1]);
 
-  const isMobile = useIsMobile();
-  const TARGET = 100000;
-  const START = 3000;
-  const normalizedValue = useLoopProgress(isMobile);
-
-  const barPct = 3 + 97 * normalizedValue;
-  const counterValue = Math.round(START + (TARGET - START) * normalizedValue);
-  const formattedCounter = counterValue.toLocaleString('pt-BR');
+  const scores = stapeScores;
+  const terminalLines = useMemo<TerminalLine[]>(() => [
+    { text: `stape audit --domain ${domain ?? 'example.com'}`, prefix: '$', color: '#6B7280' },
+    { text: 'conectando...', prefix: ' ', color: '#4B5563', delay: 300 },
+    { text: `score geral ················ ${scores?.overall ?? '—'}/100`, color: scores && scores.overall <= 30 ? '#EF4444' : '#F59E0B', delay: 200 },
+    { text: `analytics ·················· ${scores?.analytics ?? '—'}/100`, delay: 100 },
+    { text: `ads tracking ··············· ${scores?.ads ?? '—'}/100`, delay: 100 },
+    { text: `cookie lifetime ············ ${scores?.cookieLifetime ?? '—'}/100`, color: scores && scores.cookieLifetime <= 30 ? '#EF4444' : '#77BDAC', delay: 100 },
+    { text: `page speed ················· ${scores?.pageSpeed ?? '—'}/100`, delay: 100 },
+    { text: 'server-side (CAPI) ········ not detected', color: '#EF4444', delay: 200 },
+    { text: 'data loss estimado ········ ~30%', color: '#EF4444', delay: 150 },
+    { text: 'resultado: intervenção necessária', prefix: '!', color: '#F59E0B', delay: 400 },
+  ], [scores, domain]);
 
   return (
     <div className="slide-content">
@@ -43,10 +50,10 @@ export function ScaleGoalSlide({ scrollYProgress, goal, range }: {
         <div className="flex items-center gap-2">
           <span className="live-dot" />
           <span className="text-[0.6rem] font-medium tracking-wide text-[#6B7280]" style={{ fontFamily: 'var(--font-mono), monospace' }}>
-            03 / 06
+            03 / 07
           </span>
         </div>
-        <SectionBadge label="Meta de Escala" />
+        <SectionBadge label="Diagnóstico" />
       </motion.div>
 
       <motion.div
@@ -66,62 +73,19 @@ export function ScaleGoalSlide({ scrollYProgress, goal, range }: {
         {goal.description}
       </motion.p>
 
-      <motion.div style={{ opacity: barOpacity, y: barY }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, whiteSpace: 'nowrap' }}>
-          <span style={{
-            fontSize: '0.75rem', color: '#4B5563',
-            fontFamily: 'var(--font-mono), monospace', fontWeight: 500,
-          }}>
-            R$
-          </span>
-          <span style={{
-            fontFamily: 'var(--font-mono), monospace', fontWeight: 600,
-            fontSize: 'clamp(1.75rem, 6vw, 2.5rem)', lineHeight: 1,
-            color: '#77BDAC',
-            fontVariantNumeric: 'tabular-nums',
-            letterSpacing: '-0.02em',
-          }}>
-            {formattedCounter}
-          </span>
-          <span style={{
-            fontSize: '0.6rem', color: '#374151',
-            fontFamily: 'var(--font-mono), monospace', fontWeight: 500,
-          }}>
-            /dia
-          </span>
+      {/* Terminal audit */}
+      <motion.div style={{ opacity: terminalOpacity, y: terminalY }}>
+        <div style={{ maxWidth: 520 }}>
+          <TerminalTyping lines={terminalLines} fontSize="clamp(0.45rem, 1.3vw, 0.65rem)" />
         </div>
       </motion.div>
 
-      <motion.div style={{ opacity: barOpacity, y: barY }} className="mt-5 max-w-[380px]">
-        <div style={{
-          height: 3, borderRadius: 1.5, background: 'rgba(255,255,255,0.04)',
-          overflow: 'hidden', position: 'relative',
-        }}>
-          <div
-            style={{
-              height: '100%', borderRadius: 1.5,
-              width: `${barPct}%`,
-              background: 'linear-gradient(90deg, rgba(119,189,172,0.3), #77BDAC)',
-              transition: 'width 50ms linear',
-              boxShadow: normalizedValue > 0.1 ? '0 0 8px rgba(119,189,172,0.15)' : 'none',
-            }}
-          />
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
-          <span style={{ fontSize: '0.5rem', color: '#4B5563', fontFamily: 'var(--font-mono), monospace', fontWeight: 500, letterSpacing: '0.03em' }}>
-            atual
-          </span>
-          <span style={{ fontSize: '0.5rem', color: '#4B5563', fontFamily: 'var(--font-mono), monospace', fontWeight: 500, letterSpacing: '0.03em' }}>
-            potencial
-          </span>
-        </div>
-      </motion.div>
-
+      {/* Tags */}
       <motion.div
-        style={{ opacity: descOpacity, y: descY }}
+        style={{ opacity: tagsOpacity, y: tagsY }}
         className="mt-5 flex flex-wrap gap-2.5"
       >
-        {['117k seguidores', 'R$297 ticket', 'Funil ativo', 'Nicho amplo'].map((label, i) => (
+        {(goal.tags ?? ['27/100', 'Sem CAPI', 'Client-side', 'Cookie 1 dia']).map((label, i) => (
           <motion.span
             key={label}
             animate={{

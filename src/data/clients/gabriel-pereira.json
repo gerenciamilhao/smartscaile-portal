@@ -130,6 +130,7 @@
       "noteId": "019d015d-0b05-7356-9ccb-da574c2dd27a",
       "url": "https://stape.io/website-tracking-checker/019d015d-0b05-7356-9ccb-da574c2dd27a",
       "label": "Ver relatório completo da Stape",
+      "domain": "pre-especializacao.com.br",
       "scores": {
         "analytics": 38,
         "ads": 31,
@@ -142,17 +143,23 @@
       {
         "metric": "R$100-200k/dia",
         "label": "Esse teto não é do *mercado.*\nÉ do *tracking.*",
-        "description": "A operação tem audiência, ticket e funil para escalar. O que trava é a leitura parcial dos dados. O algoritmo não consegue otimizar o que não enxerga. Corrigir a atribuição é destravar a escala sem mudar a oferta."
+        "description": "A operação tem audiência, ticket e funil para escalar. O que trava é a leitura parcial dos dados. O algoritmo não consegue otimizar o que não enxerga. Corrigir a atribuição é destravar a escala sem mudar a oferta.",
+        "tags": ["117k seguidores", "R$297 ticket", "Funil ativo", "Nicho amplo"]
       },
       {
         "metric": "CPA R$100",
         "label": "Sua meta de *R$100* não é *utopia.*",
-        "description": "Server-side recupera os dados que as plataformas precisam pra otimizar de verdade. Mais sinais, melhor leilão, CPA menor."
+        "description": "Server-side recupera os dados que as plataformas precisam pra otimizar de verdade. Mais sinais, melhor leilão, CPA menor.",
+        "cpaStart": 191,
+        "cpaTarget": 100
       },
       {
         "metric": "30-40%",
         "label": "Enquanto você lê isso,\n*R$50* já rodaram sem *dados.*",
-        "description": "R$1.200 por dia do seu investimento não geram sinal de volta. O algoritmo não aprende, não otimiza, não melhora. Isso são R$36.000/mês. E o contador não para."
+        "description": "R$1.200 por dia do seu investimento não geram sinal de volta. O algoritmo não aprende, não otimiza, não melhora. Isso são R$36.000/mês. E o contador não para.",
+        "dailyLoss": 1200,
+        "monthlyLoss": 36000,
+        "dailyInvestment": 4000
       }
     ],
     "opportunities": [
