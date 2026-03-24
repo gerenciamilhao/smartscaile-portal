@@ -135,7 +135,7 @@
     "goals": [
       {
         "metric": "27/100",
-        "label": "Cada real investido rende *metade* do que deveria.",
+        "label": "Cada real *investido* rende\n*metade* do que deveria.",
         "description": "Com score 27, o algoritmo do Meta recebe dados incompletos e otimiza no escuro. O CPA dobrou de R$50 para R$100. Não é problema de criativo. É problema de tracking.",
         "tags": ["CPA dobrou em 6 meses", "R$12K/mês em mídia", "Ticket R$350-400", "Stripe sem rastreio"]
       },

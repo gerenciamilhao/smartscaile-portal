@@ -11,7 +11,7 @@ Prospects que fizeram reuniao com a smartscaile. Perfil: gestores de trafego, in
 
 ## Fluxo do Usuario
 1. Recebe link + token via WhatsApp
-2. Acessa hub.smartscaile.com
+2. Acessa portal.smartscaile.com
 3. Insere token no campo de acesso
 4. Visualiza proposta/diagnostico personalizado com dados reais da reuniao
 5. Clica no CTA para agendar implementacao
